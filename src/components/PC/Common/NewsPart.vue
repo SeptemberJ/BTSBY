@@ -19,8 +19,7 @@
             <Col span="16">
               <Row>
                 <Col class="marginT_10" span="12" v-for="(NewsKind,NewsKindIdx) in Infor.contents.newsList">
-                 <!--  <Card style="width:350px"> -->
-                 <Card style="width:auto" dis-hover>
+                 <Card style="width:auto;height: 120px" dis-hover>
                     <p slot="title">
                         <Icon type="ios-film-outline"></Icon>
                         {{NewsKind.kind}}
@@ -31,7 +30,7 @@
                     </a>
                     <ul>
                         <li v-for="(Article,ArticleIdx) in NewsKind.articles">
-                            <a :href="Article.id" target="_blank">{{ Article.tit }}</a>
+                            <a @click="newsDetail(Article.id)">{{ Article.s_title }}</a>
                         </li>
                     </ul>
                   </Card>
@@ -50,10 +49,18 @@ export default {
   props:['Infor'],
   data() {
   return {
+     KindArray:[1,2,3,4]
   }
   },
   created() {
-
+    [1,2,3,4].map((item,idx)=>{
+      axios.get(R_PRE_URL+'/searchArticleList.do?s_type='+item+'&page_num=1'
+      ).then((res)=> {
+        this.Infor.contents.newsList[idx].articles = res.data.arr
+      }).catch((error)=> {
+        console.log(error)
+      })
+    })
   },
   mounted: function(){
     
@@ -70,19 +77,10 @@ export default {
       this.$router.push({name:'社保资讯'})
       this.$store.state.newsKind = Menu.toString()
     },
-    //获取对应页数新闻
-    getNewsData(s_type,page_num){
-      axios.get(R_PRE_URL+'/searchArticleList.do?s_type='+s_type+'&page_num=1'
-      ).then((res)=> { 
-        this.Total = res.data.article_count
-        res.data.arr.map(function(item,idx){
-          item.sub_time.time = timestampToFormatTime(item.sub_time.time)
-        })
-        this.newsListInfo = res.data.arr
-      }).catch((error)=> {
-        console.log(error)
-      })
-     },
+     //文章详情
+     newsDetail(ID){
+      this.$router.push({name:'资讯详情',params: {id:ID}});
+     }
   }
 };
 </script>

@@ -1,23 +1,58 @@
-//连续月份
-export function ReadExcel() {
-var arr = ['2016-9', '2016-10', '2016-11', '2016-12', '2017-1', '2017-2'];
-var tmpday = null;
+//日期升序
+export function DateSortASC(MontList) {  //2018-01
+  var formatDate = []
+  MontList.map((item,idx)=>{
+    formatDate.push(new Date(item.slice(0,4),item.slice(5)-1,1, 0, 0, 0)) //标准日期格式
+  })
+  formatDate.sort(function(a, b){  
+      return a > b ? 1 : -1; // 这里改为大于号  
+  });  
+  return formatDate
+}
+//
+export function ifContinuity(MONTHLIST) {  //MONTHLIST必须为升序的日期集合
+var tmpday = null; //上一个日期
 //是否连续的标志
-var lianxu = true;
-for(var i=arr.length-1; i>=0; i--){
-  var dateStr = arr[i].split('-');
-  var date = new Date(parseInt(dateStr[0]), parseInt(dateStr[1], 10) - 1, 1, 0, 0, 0);
+var Continuity = true;
+for(var i=MONTHLIST.length-1; i>=0; i--){
   if(tmpday == null) {
-    tmpday = date;
+    tmpday = MONTHLIST[i];
   }else {
-    tmpday.setMonth(tmpday.getMonth() - 1);//比较是否相差一个月
-    if(date.getTime() != tmpday.getTime()) {
-    //月份没有连续
-    lianxu = false;
+    tmpday.setMonth(tmpday.getMonth() - 1) //正确的连续月份值
+    if(MONTHLIST[i].getTime() != tmpday.getTime()) { //两者是否相等
+    Continuity = false;
     break;
     }
   }
 }
+return Continuity
+}
+//连续月份
+export function ifContinuity2(MONTHLIST) {
+  console.log(MONTHLIST)
+var tmpday = null; //上一个日期
+//是否连续的标志
+var Continuity = true;
+for(var i=MONTHLIST.length-1; i>=0; i--){
+  var dateStr = MONTHLIST[i].split('-');
+  var date = new Date(parseInt(dateStr[0]), parseInt(dateStr[1], 10) - 1, 1, 0, 0, 0);
+  console.log(dateStr)
+  console.log(parseInt(dateStr[1], 10))
+  console.log(date)  //标准日期格式
+  console.log('------')
+  if(tmpday == null) {
+    tmpday = date;
+  }else {
+    tmpday.setMonth(tmpday.getMonth() - 1) //正确的连续月份值
+    console.log(tmpday)
+    console.log('======')
+    if(date.getTime() != tmpday.getTime()) { //两者是否相等
+    Continuity = false;
+    break;
+    }
+  }
+}
+return Continuity
 }
 //导入excel
 export function ReadExcel() {
@@ -79,7 +114,7 @@ export function ReadExcel() {
       var expires = "expires=" + d.toUTCString();
       console.info(cname + "=" + cvalue + "; " + expires);
       document.cookie = cname + "=" + cvalue + "; " + expires;
-      // console.info(document.cookie);
+       //alert(document.cookie);
   }
 
 //获取cookie

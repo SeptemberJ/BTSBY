@@ -59,7 +59,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import ChoosePayMember from "./ChoosePayMember.vue"
-import {getOneYearMonth,Intersect} from "../../../../util/utils"
+import {getOneYearMonth,Intersect,ifContinuity,DateSortASC} from "../../../../util/utils"
 export default {
   data() {
   return {
@@ -135,26 +135,26 @@ export default {
 
         {
             kind: '本地城镇（五险）',
-            priceU: '¥'+InsuranceDetail.person_total,
-            priceI: '¥'+InsuranceDetail.company_total,
+            priceU: '¥'+InsuranceDetail.company_total,
+            priceI: '¥'+InsuranceDetail.person_total,
             amount:0
         },
         {
             kind: '本地农村（五险）',
-            priceU: '¥'+InsuranceDetail.person_total,
-            priceI: '¥'+InsuranceDetail.company_total,
+            priceU: '¥'+InsuranceDetail.company_total,
+            priceI: '¥'+InsuranceDetail.person_total,
             amount:0
         },
         {
             kind: '外地城镇（五险）',
-            priceU: '¥'+InsuranceDetail.person_total,
-            priceI: '¥'+InsuranceDetail.company_total,
+            priceU: '¥'+InsuranceDetail.company_total,
+            priceI: '¥'+InsuranceDetail.person_total,
             amount:0
         },
         {
             kind: '外地农村（五险）',
-            priceU: '¥'+InsuranceDetail.person_total,
-            priceI: '¥'+InsuranceDetail.company_total,
+            priceU: '¥'+InsuranceDetail.company_total,
+            priceI: '¥'+InsuranceDetail.person_total,
             amount:0
         },
         {
@@ -224,19 +224,17 @@ export default {
   methods: {
     //选择月份获取服务费用、其他费用
     changeBuyMonth(e){
-      console.log(e)
-      // axios.get(R_PRE_URL+'/searchSbyFee.do?month_count='+this.buyMonthList.length
-      // ).then((res)=> { 
-      //   let FeeInfo = res.data.feeInfo
-      //   this.service_fee = FeeInfo.service_fee
-      //   this.material_fee =  FeeInfo.material_fee
-      // }).catch((error)=> {
-      //   console.log(error)
-      // })
+      axios.get(R_PRE_URL+'/searchSbyFee.do?month_count='+this.buyMonthList.length
+      ).then((res)=> { 
+        let FeeInfo = res.data.feeInfo
+        this.service_fee = FeeInfo.service_fee
+        this.material_fee =  FeeInfo.material_fee
+      }).catch((error)=> {
+        console.log(error)
+      })
     },
     //提交订单
     toSubmitOrder(){
-      let monthListStr=''
       if(this.MemberAmountS == 0 && this.MemberAmountG == 0){
         this.$Message.error('请选择参保员工！')
         return
@@ -245,33 +243,37 @@ export default {
         this.$Message.error('请选择参保月份！')
         return
       }
+      //月份是否连续
+      if(!ifContinuity(DateSortASC(this.buyMonthList))){
+        this.$Message.error('参保的月份必须连续！')
+        return
+      }
+      let monthListStr=''     //订单名称月份拼接
+      let monthObjList =[]    //缴纳月份
+      let sbEmployeeList = [] //社保名单
+      let gjjEmployeeList = []//公积金名单
+      let Pay_type = this.MemberAmountS!=0 && this.MemberAmountG!=0 ?'0':this.MemberAmountG!=0?'2':'1'                //订单名称类型
+
       this.buyMonthList.map(function(item,idx){
         monthListStr = monthListStr + item.replace("-","") +'-'
       })
 
-      let Pay_type = this.MemberAmountS!=0 && this.MemberAmountG!=0 ?'0':this.MemberAmountG!=0?'2':'1'
-
-      
-      let monthObjList =[]
       this.buyMonthList.map(function(item,idx){
         let obj = {'pay_month':item.replace("-","")}
         monthObjList.push(obj)
       })
 
-      let sbEmployeeList = []
       this.MemberListS.map((ItemArray,IdxArray)=>{
         ItemArray.map((Item,Idx)=>{
           sbEmployeeList.push({'employee_id':Item.id})
         })
       })
 
-      let gjjEmployeeList = []
       this.MemberListG.map((ItemArray,IdxArray)=>{
         ItemArray.map((Item,Idx)=>{
           gjjEmployeeList.push({'employee_id':Item.id})
         })
       })
-
 
       let orderInfo = {
         'order_name':'代缴'+ this.City + monthListStr + (Pay_type==0?'社保公积金':Pay_type==1?'社保':'公积金'),
@@ -302,12 +304,9 @@ export default {
           });
           break;
         }
-        console.log(res)
       }).catch((error)=> {
         console.log(error)
       })
-      
-
     },
     //选择社保成员
     chooseMemberS(TYPE){

@@ -19,15 +19,31 @@
     "tits":{"BigTit":"传统社保 VS 社保云","SmallTit":"SOCIAL SECURITY VS SHEIBAOYUN"},
     "contents":["http://sbyun.com/skins2/images/pic-a1.png","http://sbyun.com/skins2/images/pic-a2.png","http://sbyun.com/skins2/images/pic-a3.png","http://sbyun.com/skins2/images/pic-a4.png","http://sbyun.com/skins2/images/pic-a5.png","http://sbyun.com/skins2/images/pic-a6.png"]
   },
+  "news":{
+    "tits":{"BigTit":"最新资讯","SmallTit":"COOPERATION PARTNERS"},
+    "contents":{
+      "oneNews":{"img":"http://sbyun.com/skins2/images/pic-n01-new.jpg","tit":"探究O2O企业用工风险","abstract":"O2O企业外送员工作过程中发生事故至今已不止一起，O2O企业员工应该如何保证自身利益以及企业如何减小用工风险，值得我们深思。"},
+      "newsList":[
+        {"kind":"社保知识","articles":[{"id":1,"tit":"我国失业保险政策详细解读"},{"id":2,"tit":"延长缴费期间可以继续以单位职工"},{"id":3,"tit":"基本养老保险待遇包含哪些内容？"}]},
+        {"kind":"常见问题","articles":[{"id":1,"tit":"要将养老保险转入广州，该如何操做"},{"id":2,"tit":"发放社保补贴不能免除用人单位办"},{"id":3,"tit":"基本养老保险待遇包含哪些内容？"}]},
+        {"kind":"案例分析","articles":[{"id":1,"tit":"社保常识问答"},{"id":2,"tit":"让我们理性地聊聊，养老这件事"},{"id":3,"tit":"基本养老保险待遇包含哪些内容？"}]},
+        {"kind":"社保快讯","articles":[{"id":1,"tit":"关于深圳重特大疾病补充保险续保"},{"id":2,"tit":"中小微企业经营管理平台和社保云"},{"id":3,"tit":"基本养老保险待遇包含哪些内容？"}]}
+    ]
+    }
+  },
   "partner":{
     "tits":{"BigTit":"合作伙伴","SmallTit":"COOPERATION PARTNERS"},
     "contents":[
-      {"name":"北京移数通电讯有限公司","logo":"http://sbyun.com/skins2/images/pic-c1.png"},
-      {"name":"北京移数通电讯有限公司","logo":"http://sbyun.com/skins2/images/pic-c1.png"},
-      {"name":"北京移数通电讯有限公司","logo":"http://sbyun.com/skins2/images/pic-c1.png"},
-      {"name":"北京移数通电讯有限公司","logo":"http://sbyun.com/skins2/images/pic-c1.png"},
-      {"name":"北京移数通电讯有限公司","logo":"http://sbyun.com/skins2/images/pic-c1.png"},
-      {"name":"北京移数通电讯有限公司","logo":"http://sbyun.com/skins2/images/pic-c1.png"}
+      {"name":"","logo":"http://sbyun.com/skins2/images/pic-c1.png"},
+      {"name":"","logo":"http://sbyun.com/skins2/images/pic-c2.png"},
+      {"name":"","logo":"http://sbyun.com/skins2/images/pic-c3.png"},
+      {"name":"","logo":"http://sbyun.com/skins2/images/pic-c4.png"},
+      {"name":"","logo":"http://sbyun.com/skins2/images/pic-c5.png"},
+      {"name":"","logo":"http://sbyun.com/skins2/images/pic-c6.png"},
+      {"name":"","logo":"http://sbyun.com/skins2/images/pic-c7.png"},
+      {"name":"","logo":"http://sbyun.com/skins2/images/pic-c8.png"},
+      {"name":"","logo":"http://sbyun.com/skins2/images/pic-c9.png"},
+      {"name":"","logo":"http://sbyun.com/skins2/images/pic-c10.png"}
     ]
   }
 }

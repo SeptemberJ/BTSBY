@@ -43,7 +43,7 @@
                 <Icon type="social-tux" :size="36"></Icon> 暂无数据
               </div>
           </Card>
-          <Page class="marginT_20" :total="Total" show-total style="float: right;" :current="newsPage"  @on-change="changePage" @on-page-size-change="" v-if="newsListInfo.length>0"></Page>
+          <Page class="marginT_20" :total="Total" show-total :page-size="2" style="float: right;" :current="newsPage"  @on-change="changePage" @on-page-size-change="" v-if="newsListInfo.length>0"></Page>
         </Col>
       </Row>
     </div>
@@ -120,7 +120,7 @@ export default {
         console.log(error)
       })
      },
-     //咨询详情
+     //文章详情
      newsDetail(ID){
         this.$router.push({name:'资讯详情',params: {id:ID}});
     }

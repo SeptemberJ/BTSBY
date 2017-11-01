@@ -60,7 +60,6 @@
           :on-format-error="handleFormatError"
           :on-exceeded-size="handleMaxSize"
           :before-upload="handleBeforeUploadSF"
-          accept=".png, .jpg, .jpeg"
           type="drag"
           action=""
           style="display: inline-block;">
@@ -81,7 +80,6 @@
           :on-format-error="handleFormatError"
           :on-exceeded-size="handleMaxSize"
           :before-upload="handleBeforeUploadSB"
-          accept=".png, .jpg, .jpeg"
           type="drag"
           action=""
           style="display: inline-block;">
@@ -102,7 +100,6 @@
           :on-format-error="handleFormatError"
           :on-exceeded-size="handleMaxSize"
           :before-upload="handleBeforeUploadHZ"
-          accept=".png, .jpg, .jpeg"
           type="drag"
           action=""
           style="display: inline-block;">
@@ -123,7 +120,6 @@
           :on-format-error="handleFormatError"
           :on-exceeded-size="handleMaxSize"
           :before-upload="handleBeforeUploadBR"
-          accept=".png, .jpg, .jpeg"
           type="drag"
           action=""
           style="display: inline-block;">
@@ -144,7 +140,6 @@
           :on-format-error="handleFormatError"
           :on-exceeded-size="handleMaxSize"
           :before-upload="handleBeforeUploadPD"
-          accept=".png, .jpg, .jpeg"
           type="drag"
           action=""
           style="display: inline-block;">
@@ -186,8 +181,8 @@ export default {
       // JOB:'',//岗位
       // STREET:'',//街道
       AvatarSource:{   //upload img
-        sfz_front:'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar',
-        sfz_back:'https://o5wwk8baw.qnssl.com/bc7521e033abdd1e92222d733590f104/avatar',
+        sfz_front:'',
+        sfz_back:'',
         hkb_hz:'',
         hkb_br:'',
         personal_detail:'',
@@ -266,6 +261,7 @@ export default {
                 this.$Message.error('身份证格式不正确!')
                 return false
               }
+              console.log(this.formInsuredInfo.AvatarSource)
               //必填项校验
               if(!this.formInsuredInfo.AvatarSource.sfz_front || !this.formInsuredInfo.AvatarSource.sfz_back || !this.formInsuredInfo.AvatarSource.hkb_hz || !this.formInsuredInfo.AvatarSource.hkb_br ||!this.formInsuredInfo.AvatarSource.personal_detail ){
                 this.$Message.error('请先上传需要的文件!')
@@ -343,15 +339,13 @@ export default {
     handleBeforeUploadSF(event) {
       var _this = this
       var file = event
-      console.log(file) 
       var reader = new FileReader();   
       reader.readAsDataURL(file);   
       reader.onload = function(e){
         let reg = /^data:image\/(jpeg|png|gif);base64,/
-        console.log(this.result.replace(reg, ""))
         axios.get(R_PRE_URL+'/uploadBase64.do?imgStr='+this.result.replace(reg, "")
         ).then((res)=> {
-          _this.AvatarSource[sfz_front] = res.data.fileName
+          _this.formInsuredInfo.AvatarSource.sfz_front = res.data.fileName
         }).catch((error)=> {
           console.log(error)
         })
@@ -361,15 +355,13 @@ export default {
     handleBeforeUploadSB(event) {
       var _this = this
       var file = event
-      console.log(file) 
       var reader = new FileReader();   
       reader.readAsDataURL(file);   
       reader.onload = function(e){
         let reg = /^data:image\/(jpeg|png|gif);base64,/
-        console.log(this.result.replace(reg, ""))
         axios.get(R_PRE_URL+'/uploadBase64.do?imgStr='+this.result.replace(reg, "")
         ).then((res)=> {
-          _this.AvatarSource[sfz_back] = res.data.fileName
+          _this.formInsuredInfo.AvatarSource.sfz_back = res.data.fileName
         }).catch((error)=> {
           console.log(error)
         })
@@ -379,15 +371,13 @@ export default {
     handleBeforeUploadHZ(event) {
       var _this = this
       var file = event
-      console.log(file) 
       var reader = new FileReader();   
       reader.readAsDataURL(file);   
       reader.onload = function(e){
         let reg = /^data:image\/(jpeg|png|gif);base64,/
-        console.log(this.result.replace(reg, ""))
         axios.get(R_PRE_URL+'/uploadBase64.do?imgStr='+this.result.replace(reg, "")
         ).then((res)=> {
-          _this.AvatarSource[hkb_hz] = res.data.fileName
+          _this.formInsuredInfo.AvatarSource.hkb_hz = res.data.fileName
         }).catch((error)=> {
           console.log(error)
         })
@@ -397,15 +387,13 @@ export default {
     handleBeforeUploadBR(event) {
       var _this = this
       var file = event
-      console.log(file) 
       var reader = new FileReader();   
       reader.readAsDataURL(file);   
       reader.onload = function(e){
         let reg = /^data:image\/(jpeg|png|gif);base64,/
-        console.log(this.result.replace(reg, ""))
         axios.get(R_PRE_URL+'/uploadBase64.do?imgStr='+this.result.replace(reg, "")
         ).then((res)=> {
-          _this.AvatarSource[hkb_br] = res.data.fileName
+          _this.formInsuredInfo.AvatarSource.hkb_br = res.data.fileName
         }).catch((error)=> {
           console.log(error)
         })
@@ -415,7 +403,6 @@ export default {
     handleBeforeUploadPD(event) {
       var _this = this
       var file = event
-      console.log(file) 
       var reader = new FileReader();   
       reader.readAsDataURL(file);   
       reader.onload = function(e){
@@ -423,7 +410,7 @@ export default {
         console.log(this.result.replace(reg, ""))
         axios.get(R_PRE_URL+'/uploadBase64.do?imgStr='+this.result.replace(reg, "")
         ).then((res)=> {
-          _this.AvatarSource[personal_detail] = res.data.fileName
+          _this.formInsuredInfo.AvatarSource.personal_detail = res.data.fileName
         }).catch((error)=> {
           console.log(error)
         })
@@ -431,29 +418,23 @@ export default {
     },
     
     handleView (name) {
-        this.imgName = name;
-        this.visible = true;
     },
     handleRemove (file) {
-        const fileList = this.$refs.upload.fileList;
-        this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
     },
     handleSuccess (res, file) {
-        file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar';
-        file.name = '7eb99afb9d5f317c912f08b5212fd69a';
     },
     handleFormatError (file) {
-        this.$Notice.warning({
-            title: 'The file format is incorrect',
-            desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
-        });
-    },
-    handleMaxSize (file) {
-        this.$Notice.warning({
-            title: 'Exceeding file size limit',
-            desc: 'File  ' + file.name + ' is too large, no more than 2M.'
-        });
-    },
+          this.$Notice.warning({
+              title: '图片格式警告',
+              desc: '您上传的' + file.name + '文件格式不支持!'
+          });
+      },
+      handleMaxSize (file) {
+          this.$Notice.warning({
+              title: '图片大小警告',
+              desc: '您上传的  ' + file.name + '太大了, 请不要超过2M!'
+          });
+      },
     handleBeforeUpload () {
     }
    

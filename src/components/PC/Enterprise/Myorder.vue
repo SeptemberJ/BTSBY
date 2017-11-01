@@ -36,35 +36,54 @@
 
       <Page class="marginT_20" :total="Total" show-total style="float: right;" :current="page_num" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer></Page>
       
-            <!-- Modal -->
-      <Modal v-model="ifShowModal">
+      <!-- Modal -->
+      <Modal v-model="ifShowModal" :width="800">
         <p slot="header" style="text-align:left">
             <Icon type="ios-pricetags"></Icon>
             <span>社保云增值服务详细信息</span>
         </p>
         <div style="text-align:left">
-          <Row class="marginTB_10">
+          <Row class="marginB_10">
               <Col span="12"><span>订单号 ：</span><span>{{ModalInfo.order_no}}</span></Col>
               <Col span="12"><span>订单名称 ：</span><span>{{ModalInfo.order_name}}</span></Col>
               
           </Row>
-          <Row>
+          <Row class="marginB_10">
               <Col span="12"><span>订单金额 ：</span><span>￥{{ModalInfo.amount}}</span></Col>
               <Col span="12"><span>支付状态：</span><span>{{ModalInfo.status}}</span></Col>
           </Row>
-          <Row>
+          <Row class="marginB_10">
               <Col span="12"><span>服务内容 ：</span><span>{{ModalInfo.pay_type_T}}</span></Col>
-              <Col span="12"><span>代缴月份：</span><span>{{}}</span></Col>
+              <Col span="12">
+                <span>代缴人数 ：</span>
+                <span class="cursorPointer" @click="seeMember(ModalInfo.MemberS)">社保：<b class="colorBlue">{{ModalInfo.MemberAmountS}}</b> 人</span> 
+                <span class="cursorPointer" @click="seeMember(ModalInfo.MemberSG)">公积金：<b class="colorBlue">{{ModalInfo.MemberAmountG}}</b> 人</span>
+              </Col>
           </Row>
-          <!-- <Row class="marginTB_10" style="border-top: 1px solid #ddd;">
-              <Col span="24" class="marginTB_10"><span><b>客户本人需提供资料 ：</b></span><span>{{ModalInfo.personal_info}}</span></Col>
-              <Col span="24" class="marginTB_10"><span><b>服务公司需提供资料 ：</b></span><span>{{ModalInfo.company_info}}</span></Col>
-              <Col span="24" class="marginTB_10"><span><b>办理步骤 ：</b></span><span>{{ModalInfo.process_steps}}</span></Col>
-          </Row> -->
+          <Row>
+            <Col span="24">
+              <span>代缴月份：</span>
+              <Tag checkable color="blue" v-for="(Month,MonthIdx) in ModalInfo.Months">{{Month}}</Tag>
+            </Col>
+          </Row>
         </div>
         <div slot="footer" style="text-align: center;">
-            <Button type="primary" size="large" :loading="modal_loading" @click=""><Icon type="printer"></Icon><a href="http://192.168.10.177:8082/exportExcel?order_id=ea225728-e8ce-4b3c-8853-fb971ef9e66b&pay_type=0" download="http://192.168.10.177:8082/exportExcel?order_id=ea225728-e8ce-4b3c-8853-fb971ef9e66b&pay_type=0">导出订单数据</a></Button>
+            <Button type="primary" size="large" :loading="modal_loading" @click=""><Icon type="printer"></Icon><a style="color: #fff;" href="http://192.168.10.177:8082/exportExcel?order_id=ea225728-e8ce-4b3c-8853-fb971ef9e66b&pay_type=0" download="http://192.168.10.177:8082/exportExcel?order_id=ea225728-e8ce-4b3c-8853-fb971ef9e66b&pay_type=0">导出订单数据</a></Button>
         </div>
+      </Modal>
+
+      <!-- 参保名单 -->
+      <Modal v-model="ifShowMember" :mask-closable="false">
+          <p slot="header" style="">
+              <Icon type="ios-people"></Icon>
+              <span>参保名单</span>
+          </p>
+          <div style="text-align:center">
+              <Table :columns="columnsMember" height="200" :data="dataMember"></Table>
+          </div>
+          <div slot="footer">
+              <Button type="primary" size="large" @click="CloseMember">关闭</Button>
+          </div>
       </Modal>
 
     </div>
@@ -77,6 +96,7 @@ export default {
   data() {
   return {
     ifShowModal:false,
+    ifShowMember:false,
     modal_loading: false,
     ifLoading:false,
     Total:0,
@@ -94,7 +114,11 @@ export default {
       amount:'',
       status:'',
       pay_type:'',
-      pay_type_T:''
+      pay_type_T:'',
+      MemberAmountS:'',
+      MemberAmountG:'',
+      MemberS:'',
+      MemberG:''
     },
     statusList: [
             {
@@ -151,6 +175,26 @@ export default {
                 value: '6',
                 label: '订单已取消'
             }
+    ],
+    columnsMember: [
+          {
+              type: 'index',
+              width:60
+          },
+          {
+              title: '员工姓名',
+              key: 'name'
+          },
+          {
+              title: '身份证号',
+              key: 'id_number'
+          }
+    ],
+    dataMember: [
+          {
+              name: '张三',
+              id_number: '320684199912121234',
+          },
     ],
     myOrderList: [
             {
@@ -247,8 +291,33 @@ export default {
             content: `content`//Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}
         })
     },
+    //查看参保人员详细名单
+    seeMember(MemberList){
+      this.ifShowMember = true
+    },
+    CloseMember(){
+      this.ifShowMember = false
+    },
     seeDetail (Info) {
-        console.log(Info)
+      //获取参保人员
+      axios.get(R_PRE_URL+'/searchCompanyOrderInfo.do?id='+Info.row.id
+      ).then((res)=> {
+        this.ModalInfo.MemberS = res.data.orderInfo.sbEmployeeList
+        this.ModalInfo.MemberG = res.data.orderInfo.gjjEmployeeList
+        this.ModalInfo.MemberAmountS = res.data.orderInfo.sbEmployeeList.length
+        this.ModalInfo.MemberAmountG = res.data.orderInfo.gjjEmployeeList.length
+      }).catch((error)=> {
+        console.log(error)
+      })
+        let MonthStr = Info.row.order_name.replace(/[^0-9]+/g, '')
+        let MonthArray = []
+        let i=0
+        do {
+            MonthArray.push(MonthStr.slice(0+i*6,6+i*6))
+            i++
+        }
+        while (i<(MonthStr.length/6))
+        this.ModalInfo.Months = MonthArray
         this.ifShowModal = true
         this.ModalInfo.id = Info.row.id
         this.ModalInfo.order_no = Info.row.order_no
@@ -300,7 +369,7 @@ export default {
           start_time = this.start_time?timestampToFormatTime((this.start_time).getTime()):'',
           end_time = this.end_time?timestampToFormatTime((this.end_time).getTime()):'',
           month_name = this.month_name?(this.month_name).getMonth()+1:''
-      axios.get(R_PRE_URL+'/searchOrderList.do?member_id='+this.$store.state.userInfo.member_id+'&number='+number+'&status='+status+'&progress='+progress+'&start_time='+start_time+'&end_time='+end_time+'&month_name='+month_name+'&page_num='+ page_num
+      axios.get(R_PRE_URL+'/searchCompanyOrderList.do?member_id='+this.$store.state.userInfo.member_id+'&number='+number+'&status='+status+'&progress='+progress+'&start_time='+start_time+'&end_time='+end_time+'&month_name='+month_name+'&page_num='+ page_num
       ).then((res)=> {
         this.Total = res.data.orderCount
         let temp = res.data.arr

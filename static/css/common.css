@@ -25,6 +25,9 @@ html {
 @media screen (min-width:320x) and (max-width:767px){
   body{min-width: 100%;width:100%;background: red;}
 }*/
+.cursorPointer{
+  cursor: pointer;
+}
 .selfAdaptionWrap{
     display: flex;
     flex-direction:row;
@@ -83,6 +86,9 @@ html {
 }
 .marginT_20{
     margin-top: 20px;
+}
+.marginB_10{
+    margin-bottom: 10px;
 }
 .marginB_20{
     margin-bottom: 20px;

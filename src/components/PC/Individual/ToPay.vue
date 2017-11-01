@@ -1,87 +1,87 @@
 <template>
-  <div id="TopayI">
-    <!-- top -->
-    <h2>参保资料</h2>
-    <p class="securityInfo">参保人: {{NAME}}  参保城市：{{INSURED_AREA}}  户口性质：{{RESIDENCE}}<span @click="ToModifySecurityInfo"><Icon type="compose" size="18"></Icon></span></p>
-    <Table :columns="columnsHead" :loading="ifLoading" :data="dataOrder"></Table>
-    <Form>
-        <FormItem label="">
-            <Checkbox v-model="ifSecurityChoosed">社保代缴</Checkbox>
-        </FormItem>
-        <FormItem label="">
-            <Checkbox v-model="ifFundsChoosed">公积金代缴</Checkbox>
-        </FormItem>
-        <!-- <FormItem label="" v-if="ifFundsChoosed">
-            <RadioGroup v-model="ifJoined">
-                <Radio label="新参保">新参保</Radio>
-                <Radio label="曾参保">曾参保</Radio>
-            </RadioGroup>
-            <Input v-if="ifJoined == '曾参保'" v-model="OldEnterprise" placeholder="原参保公司名称" style="width: 300px"></Input>
-            <Input v-if="ifJoined == '曾参保'" v-model="FundsAccount" placeholder="公积金账号" style="width: 300px"></Input>
-        </FormItem> -->
-        <FormItem label="公积金代缴基数：" v-if="ifFundsChoosed" :label-width="150">
-          <Row>
-            <Col span="14">
-                <Input v-model="FundsBasic" disabled style="width: 80px"></Input>
-            </Col>
-          </Row>
-        </FormItem>
-        <FormItem label="公积金个人比例：" v-if="ifFundsChoosed" :label-width="150">
-          <Row>
-            <Col span="14">
-                <Input v-model="FundsU" icon="" disabled style="width: 80px"></Input>
-            </Col>
-          </Row>
-        </FormItem>
-        <FormItem label="公积金单位比例：" v-if="ifFundsChoosed" :label-width="150">
-          <Row>
-            <Col span="14">
-                <Input v-model="FundsI" icon="" disabled style="width: 80px"></Input>
-            </Col>
-          </Row>
-        </FormItem>
-    </Form>
-    <!-- Bottom -->
-    <h2>选择购买月份</h2>
-    <CheckboxGroup v-model="buyMonthList" class="monthList" @on-change="changeBuyMonth">
-        <Checkbox v-for="(Month,MonthIdx) in MonthList" :label="Month"></Checkbox>
-    </CheckboxGroup>
-    <div class="tipBlock">
-      <p>提示：每个月的15号为上海的社保增员截止日期，投保类型为当月缴当月</p>
-      <p style="text-indent: 36px">每个月的11号为上海的社保减员截止日期</p>
-      <p>提示：每个月的15号为上海的社保增员截止日期，投保类型为当月缴当月</p>
-      <p style="text-indent: 36px">每个月的11号为上海的社保减员截止日期</p>
+  <div>
+    <div id="TopayI" v-if="ifHasInfoAlready">
+      <!-- top -->
+      <h2>参保资料</h2>
+      <p class="securityInfo">参保人: {{NAME}}  参保城市：{{INSURED_AREA}}  户口性质：{{RESIDENCE}}<span @click="ToModifySecurityInfo"><Icon type="compose" size="18"></Icon></span></p>
+      <Table :columns="columnsHead" :loading="ifLoading" :data="dataOrder"></Table>
+      <Form>
+          <FormItem label="">
+              <Checkbox v-model="ifSecurityChoosed">社保代缴</Checkbox>
+          </FormItem>
+          <FormItem label="">
+              <Checkbox v-model="ifFundsChoosed">公积金代缴</Checkbox>
+          </FormItem>
+          <!-- <FormItem label="" v-if="ifFundsChoosed">
+              <RadioGroup v-model="ifJoined">
+                  <Radio label="新参保">新参保</Radio>
+                  <Radio label="曾参保">曾参保</Radio>
+              </RadioGroup>
+              <Input v-if="ifJoined == '曾参保'" v-model="OldEnterprise" placeholder="原参保公司名称" style="width: 300px"></Input>
+              <Input v-if="ifJoined == '曾参保'" v-model="FundsAccount" placeholder="公积金账号" style="width: 300px"></Input>
+          </FormItem> -->
+          <FormItem label="公积金代缴基数：" v-if="ifFundsChoosed" :label-width="150">
+            <Row>
+              <Col span="14">
+                  <Input v-model="FundsBasic" disabled style="width: 80px"></Input>
+              </Col>
+            </Row>
+          </FormItem>
+          <FormItem label="公积金个人比例：" v-if="ifFundsChoosed" :label-width="150">
+            <Row>
+              <Col span="14">
+                  <Input v-model="FundsU" icon="" disabled style="width: 80px"></Input>
+              </Col>
+            </Row>
+          </FormItem>
+          <FormItem label="公积金单位比例：" v-if="ifFundsChoosed" :label-width="150">
+            <Row>
+              <Col span="14">
+                  <Input v-model="FundsI" icon="" disabled style="width: 80px"></Input>
+              </Col>
+            </Row>
+          </FormItem>
+      </Form>
+      <!-- Bottom -->
+      <h2>选择购买月份</h2>
+      <CheckboxGroup v-model="buyMonthList" class="monthList" @on-change="changeBuyMonth">
+          <Checkbox v-for="(Month,MonthIdx) in MonthList" :label="Month"></Checkbox>
+      </CheckboxGroup>
+      <div class="tipBlock">
+        <p>提示：每个月的15号为上海的社保增员截止日期，投保类型为当月缴当月</p>
+        <p style="text-indent: 36px">每个月的11号为上海的社保减员截止日期</p>
+        <p>提示：每个月的15号为上海的社保增员截止日期，投保类型为当月缴当月</p>
+        <p style="text-indent: 36px">每个月的11号为上海的社保减员截止日期</p>
+      </div>
+      <div class="sumBlock">
+        <!-- 社保及公积金 -->
+        <div v-if="ifFundsChoosed && ifSecurityChoosed">
+          <h3>代收费用小计：<h2 class="colorRed" style="display: inline;">¥{{((total_securityI+total_securityU+FundsBasic*(FundsI+FundsU)+service_fee)*buyMonthList.length+material_fee).toFixed(2)}}</h2></h3>
+          <p>(社保：{{total_securityI+total_securityU}}元/月 + 公积金: {{FundsBasic*(FundsI+FundsU)}}元/月 )× {{buyMonthList.length}}月 + 服务费用：{{service_fee}}元/月/人 x {{buyMonthList.length}}月 + 其他费用：{{material_fee}}元</p>
+        </div>
+        <!-- 仅社保 -->
+        <div v-if="ifSecurityChoosed &&  !ifFundsChoosed">
+          <h3>代收费用小计：<h2 class="colorRed" style="display: inline;">¥{{((total_securityI+total_securityU+service_fee)*buyMonthList.length+material_fee).toFixed(2)}}</h2></h3>
+          <p>社保：{{total_securityI+total_securityU}}元/月 × {{buyMonthList.length}}月 + 服务费用：{{service_fee}}元/月/人 x {{buyMonthList.length}}月 + 其他费用：{{material_fee}}元</p>
+        </div>
+        <!-- 仅公积金 -->
+        <div v-if="!ifSecurityChoosed && ifFundsChoosed">
+          <h3>代收费用小计：<h2 class="colorRed" style="display: inline;">¥{{((FundsBasic*(FundsI+FundsU)+service_fee)*buyMonthList.length+material_fee).toFixed(2)}}</h2></h3>
+          <p>公积金：{{FundsBasic*(FundsI+FundsU)}}元/月 × {{buyMonthList.length}}月 + 服务费用：{{service_fee}}元/月/人 x {{buyMonthList.length}}月 + 其他费用：{{material_fee}}元</p>
+        </div>
+        <div v-if="!ifFundsChoosed && !ifSecurityChoosed">
+          <p>请选择要代缴的种类！</p>
+        </div>
+
+        <Alert closable  class="marginT_20">其他费用：{{material_fee}}</Alert>
+        <p class="colorRed">注：订单代收费用为预收取费用，若在代缴期间遇到社保政策变化导致的社保基数、比例调整，系统会自动生成补收或退款订单。</p>
+        <p class="colorRed">订单信息会以邮件的方式通知。在社保代缴期间，请注意查收您的邮箱。详情请咨询客服：400-0135-200</p>
+      </div>
+
+      <Button type="error" class="marginT_20" @click="toSubmitOrder">立即购买</Button>
     </div>
-    <div class="sumBlock">
-      <!-- 社保及公积金 -->
-      <div v-if="ifFundsChoosed && ifSecurityChoosed">
-        <h3>代收费用小计：<h2 class="colorRed" style="display: inline;">¥{{((total_securityI+total_securityU+FundsBasic*(FundsI+FundsU)+service_fee)*buyMonthList.length+material_fee).toFixed(2)}}</h2></h3>
-        <p>(社保：{{total_securityI+total_securityU}}元/月 + 公积金: {{FundsBasic*(FundsI+FundsU)}}元/月 )× {{buyMonthList.length}}月 + 服务费用：{{service_fee}}元/月/人 x {{buyMonthList.length}}月 + 其他费用：{{material_fee}}元</p>
-      </div>
-      <!-- 仅社保 -->
-      <div v-if="ifSecurityChoosed &&  !ifFundsChoosed">
-        <h3>代收费用小计：<h2 class="colorRed" style="display: inline;">¥{{((total_securityI+total_securityU+service_fee)*buyMonthList.length+material_fee).toFixed(2)}}</h2></h3>
-        <p>社保：{{total_securityI+total_securityU}}元/月 × {{buyMonthList.length}}月 + 服务费用：{{service_fee}}元/月/人 x {{buyMonthList.length}}月 + 其他费用：{{material_fee}}元</p>
-      </div>
-      <!-- 仅公积金 -->
-      <div v-if="!ifSecurityChoosed && ifFundsChoosed">
-        <h3>代收费用小计：<h2 class="colorRed" style="display: inline;">¥{{((FundsBasic*(FundsI+FundsU)+service_fee)*buyMonthList.length+material_fee).toFixed(2)}}</h2></h3>
-        <p>公积金：{{FundsBasic*(FundsI+FundsU)}}元/月 × {{buyMonthList.length}}月 + 服务费用：{{service_fee}}元/月/人 x {{buyMonthList.length}}月 + 其他费用：{{material_fee}}元</p>
-      </div>
-      <div v-if="!ifFundsChoosed && !ifSecurityChoosed">
-        <p>请选择要代缴的种类！</p>
-      </div>
 
-      <Alert closable  class="marginT_20">其他费用：{{material_fee}}</Alert>
-      <p class="colorRed">注：订单代收费用为预收取费用，若在代缴期间遇到社保政策变化导致的社保基数、比例调整，系统会自动生成补收或退款订单。</p>
-      <p class="colorRed">订单信息会以邮件的方式通知。在社保代缴期间，请注意查收您的邮箱。详情请咨询客服：400-0135-200</p>
-    </div>
-
-    <Button type="error" class="marginT_20" @click="toSubmitOrder">立即购买</Button>
-    
-
-    
-
+    <Alert v-else type="warning" show-icon><h3>请先填写参保资料! <a @click="ToModifySecurityInfo">去填写</a></h3></Alert>
   </div>
 </template>
 <script>
@@ -91,6 +91,7 @@ import {getOneYearMonth,removeByValue} from "../../../util/utils"
 export default {
   data() {
   return {
+    ifHasInfoAlready:false,
     ifLoading: true,
     NAME:'',
     INSURED_AREA:'',
@@ -145,10 +146,14 @@ export default {
     ).then((res)=> { 
       let MemberDetail = res.data.memberDetail
       if(!MemberDetail){
-        this.$Message.error('请先填写参保资料!')
-        console.log(this)
+        this.ifHasInfoAlready = false
+        //this.$Message.error('请先填写参保资料!')
+        this.$Notice.warning({
+            title: '请先填写参保资料!'
+        });
         return false
       }else{
+      this.ifHasInfoAlready = true
       let CityCode = MemberDetail.city
       this.NAME = MemberDetail.real_name || ''
       this.INSURED_AREA = MemberDetail.city_name|| ''
@@ -270,7 +275,6 @@ export default {
     //修改参保资料
     ToModifySecurityInfo(){
       this.$store.state.HRMenuCur = '参保资料'
-      alert(this.$store.state.HRMenuCur)
     },
     //选择月份获取服务费用、其他费用
     changeBuyMonth(){
@@ -294,6 +298,13 @@ export default {
         this.$Message.error('请选择代缴种类！')
         return
       }
+
+      //月份是否连续
+      if(!ifContinuity(DateSortASC(this.buyMonthList))){
+        this.$Message.error('参保的月份必须连续！')
+        return
+      }
+      
       let Amount =0
       let monthListStr=''
       this.buyMonthList.map(function(item,idx){

@@ -1,6 +1,6 @@
 <template>
-      <Modal v-model="ifDisMission" :mask-closable="false" @on-ok="ok"
-        @on-cancel="cancel" ok-text="确认离职">
+      <Modal v-model="ifDisMission" :mask-closable="false" @on-ok="Dismission"
+        @on-cancel="DismissionCancel" ok-text="确认离职">
         <p slot="header" style="text-align:left">
             <span>离职管理</span>
         </p>
@@ -84,11 +84,12 @@ export default {
   },
   methods: {
     changeDisMissionTime(event){
-      this.formDisMission.disMission_time = Moment(event).add('days',1)
+      this.formDisMission.disMission_time = event
     },
-     ok () {
-          this.$Message.info('Clicked ok')
+    Dismission() {
+          this.$Message.success('离职操作成功!')
           let DATA = this.formDisMission
+          console.log(DATA)
           // axios.post(R_PRE_URL+'/insertCompanyEmployee2.do',DATA
           // ).then((res)=> {
           //  }).catch((error)=> {
@@ -96,10 +97,9 @@ export default {
           // })
 
           //this.$emit('refreshData')  //返回刷新
-      },
-      cancel () {
-          // this.$Message.info('Clicked cancel');
-      }
+    },
+    DismissionCancel() {
+    }
    
   },
 };

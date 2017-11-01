@@ -39,18 +39,18 @@
       <Page v-if="dataOrder.length>0" class="marginT_20" :total="Total" show-total style="float: right;" :current="page_num" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer></Page>
       
       <!-- Modal -->
-      <Modal v-model="ifShowModal">
+      <Modal v-model="ifShowModal" :width="800">
         <p slot="header" style="text-align:left">
             <Icon type="ios-pricetags"></Icon>
             <span>社保云增值服务详细信息</span>
         </p>
         <div style="text-align:left">
-          <Row class="marginTB_10">
+          <Row class="marginB_10">
               <Col span="12"><span>订单号 ：</span><span>{{ModalInfo.order_no}}</span></Col>
               <Col span="12"><span>订单名称 ：</span><span>{{ModalInfo.order_name}}</span></Col>
               
           </Row>
-          <Row>
+          <Row class="marginB_10">
               <Col span="12"><span>订单金额 ：</span><span>￥{{ModalInfo.amount}}</span></Col>
               <Col span="12"><span>支付状态：</span><span>{{ModalInfo.status}}</span></Col>
           </Row>
