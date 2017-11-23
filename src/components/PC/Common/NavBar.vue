@@ -58,12 +58,13 @@ export default {
     .layout-logo{
         width: 220px;
         height: 75px;
-        background: #5b6270;
         float: left;
         position: relative;
         top: 0px;
         left: 20px;
-        background: url('http://sbyun.com/skins2/images/logo.png') no-repeat top center/contain;
+        background: url('http://sbyun.com/skins2/images/logo.png');
+        background-size: contain;
+        background-repeat: no-repeat;
     }
     .layout-nav{
         width:auto;

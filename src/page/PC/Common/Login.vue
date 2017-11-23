@@ -1,9 +1,30 @@
 <template>
- <div id="Login" style="min-width: 1150px;min-height: 600px;padding: 20px;background:url('http://sbyun.com/skins2/images/login-banner.jpg')  no-repeat top center/cover;">
+ <div id="Login" style="min-width: 1150px;min-height: 600px;padding: 20px;">
    <div class="LoginBox">
-        <Card :bordered="false">
-            <p slot="title">No border title</p>
-            <p>Content of no border type. Content of no border type. Content of no border type. Content of no border type. </p>
+        <Card :bordered="false" :dis-hover="false">
+            <p slot="title">用户登录</p>
+             <p>
+               <Form ref="formLogin" :model="formLogin" :rules="ruleInline" :inline="false">
+                  <FormItem prop="UserName">
+                      <Input type="text" v-model="formLogin.UserName" placeholder="用户名">
+                          <Icon type="person" slot="prepend"></Icon>
+                      </Input>
+                  </FormItem>
+                  <FormItem prop="UserPsd">
+                      <Input type="password" v-model="formLogin.UserPsd" placeholder="密码">
+                          <Icon type="locked" slot="prepend"></Icon>
+                      </Input>
+                  </FormItem>
+                  <FormItem label="记住密码" prop="ifRemmberPsd">
+                    <Checkbox label="记住密码" v-model="ifRemmberPsd"></Checkbox>
+                    <Button type="text" style="float: right;">忘记密码</Button>
+                  </FormItem>
+                  
+                  <FormItem>
+                      <Button type="primary" @click="handleSubmit('formLogin')">登录</Button>
+                  </FormItem>
+              </Form>
+             </p>
         </Card>
     </div>
     </div>
@@ -14,7 +35,24 @@ import axios from 'axios'
 export default {
   data() {
   return {
-    value2: 0
+    ifRemmberPsd:localStorage.getItem("user_remember")?true : false,
+    formLogin: {
+        UserName:localStorage.getItem("user_remember")?localStorage.getItem("user_name") : '',
+        UserPsd:localStorage.getItem("user_remember")?localStorage.getItem("user_psd") : ''
+    },
+    ruleInline: {
+        UserName: [
+            { required: true, message: '请输入用户名', trigger: 'blur' }
+        ],
+        UserPsd: [
+            { required: true, message: '请输入密码.', trigger: 'blur' },
+            // { type: 'string', min: 1, message: '密码不能少于6位', trigger: 'blur' }
+        ],
+        // ifRemmberPsd: [
+        //     { required: false, type: 'Boolean', message: '', trigger: 'change' }
+            
+        // ],
+    }
   }
   },
   mounted: function(){
@@ -34,11 +72,55 @@ export default {
   watch:{
   },
   methods: {
+    handleSubmit(name) {
+        this.$refs[name].validate((valid) => {
+            if (valid) {
+                this.$Message.success('登录成功!');
+            } else {
+                this.$Message.error('请输入正确的用户名和密码!');
+            }
+        })
+        this.LoginIn(this.formLogin.UserName,this.formLogin.UserPsd)
+
+    },
+    LoginIn(NAME,PSD){
+      axios.get(R_PRE_URL+'/login.do?mobile='+NAME+'&psw='+PSD
+      ).then((res)=> {
+        switch(res.data.result){
+          case "2":
+          localStorage.setItem("user_name",this.formLogin.UserName)
+          if(this.ifRemmberPsd){
+            localStorage.setItem("user_psd",this.formLogin.UserPsd)
+            localStorage.setItem("user_remember",true)
+          }
+          localStorage.setItem("member_id",res.data.member_id)
+          this.$store.state.userInfo.username = this.formLogin.UserName
+          this.$store.state.userInfo.member_id = res.data.member_id
+          this.$store.state.ifLogined = true
+          this.$router.push({name:'首页'})
+          break;
+          case "3":
+          this.$Message.success('手机号不存在!');
+          break;
+          case "4":
+          this.$Message.success('密码不正确!');
+          break;
+          default:
+          this.$Message.success('登录失败!');
+        }
+      }).catch((error)=> {
+        console.log(error)
+      })
+    },
   }
 };
 </script>
 <style lang="scss" scoped>
 #Login{
+  background: url('http://sbyun.com/skins2/images/login-banner.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  
   .LoginBox{
     padding: 25px;
     position: absolute;

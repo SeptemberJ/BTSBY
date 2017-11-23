@@ -4,6 +4,8 @@ import Store from '../store/store'
 import App from '../app'
 import Index from '../page/Index/Index'
 import Login from '../page/PC/Common/Login'
+import Sign from '../page/PC/Common/Sign'
+import HRBackSystemI from '../page/PC/Individual/HRBackSystemI'
 import {deviceInfo} from "../util/device"
 
 Vue.use(VueRouter)
@@ -15,6 +17,8 @@ const routes = [
     children: [
     {path: '/Index', name: '首页', component: Index},
     {path: '/Login', name: '登录', component: Login},
+    {path: '/Sign', name: '注册', component: Sign},
+    {path: '/HRBackSystemI', name: 'HR管理后台(个人)', component: HRBackSystemI},
       {path:'*', redirect: '/Index'}
       // {path: '/article/:id', name: 'article', component: Article},
     ]
