@@ -272,7 +272,7 @@ export default {
     //提交订单
     toSubmitOrder(){
       if(!this.ifFundsChoosed && !this.ifSecurityChoosed){
-        alert('都没选！')
+        this.$Message.error('请选择代缴种类！')
         return
       }
       let Amount =0
@@ -294,7 +294,7 @@ export default {
       }
       let monthObjList =[]
       this.buyMonthList.map(function(item,idx){
-        let obj = {'pay_month':item}
+        let obj = {'pay_month':item.replace("-","")}
         monthObjList.push(obj)
       })
 
@@ -306,7 +306,7 @@ export default {
         'member_id':this.$store.state.userInfo.member_id,
         'insurance_detail_id':this.securityID,
         'city':this.INSURED_AREA,
-        'order_month':monthListStr,
+        'order_month':'',//monthListStr
         'pay_type':Pay_type,
         'sbEntryList':monthObjList,
         'gjjEntryList':monthObjList
@@ -315,6 +315,14 @@ export default {
 
       axios.post(R_PRE_URL+'/insertOrder.do',orderInfo
       ).then((res)=> {
+        switch(res.data.result){
+          case '2':
+          this.$Message.success('下单成功!')
+          break;
+          case '0':
+          this.$Message.error(res.data.message+':'+res.data.detail)
+          break;
+        }
         console.log(res)
       }).catch((error)=> {
         console.log(error)

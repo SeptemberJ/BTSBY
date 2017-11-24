@@ -102,13 +102,13 @@ export default {
           this.$router.push({name:'首页'})
           break;
           case "3":
-          this.$Message.success('手机号不存在!');
+          this.$Message.error('手机号不存在!');
           break;
           case "4":
-          this.$Message.success('密码不正确!');
+          this.$Message.error('密码不正确!');
           break;
           default:
-          this.$Message.success('登录失败!');
+          this.$Message.error('登录失败!');
         }
       }).catch((error)=> {
         console.log(error)
