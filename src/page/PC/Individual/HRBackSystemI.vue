@@ -5,11 +5,13 @@
                 <Col span="5">
                   <SideBar v-on:SideMenu-click="listenFromSideMenu"></SideBar>
                 </Col>
-                <Col span="19">
+                <Col span="19" style="border-left: 1px solid #ddd;">
                     <div class="layout-content-main">
+                      <Myorder v-if="curMneu == '我的订单'"></Myorder>
                       <BasicInfo v-if="curMneu == '基本资料'"></BasicInfo>
                       <InsuredInfo v-if="curMneu == '参保资料'"></InsuredInfo>
                       <AccountSafe v-if="curMneu == '账号安全'"></AccountSafe>
+                      <ToPay v-if="curMneu == '购买社保'"></ToPay>
                      
                     </div>
                 </Col>
@@ -22,13 +24,15 @@
 import Vue from 'vue'
 import axios from 'axios'
 import SideBar from '../../../components/PC/Individual/SideBar.vue'
+import Myorder from '../../../components/PC/Individual/Myorder.vue'
 import BasicInfo from '../../../components/PC/Individual/BasicInfo.vue'
 import InsuredInfo from '../../../components/PC/Individual/InsuredInfo.vue'
 import AccountSafe from '../../../components/PC/Individual/AccountSafe.vue'
+import ToPay from '../../../components/PC/Individual/ToPay.vue'
 export default {
   data() {
   return {
-    curMneu:'参保资料'
+    curMneu:'我的订单'
     
   }
   },
@@ -50,9 +54,11 @@ export default {
   },
   components: {
       SideBar,
+      Myorder,
       BasicInfo,
       InsuredInfo,
-      AccountSafe
+      AccountSafe,
+      ToPay
 
   },
   methods: {

@@ -75,12 +75,13 @@ export default {
     handleSubmit(name) {
         this.$refs[name].validate((valid) => {
             if (valid) {
-                this.$Message.success('登录成功!');
+              this.LoginIn(this.formLogin.UserName,this.formLogin.UserPsd)
+                
             } else {
                 this.$Message.error('请输入正确的用户名和密码!');
             }
         })
-        this.LoginIn(this.formLogin.UserName,this.formLogin.UserPsd)
+        
 
     },
     LoginIn(NAME,PSD){
@@ -97,6 +98,7 @@ export default {
           this.$store.state.userInfo.username = this.formLogin.UserName
           this.$store.state.userInfo.member_id = res.data.member_id
           this.$store.state.ifLogined = true
+          this.$Message.success('登录成功!');
           this.$router.push({name:'首页'})
           break;
           case "3":
