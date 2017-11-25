@@ -2,6 +2,11 @@
     <Carousel id="Carousel" v-model="value2" loop height="auto">
         <CarouselItem>
             <div class="demo-carousel">
+                <img src="http://sbyun.com/skins2/images/BANNER-1.jpg">
+            </div>
+        </CarouselItem>
+        <CarouselItem>
+            <div class="demo-carousel">
                 <img src="http://sbyun.com/skins2/images/BANNER-4.jpg">
             </div>
         </CarouselItem>
