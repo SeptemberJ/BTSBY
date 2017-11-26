@@ -6,11 +6,11 @@
         <div id="Pwrap" v-else>
           <Carousel></Carousel>
           <CommonThree></CommonThree>
-          <ImgBar></ImgBar>
-          <TMBPart></TMBPart>
-          <ImgTwoColumn></ImgTwoColumn>
-          <NewsPart  :IndexInfor="IndexInfor"></NewsPart>
-          <Partner></Partner>
+          <ImgBar :Infor="IndexInfor.experience"></ImgBar>
+          <TMBPart :Infor="IndexInfor.customer"></TMBPart>
+          <ImgTwoColumn :Infor="IndexInfor.compare"></ImgTwoColumn>
+          <NewsPart  :Infor="IndexInfor.news"></NewsPart>
+          <Partner :Infor="IndexInfor.partner"></Partner>
         </div>
     </div>
 </template>
@@ -38,6 +38,7 @@ import Partner from '../../components/PC/Common/Partner'
     axios.get(PRE_URL+'static/json/Index.json'
       ).then((res)=> {
         this.IndexInfor = res.data
+        console.log(this.IndexInfor)
     }).catch((error)=> {
       console.log(error)
     })

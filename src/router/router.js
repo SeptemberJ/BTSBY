@@ -5,6 +5,10 @@ import App from '../app'
 import Index from '../page/Index/Index'
 import Login from '../page/PC/Common/Login'
 import Sign from '../page/PC/Common/Sign'
+import Individual from '../page/PC/Common/Individual'
+import Enterprise from '../page/PC/Common/Enterprise'
+import News from '../page/PC/Common/News'
+import AboutUs from '../page/PC/Common/AboutUs'
 import HRBackSystemI from '../page/PC/Individual/HRBackSystemI'
 import {deviceInfo} from "../util/device"
 
@@ -18,6 +22,13 @@ const routes = [
     {path: '/Index', name: '首页', component: Index},
     {path: '/Login', name: '登录', component: Login},
     {path: '/Sign', name: '注册', component: Sign},
+    {path: '/Individual', name: '个人保', component: Individual},
+    {path: '/Enterprise', name: '企业保', component: Enterprise},
+    {path: '/News', name: '社保资讯', component: News},
+    {path: '/AboutUs', name: '关于我们', component: AboutUs},
+
+    
+    
     {path: '/HRBackSystemI', name: 'HR管理后台(个人)', component: HRBackSystemI},
       {path:'*', redirect: '/Index'}
       // {path: '/article/:id', name: 'article', component: Article},

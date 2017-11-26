@@ -10,8 +10,8 @@
               </Col>
               <Col span="12" class="ContRight">
                 <Button type="text" v-if="ifLogined?true:false" @click="GoHR">HR管理后台</Button>
-                <Button type="text">社保资讯</Button>
-                <Button type="text">帮助</Button>
+                <Button type="text" @click="GoNews">社保资讯</Button>
+                <!-- <Button type="text">帮助</Button> -->
               </Col>
           </Row>
       </div>
@@ -52,7 +52,10 @@ export default {
   },
   methods: {
     GoHR(){
-      this.$router.push({name:'HR管理后台'});
+      this.$router.push({name:'HR管理后台(个人)'});
+    },
+    GoNews(){
+      this.$router.push({name:'社保资讯'});
     },
     ToLogin(){
       this.$router.push({name:'登录'});

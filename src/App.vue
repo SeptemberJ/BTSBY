@@ -12,7 +12,7 @@
           </transition>
         </div>
         <div class="layout-copy">
-            2011-2016 &copy; TalkingData
+            <FooterPart></FooterPart>
         </div>
     </div>
 
@@ -26,6 +26,7 @@
 import TopBlock from 'components/PC/Common/TopBlock'
 import NavBar from 'components/PC/Common/NavBar'
 import Carousel from 'components/PC/Common/Carousel'
+import FooterPart from 'components/PC/Common/FooterPart'
   export default{
     data: function () {
       return {
@@ -47,7 +48,8 @@ import Carousel from 'components/PC/Common/Carousel'
     components: {
       TopBlock,
       NavBar,
-      Carousel
+      Carousel,
+      FooterPart
       
 
     },

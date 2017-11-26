@@ -2,23 +2,23 @@
     <div id="NewsPart">
       <Row>
         <Col span="24" class="marginTB_40">
-          <h2 class="TextCenter">{{IndexInfor.news.tits.BigTit}}</h2>
-          <p class="TextCenter">{{IndexInfor.news.tits.SmallTit}}</p>
+          <h2 class="TextCenter">{{Infor.tit.BigTit}}</h2>
+          <p class="TextCenter">{{Infor.tits.SmallTit}}</p>
         </Col>
         <Col span="24">
           <Row>
             <Col span="8">
               <Card :bordered="false" dis-hover>
                 <div style="text-align:left">
-                    <img :src="IndexInfor.news.contents.oneNews.img" alt="图片">
-                    <h3 class="marginTB_10">{{IndexInfor.news.contents.oneNews.tit}}</h3>
-                    <p>{{IndexInfor.news.contents.oneNews.abstract}}</p>
+                    <img :src="Infor.contents.oneNews.img" alt="图片">
+                    <h3 class="marginTB_10">{{Infor.contents.oneNews.tit}}</h3>
+                    <p>{{Infor.contents.oneNews.abstract}}</p>
                 </div>
               </Card>
             </Col>
             <Col span="16">
               <Row>
-                <Col class="marginT_10" span="12" v-for="(NewsKind,NewsKindIdx) in IndexInfor.news.contents.newsList">
+                <Col class="marginT_10" span="12" v-for="(NewsKind,NewsKindIdx) in Infor.contents.newsList">
                   <Card style="width:350px">
                     <p slot="title">
                         <Icon type="ios-film-outline"></Icon>
@@ -55,14 +55,13 @@
 import Vue from 'vue'
 import axios from 'axios'
 export default {
-  props:['IndexInfor'],
+  props:['Infor'],
   data() {
   return {
     // IndexInfor:{}
   }
   },
   created() {
-    console.log(this.IndexInfor)
     // axios.get(PRE_URL+'static/json/Index.json'
     //   ).then((res)=> {
     //     this.IndexInfor = res.data

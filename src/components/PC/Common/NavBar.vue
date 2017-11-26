@@ -1,21 +1,21 @@
 <template>
  <div class="layout">
-        <Menu mode="horizontal" active-name="1">
+        <Menu mode="horizontal" :active-name="activeRoute" @on-select="tabChange">
             <div class="layout-logo"></div>
             <div class="layout-nav">
-                <MenuItem name="1">
+                <MenuItem name="首页">
                     首页
                 </MenuItem>
-                <MenuItem name="2">
+                <MenuItem name="个人保">
                     个人保
                 </MenuItem>
-                <MenuItem name="3">
+                <MenuItem name="企业保">
                     企业保
                 </MenuItem>
-                <MenuItem name="4">
+                <MenuItem name="社保资讯">
                     社保资讯
                 </MenuItem>
-                <MenuItem name="5">
+                <MenuItem name="关于我们">
                     关于我们
                 </MenuItem>
             </div>
@@ -42,11 +42,17 @@ export default {
   
   },
   computed: {
+    activeRoute(){
+      return this.$store.state.activeRoute
+    }
     
   },
   watch:{
   },
   methods: {
+    tabChange(event){
+      this.$router.push({name:event});
+    }, 
   }
 };
 </script>

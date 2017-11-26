@@ -1,23 +1,14 @@
 <template>
-    <div id="Partner">
+    <div id="OnlyImg">
       <Row>
         <Col span="24" class="marginTB_40">
           <h2 class="TextCenter">{{Infor.tits.BigTit}}</h2>
           <p class="TextCenter">{{Infor.tits.SmallTit}}</p>
         </Col>
-        <Col span="24">
-          <Row>
-            <Col span="4" v-for="(Content,ContentIdx) in Infor.contents">
-              <Card :bordered="false" dis-hover>
-                <div style="text-align:center">
-                    <img :src="Content.logo" alt="图片">
-                    <p>{{Content.name}}</p>
-                </div>
-              </Card>
-            </Col>
-          </Row>
+        <Col span="24" v-for="(Content,ContentIdx) in Infor.contents" class="TextCenter"> 
+          <img :src="Content">
         </Col>
-    </Row>
+      </Row>
     </div> 
 </template>
 <script>
@@ -27,11 +18,10 @@ export default {
   props:['Infor'],
   data() {
   return {
-    //IndexInfor:{}
+    // IndexInfor:{}
   }
   },
   created() {
-    console.log(this.Infor)
     // axios.get(PRE_URL+'static/json/Index.json'
     //   ).then((res)=> {
     //     this.IndexInfor = res.data
@@ -54,7 +44,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-#Partner{
+#OnlyImg{
   width: 80%;
   margin: 0 auto;
 }
