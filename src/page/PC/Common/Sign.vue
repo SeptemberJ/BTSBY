@@ -110,7 +110,7 @@ import {generateMixed} from "../../../util/utils"
 export default {
   data() {
   return {
-    NavCur:2,
+    NavCur:0,
     timerCount:"获取验证码",
     disabled:false,
     

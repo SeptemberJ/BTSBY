@@ -37,7 +37,7 @@
             <span>社保云增值服务详细信息</span>
         </p>
         <div style="text-align:left">
-          <Row>
+          <Row class="marginTB_10">
               <Col span="12"><span>投保地名称 ：</span><span>{{ModalInfo.city_name}}</span></Col>
               <Col span="12"><span>服务险种名称 ：</span><span>{{ModalInfo.s_name}}</span></Col>
               
@@ -45,6 +45,11 @@
           <Row>
               <Col span="12"><span>服务事项 ：</span><span>{{ModalInfo.service_items}}</span></Col>
               <Col span="12"><span>办理方式：</span><span>{{ModalInfo.way}}</span></Col>
+          </Row>
+          <Row class="marginTB_10" style="border-top: 1px solid #ddd;">
+              <Col span="24" class="marginTB_10"><span><b>客户本人需提供资料 ：</b></span><span>{{ModalInfo.personal_info}}</span></Col>
+              <Col span="24" class="marginTB_10"><span><b>服务公司需提供资料 ：</b></span><span>{{ModalInfo.company_info}}</span></Col>
+              <Col span="24" class="marginTB_10"><span><b>办理步骤 ：</b></span><span>{{ModalInfo.process_steps}}</span></Col>
           </Row>
             <!-- <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" >
               <FormItem label="投保地名称 ：" prop="name">
@@ -75,7 +80,10 @@ export default {
       city_name:'',
       s_name:'',
       service_items:'',
-      way:''
+      way:'',
+      personal_info:'',
+      company_info:'',
+      process_steps:''
     },
     cityList:[],
     serviceKindList:[],
@@ -213,7 +221,11 @@ export default {
       this.ModalInfo.city_name = rowInfo.city_name
       this.ModalInfo.s_name = rowInfo.s_name
       this.ModalInfo.service_items = rowInfo.service_items
-       this.ModalInfo.way = rowInfo.management_mode == 0?'均可办理':(rowInfo.management_mode == 1?'只可自行办理':'委托办理')
+      this.ModalInfo.way = rowInfo.management_mode == 0?'均可办理':(rowInfo.management_mode == 1?'只可自行办理':'委托办理')
+      this.ModalInfo.personal_info = rowInfo.personal_info
+      this.ModalInfo.company_info = rowInfo.company_info
+       
+      this.ModalInfo.process_steps = rowInfo.process_steps
       // this.ModalInfo.way = (rowInfo.management_mode == 0?'均可办理':(rowInfo.management_mode==1)?:'只可自行办理':'委托办理')
         // this.$Modal.info({
         //     title: 'User Info',
