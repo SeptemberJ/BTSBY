@@ -16,6 +16,8 @@ const store = new Vuex.Store({
     ifLogined:(localStorage.getItem("member_id"))?true : false,
     loading:false,
     activeRoute:'首页', //导航显示路由名字
+    newsKind:'1',
+    newsPage:1,
     isMobile:'',
     toast:{
         ifShow:false, //显示

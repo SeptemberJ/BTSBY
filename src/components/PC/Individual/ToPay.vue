@@ -3,7 +3,7 @@
     <!-- top -->
     <h2>参保资料</h2>
     <p class="securityInfo">参保人: {{NAME}}  参保城市：{{INSURED_AREA}}  户口性质：{{RESIDENCE}}<Icon type="edit"/></p>
-    <Table :loading="loading" :columns="columnsHead" :data="dataOrder"></Table>
+    <Table :columns="columnsHead" :loading="ifLoading" :data="dataOrder"></Table>
     <Form>
         <FormItem label="">
             <Checkbox v-model="ifSecurityChoosed">社保代缴</Checkbox>
@@ -91,7 +91,7 @@ import {getOneYearMonth,removeByValue} from "../../../util/utils"
 export default {
   data() {
   return {
-    loading: false,
+    ifLoading: true,
     NAME:'',
     INSURED_AREA:'',
     RESIDENCE:'',
@@ -226,10 +226,14 @@ export default {
                       }
                       
                   ] 
+                  
+                  this.ifLoading = false
 
       }).catch((error)=> {
         console.log(error)
       })
+
+
 
     }).catch((error)=> {
       console.log(error)

@@ -8,6 +8,7 @@ import Sign from '../page/PC/Common/Sign'
 import Individual from '../page/PC/Common/Individual'
 import Enterprise from '../page/PC/Common/Enterprise'
 import News from '../page/PC/Common/News'
+import NewsDetail from '../page/PC/Common/NewsDetail'
 import AboutUs from '../page/PC/Common/AboutUs'
 import HRBackSystemI from '../page/PC/Individual/HRBackSystemI'
 import {deviceInfo} from "../util/device"
@@ -25,6 +26,7 @@ const routes = [
     {path: '/Individual', name: '个人保', component: Individual},
     {path: '/Enterprise', name: '企业保', component: Enterprise},
     {path: '/News', name: '社保资讯', component: News},
+    {path: '/NewsDetail/:id', name: '资讯详情', component: NewsDetail},
     {path: '/AboutUs', name: '关于我们', component: AboutUs},
 
     

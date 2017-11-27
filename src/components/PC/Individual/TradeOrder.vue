@@ -46,14 +46,8 @@ export default {
   }
   },
   created(){
-    // axios.get(R_PRE_URL+'/searchOrderList.do?member_id='+this.$store.state.userInfo.member_id
+    // axios.get(R_PRE_URL+'/checkOrderMonth.do?member_id='+this.$store.state.userInfo.member_id
     //   ).then((res)=> {
-    //     let temp = res.data.arr
-    //     temp.map((item,idx)=>{
-    //       item.pay_time = timestampToFormatTime(item.pay_time.time)
-    //     })
-    //     this.dataOrder = temp
-    //     console.log(this.dataOrder)
 
     //   }).catch((error)=> {
     //     console.log(error)

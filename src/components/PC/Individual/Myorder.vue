@@ -30,7 +30,7 @@
         <span><Button type="primary" icon="ios-search">搜索</Button></span> -->
       </h3>
       <!-- table -->
-      <Table class="marginT_20" border :columns="columns5" :data="dataOrder"></Table>
+      <Table class="marginT_20" border :columns="columns5" :loading="ifLoading" :data="dataOrder"></Table>
       
     </div>
 </template>
@@ -41,7 +41,7 @@ import {timestampToFormatTime} from '../../../util/utils'
 export default {
   data() {
   return {
-    model1: '',
+    ifLoading:true,
     cityList: [
             {
                 value: 'New York',
@@ -84,19 +84,24 @@ export default {
                         render: (h, params) => {
                             return h('div', [
                                 h('Button', {
+                                    // class: {
+                                    //   foo: true,
+                                    //   bar: false
+                                    // },
                                     props: {
                                         type: 'primary',
                                         size: 'small'
                                     },
                                     style: {
-                                        marginRight: '5px'
+                                        marginRight: '5px',
+                                        display:this.dataOrder[params.index].status == '待支付'?'':'none'
                                     },
                                     on: {
                                         click: () => {
                                             this.show(params.index)
                                         }
                                     }
-                                }, 'View'),
+                                }, '支付'),
                                 h('Button', {
                                     props: {
                                         type: 'error',
@@ -107,7 +112,7 @@ export default {
                                             this.remove(params.index)
                                         }
                                     }
-                                }, 'Delete')
+                                }, '取消')
                             ]);
                         }
                           
@@ -123,10 +128,47 @@ export default {
       ).then((res)=> {
         let temp = res.data.arr
         temp.map((item,idx)=>{
+          switch(item.status){
+            case '0':
+            item.status = '待支付'
+            break;
+            case '1':
+            item.status = '已支付'
+            break;
+            case '2':
+            item.status = '支付成功'
+            break;
+            case '3':
+            item.status = '支付失败'
+            break;
+          }
+          switch(item.progress){
+            case '0':
+            item.progress = '订单待支付'
+            break;
+            case '1':
+            item.progress = '已支付待确认'
+            break;
+            case '2':
+            item.progress = '已确认支付成功'
+            break;
+            case '3':
+            item.progress = '未支付成功'
+            break;
+            case '4':
+            item.progress = '订单已处理'
+            break;
+            case '5':
+            item.progress = '订单完成'
+            break;
+            case '6':
+            item.progress = '订单已取消'
+            break;
+          }
           item.pay_time = timestampToFormatTime(item.pay_time.time)
+          this.ifLoading = false
         })
         this.dataOrder = temp
-        console.log(this.dataOrder)
 
       }).catch((error)=> {
         console.log(error)

@@ -5,14 +5,14 @@
           <Icon type="ios-paper" size="24"></Icon>
           社保公积金缴费记录
         </span>
-        <!-- <span>
+        <span style="float: right;">
           缴纳年份
-          <DatePicker type="year" placeholder="请选择" style="width: 100px"></DatePicker>
+          <DatePicker type="year" placeholder="请选择" style="width: 100px" v-model="Year" @on-change="YearChange"></DatePicker>
+          <Button type="primary" icon="ios-search" @click="searchRecord">搜索</Button>
         </span>
-        <span><Button type="primary" icon="ios-search">搜索</Button></span> -->
       </h3>
       <!-- table -->
-      <Table class="marginT_20" border :columns="columns5" :data="dataOrder"></Table>
+      <Table class="marginT_20" border :columns="columns5" :loading="ifLoading" :data="dataOrder"></Table>
       
     </div>
 </template>
@@ -23,7 +23,8 @@ import {timestampToFormatTime} from '../../../util/utils'
 export default {
   data() {
   return {
-    model1: '',
+    ifLoading:true,
+    Year:new Date(),
     cityList: [
             {
                 value: 'New York',
@@ -38,15 +39,15 @@ export default {
             },
             {
                 title: '缴纳月份',
-                key: 'payMonth',
+                key: 'pay_month',
             },
             {
                 title: '社保',
-                key: 'security',
+                key: 'sb_status',
             },
             {
                 title: '公积金',
-                key: 'funds'
+                key: 'gjj_status'
             },
             {
                 title: '操作',
@@ -85,30 +86,14 @@ export default {
                           
             }
         ],
-        dataOrder: [
-                {
-                  'payMonth':'201701',
-                  'security':'未投保',
-                  'funds':'未投保'
-                }
-        ]
+        dataOrder: []
 
     
   }
   },
   created(){
-    // axios.get(R_PRE_URL+'/searchOrderList.do?member_id='+this.$store.state.userInfo.member_id
-    //   ).then((res)=> {
-    //     let temp = res.data.arr
-    //     temp.map((item,idx)=>{
-    //       item.pay_time = timestampToFormatTime(item.pay_time.time)
-    //     })
-    //     this.dataOrder = temp
-    //     console.log(this.dataOrder)
-
-    //   }).catch((error)=> {
-    //     console.log(error)
-    //   })
+    this.getData(this.Year)
+    
   },
   mounted: function(){
     
@@ -128,6 +113,76 @@ export default {
     },
     remove (index) {
         //this.data6.splice(index, 1);
+    },
+    YearChange(YEAR){
+       this.Year = YEAR
+    },
+    searchRecord(){
+      if(!this.Year){
+        this.$Message.error('请选择缴纳年份!')
+        return false
+      }
+       this.getData(this.Year)
+    },
+    //获取记录
+    getData(YEAR){
+      this.ifLoading = true
+      const OnlyYear = (typeof YEAR == 'string')?YEAR:YEAR.getFullYear()
+      const DATA = {
+                  "member_id":this.$store.state.userInfo.member_id,
+                  entryList:[
+                    {pay_month:OnlyYear+"01"},
+                    {pay_month:OnlyYear+"02"},
+                    {pay_month:OnlyYear+"03"},
+                    {pay_month:OnlyYear+"04"},
+                    {pay_month:OnlyYear+"05"},
+                    {pay_month:OnlyYear+"06"},
+                    {pay_month:OnlyYear+"07"},
+                    {pay_month:OnlyYear+"08"},
+                    {pay_month:OnlyYear+"09"},
+                    {pay_month:OnlyYear+"10"},
+                    {pay_month:OnlyYear+"11"},
+                    {pay_month:OnlyYear+"12"},
+                   ]
+                }
+    axios.post(R_PRE_URL+'/checkOrderMonth.do?',DATA
+    ).then((res)=> {
+      let temp = res.data.orderMonthList
+      temp.map((Item,Idx)=>{
+        switch(Item.sb_status){
+            case 0:
+            Item.sb_status = '待支付'
+            break;
+            case 1:
+            Item.sb_status = '已支付'
+            break;
+            case 9:
+            Item.sb_status = '未投保'
+            break;
+            default:
+            Item.sb_status = '其他'
+          }
+        switch(Item.gjj_status){
+            case 0:
+            Item.gjj_status = '待支付'
+            break;
+            case 1:
+            Item.gjj_status = '已支付'
+            break;
+            case 9:
+            Item.gjj_status = '未投保'
+            break;
+            default:
+            Item.gjj_status = '其他'
+          }
+
+      })
+      this.dataOrder = temp
+      this.ifLoading = false
+    }).catch((error)=> {
+      console.log(error)
+    })
+
     }
    
   },

@@ -38,7 +38,6 @@ import Partner from '../../components/PC/Common/Partner'
     axios.get(PRE_URL+'static/json/Index.json'
       ).then((res)=> {
         this.IndexInfor = res.data
-        console.log(this.IndexInfor)
     }).catch((error)=> {
       console.log(error)
     })
