@@ -32,10 +32,41 @@
         </span>
       </h3>
       <!-- table -->
-      <Table class="marginT_20" border :columns="columns5" :loading="ifLoading" :data="dataOrder"></Table>
+      <Table class="marginT_20" border highlight-row :columns="myOrderList" :loading="ifLoading" :data="dataOrder"></Table>
 
       <Page class="marginT_20" :total="Total" show-total style="float: right;" :current="page_num" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer></Page>
       
+            <!-- Modal -->
+      <Modal v-model="ifShowModal">
+        <p slot="header" style="text-align:left">
+            <Icon type="ios-pricetags"></Icon>
+            <span>社保云增值服务详细信息</span>
+        </p>
+        <div style="text-align:left">
+          <Row class="marginTB_10">
+              <Col span="12"><span>订单号 ：</span><span>{{ModalInfo.order_no}}</span></Col>
+              <Col span="12"><span>订单名称 ：</span><span>{{ModalInfo.order_name}}</span></Col>
+              
+          </Row>
+          <Row>
+              <Col span="12"><span>订单金额 ：</span><span>￥{{ModalInfo.amount}}</span></Col>
+              <Col span="12"><span>支付状态：</span><span>{{ModalInfo.status}}</span></Col>
+          </Row>
+          <Row>
+              <Col span="12"><span>服务内容 ：</span><span>{{ModalInfo.pay_type_T}}</span></Col>
+              <Col span="12"><span>代缴月份：</span><span>{{}}</span></Col>
+          </Row>
+          <!-- <Row class="marginTB_10" style="border-top: 1px solid #ddd;">
+              <Col span="24" class="marginTB_10"><span><b>客户本人需提供资料 ：</b></span><span>{{ModalInfo.personal_info}}</span></Col>
+              <Col span="24" class="marginTB_10"><span><b>服务公司需提供资料 ：</b></span><span>{{ModalInfo.company_info}}</span></Col>
+              <Col span="24" class="marginTB_10"><span><b>办理步骤 ：</b></span><span>{{ModalInfo.process_steps}}</span></Col>
+          </Row> -->
+        </div>
+        <div slot="footer" style="text-align: center;">
+            <Button type="primary" size="large" :loading="modal_loading" @click="pinterExl"><Icon type="printer"></Icon>导出订单数据</Button>
+        </div>
+      </Modal>
+
     </div>
 </template>
 <script>
@@ -45,6 +76,8 @@ import {timestampToFormatTime} from '../../../util/utils'
 export default {
   data() {
   return {
+    ifShowModal:false,
+    modal_loading: false,
     ifLoading:false,
     Total:0,
     page_num:1,  //页数
@@ -54,6 +87,15 @@ export default {
     start_time:'',
     end_time:'',
     month_name:'',
+    ModalInfo:{
+      id:'',
+      order_no:'',
+      order_name:'',
+      amount:'',
+      status:'',
+      pay_type:'',
+      pay_type_T:''
+    },
     statusList: [
             {
                 value: '-1',
@@ -110,7 +152,7 @@ export default {
                 label: '订单已取消'
             }
     ],
-    columns5: [
+    myOrderList: [
             {
                 title: '订单名称',
                 key: 'order_name',
@@ -171,10 +213,10 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.remove(params.index)
+                                            this.seeDetail(params)
                                         }
                                     }
-                                }, '取消')
+                                }, '查看')
                             ]);
                         }
                           
@@ -205,8 +247,28 @@ export default {
             content: `content`//Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}
         })
     },
-    remove (index) {
-        //this.data6.splice(index, 1);
+    seeDetail (Info) {
+        console.log(Info)
+        this.ifShowModal = true
+        this.ModalInfo.id = Info.row.id
+        this.ModalInfo.order_no = Info.row.order_no
+        this.ModalInfo.order_name = Info.row.order_name
+        this.ModalInfo.amount = Info.row.amount
+        this.ModalInfo.status = Info.row.status
+        this.ModalInfo.pay_type = Info.row.pay_type
+        this.ModalInfo.pay_type_T = Info.row.pay_type == '0'?'代缴社保和公积金':(Info.row.pay_type == '1'?'代缴社保':'代缴公积金')
+        
+    },
+    //导出excel
+    pinterExl(){
+      let ID = this.ModalInfo.id
+      let TYPE = this.ModalInfo.pay_type
+      axios.get(R_PRE_URL+'/exportExcel?order_id='+ID + '&pay_type='+TYPE
+        ).then((res)=> { 
+          
+        }).catch((error)=> {
+          console.log(error)
+        })
     },
     changeStartTime(event){
       this.start_time = event
@@ -288,7 +350,12 @@ export default {
       }).catch((error)=> {
         console.log(error)
       })
-    }
+    },
+    //选择某行
+    // chooseOrder(event){
+    //   console.log(event)
+
+    // }
    
   },
 };
