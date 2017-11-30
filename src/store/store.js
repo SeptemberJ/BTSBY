@@ -11,6 +11,7 @@ const store = new Vuex.Store({
     userInfo:{
         username:localStorage.getItem("user_name"),
         member_id:localStorage.getItem("member_id"),
+        register_type:localStorage.getItem("register_type"),
         // useravatar:localStorage.getItem("user_avatar"),
     },
     ifLogined:(localStorage.getItem("member_id"))?true : false,

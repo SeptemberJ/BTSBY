@@ -61,7 +61,7 @@
             </Form> -->
         </div>
         <div slot="footer" style="text-align: center;">
-            <Button type="primary" size="large" :loading="modal_loading" @click="del">办理</Button>
+            <Button type="primary" size="large" :loading="modal_loading" @click="toHandle">办理</Button>
         </div>
       </Modal>
       
@@ -79,7 +79,10 @@ export default {
     ModalInfo:{
       city_name:'',
       s_name:'',
+      s_acquirer:'',
+      insurance_name:'',
       service_items:'',
+      service_items_id:'',
       way:'',
       personal_info:'',
       company_info:'',
@@ -221,6 +224,9 @@ export default {
       this.ModalInfo.city_name = rowInfo.city_name
       this.ModalInfo.s_name = rowInfo.s_name
       this.ModalInfo.service_items = rowInfo.service_items
+      this.ModalInfo.service_items_id = rowInfo.id
+      this.ModalInfo.s_acquirer = rowInfo.s_acquirer
+      this.ModalInfo.insurance_name = rowInfo.insurance_name
       this.ModalInfo.way = rowInfo.management_mode == 0?'均可办理':(rowInfo.management_mode == 1?'只可自行办理':'委托办理')
       this.ModalInfo.personal_info = rowInfo.personal_info
       this.ModalInfo.company_info = rowInfo.company_info
@@ -238,7 +244,7 @@ export default {
     //VAS详情
     searchVasDetail(){
       this.ifLoading = true
-      axios.get(R_PRE_URL+'/searchSbyAddedInfoList.do?s_city='+this.City+'&insurance_name='+this.Kind+'&management_mode='+this.Way
+      axios.get(R_PRE_URL+'/searchSbyAddedInfoList.do?city_id='+this.City+'&insurance_name='+this.Kind+'&management_mode='+this.Way
       ).then((res)=> { 
         this.dataVas = res.data.arr
         this.ifLoading = false
@@ -247,14 +253,28 @@ export default {
       })
     },
     //办理
-    del () {
+    toHandle () {
       this.modal_loading = true;
-      setTimeout(() => {
+      let DATA = {
+        service_item_id:this.ModalInfo.service_items_id,
+        member_id:this.$store.state.userInfo.member_id,
+        acquirer:this.ModalInfo.s_acquirer,
+        insurance_name:this.ModalInfo.insurance_name,
+        service_items:this.ModalInfo.service_items,
+      }
+      axios.post(R_PRE_URL+'/insertSbyAddedOrder.do',DATA
+      ).then((res)=> {
+        if(res.data.result==2){
+          this.$Message.success('办理成功!')
           this.modal_loading = false;
-          this.modal2 = false;
-          this.$Message.success('Successfully delete');
-      }, 2000);
-            }
+        }else{
+          this.$Message.error(res.data.message+'!')
+          return false
+        }
+      }).catch((error)=> {
+        console.log(error)
+      })
+    }
    
   },
 };

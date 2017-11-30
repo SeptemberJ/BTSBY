@@ -2,14 +2,14 @@
 <div id="Sign">
         
     <Steps class="StepBar" :current="NavCur" >
-        <Step title="设置用户名" :content="NavCur==0?'进行中':'已完成'"></Step>
+        <Step title="EE设置用户名" :content="NavCur==0?'进行中':'已完成'"></Step>
         <Step title="填写账号信息" :content="NavCur==0?'待进行':NavCur==1?'进行中':'已完成'"></Step>
         <Step title="注册成功" :content="NavCur==2?'进行中':'待进行'"></Step>
     </Steps>
     <!-- step1 -->
     <Card class="stepOne" v-if="NavCur == 0" :bordered="false" :dis-hover="false"> 
        <Form  ref="formStepOne" :model="formStepOne" :rules="ruleInlineOne" :inline="false">
-          <FormItem prop="TEL" label="手机号码">
+          <FormItem prop="TEL" label="手机号码*">
             <Row>
               <Col span="14">
                   <Input v-model="formStepOne.TEL" placeholder="请输入手机号码"></Input>
@@ -20,7 +20,7 @@
             </Row>
           </FormItem>
 
-          <FormItem prop="RIMGCODE" label="图形验证码">
+          <FormItem prop="RIMGCODE" label="图形验证码*">
             <Row>
               <Col span="14">
                   <Input v-model="formStepOne.RIMGCODE" placeholder="请输入图形验证码"></Input>
@@ -31,7 +31,7 @@
             </Row>
           </FormItem>
 
-          <FormItem prop="CODE" label="手机验证码">
+          <FormItem prop="CODE" label="手机验证码*">
             <Row>
               <Col span="18">
                   <Input v-model="formStepOne.CODE" placeholder="请输入手机验证码"></Input>
@@ -39,7 +39,7 @@
             </Row>
           </FormItem>
 
-          <FormItem prop="EMAIL" label="电子邮箱">
+          <FormItem prop="EMAIL" label="电子邮箱*">
             <Row>
               <Col span="18">
                   <Input v-model="formStepOne.EMAIL" placeholder="请输入电子邮箱"></Input>
@@ -84,6 +84,30 @@
               </Col>
             </Row>
           </FormItem>
+
+          <FormItem prop="CONTACT" label="联系人">
+            <Row>
+              <Col span="18">
+                  <Input  v-model="formStepTwo.CONTACT" placeholder="请输入联系人"></Input>
+              </Col>
+            </Row>
+          </FormItem>
+
+          <FormItem prop="COMPANY_NAME" label="公司名称">
+            <Row>
+              <Col span="18">
+                  <Input  v-model="formStepTwo.COMPANY_NAME" placeholder="请输入公司名称"></Input>
+              </Col>
+            </Row>
+          </FormItem>
+
+          <FormItem prop="INVITECODE" label="邀请码">
+            <Row>
+              <Col span="18">
+                  <Input v-model="formStepTwo.INVITECODE" placeholder="请输入邀请码(选填)"></Input>
+              </Col>
+            </Row>
+          </FormItem>
           
           <FormItem>
               <Button type="primary" long @click="handleStepTwo('formStepTwo')">下一步</Button>
@@ -107,14 +131,13 @@ import {generateMixed} from "../../../util/utils"
 export default {
   data() {
   return {
-    signType:0,//0--个人  1--企业
     NavCur:0,
     timerCount:"获取验证码",
     disabled:false,
     
     
-    REALNAME:"",
-    INVITECODE:"",
+    // REALNAME:"",
+    // INVITECODE:"",
     formStepOne: {
       TEL:"",
       IMGCODE:"",
@@ -126,6 +149,10 @@ export default {
     formStepTwo: {
       PSD:"",
       PSDAGAIN:"",
+      INVITECODE:"",
+      CONTACT:"",
+      COMPANY_NAME:""
+
     },
     ruleInlineOne: {
       TEL: [
@@ -147,13 +174,18 @@ export default {
       ],
       PSDAGAIN: [
           { required: true, message: '请输入密码确认.', trigger: 'blur' },
+      ],
+      CONTACT: [
+          { required: true, message: '请输入联系人.', trigger: 'blur' },
+      ],
+      COMPANY_NAME: [
+          { required: true, message: '请输入公司名称.', trigger: 'blur' },
       ]
     },
   }
   },
   created() {
     this.formStepOne.IMGCODE = generateMixed(4)
-    this.signType = this.$router.history.current.params.type
   },
   mounted: function(){
     
@@ -194,7 +226,7 @@ export default {
               return false
             }
             this.NavCur = 1
-            this.$Message.success('提交成功!');
+            //this.$Message.success('提交成功!');
           } else {
             this.$Message.error('带*号的为必填项!')
           }
@@ -205,7 +237,7 @@ export default {
     handleStepTwo(name) {
         this.$refs[name].validate((valid) => {
             if (valid) {
-              if (!this.formStepTwo.PSD || !this.formStepTwo.PSDAGAIN){  // || !this.REALNAME
+              if (!this.formStepTwo.PSD || !this.formStepTwo.PSDAGAIN || !this.formStepTwo.CONTACT || !this.formStepTwo.COMPANY_NAME){
                 this.$Message.error('带*号为必填项!')
                 return false
               }
@@ -217,9 +249,13 @@ export default {
               const DATA = {
                   "mobilephone":this.formStepOne.TEL,
                   "email":this.formStepOne.EMAIL,
-                  "password":this.formStepTwo.PSD
+                  "password":this.formStepTwo.PSD,
+                  "contact":this.formStepTwo.CONTACT,
+                  "company_name":this.formStepTwo.COMPANY_NAME,
+                  "register_type":"1",
+                  "recomment_code":this.formStepTwo.INVITECODE
                 }
-              axios.post(R_PRE_URL+'/register.do',DATA
+              axios.post(R_PRE_URL+'/registerCompany.do',DATA
               ).then((res)=> {
                 if(res.data.result==2){
                   this.NavCur = 2

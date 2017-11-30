@@ -26,8 +26,8 @@
               </Form>
              </p>
         </Card>
-    </div>
-    </div>
+   </div>
+</div>
 </template>
 <script>
 import Vue from 'vue'
@@ -95,8 +95,10 @@ export default {
             localStorage.setItem("user_remember",true)
           }
           localStorage.setItem("member_id",res.data.member_id)
+          localStorage.setItem("register_type",res.data.register_type)
           this.$store.state.userInfo.username = this.formLogin.UserName
           this.$store.state.userInfo.member_id = res.data.member_id
+          this.$store.state.userInfo.register_type = res.data.register_type
           this.$store.state.ifLogined = true
           this.$Message.success('登录成功!');
           this.$router.push({name:'首页'})

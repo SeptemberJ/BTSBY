@@ -52,7 +52,12 @@ export default {
   },
   methods: {
     GoHR(){
-      this.$router.push({name:'HR管理后台(个人)'});
+      if(this.$store.state.userInfo.register_type == '0'){
+        this.$router.push({name:'HR管理后台(个人)'});
+      }else{
+        this.$router.push({name:'HR管理后台(企业)'});
+      }
+      
     },
     GoNews(){
       this.$router.push({name:'社保资讯'});
@@ -61,7 +66,7 @@ export default {
       this.$router.push({name:'登录'});
     },
     ToSign(){
-      this.$router.push({name:'注册'});
+      this.$router.push({name:'个人注册'});
     },
     Logout(){
        localStorage.clear();

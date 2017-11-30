@@ -4,13 +4,15 @@ import Store from '../store/store'
 import App from '../app'
 import Index from '../page/Index/Index'
 import Login from '../page/PC/Common/Login'
-import Sign from '../page/PC/Common/Sign'
+import SignI from '../page/PC/Individual/Sign'
+import SignE from '../page/PC/Enterprise/Sign'
 import Individual from '../page/PC/Common/Individual'
 import Enterprise from '../page/PC/Common/Enterprise'
 import News from '../page/PC/Common/News'
 import NewsDetail from '../page/PC/Common/NewsDetail'
 import AboutUs from '../page/PC/Common/AboutUs'
 import HRBackSystemI from '../page/PC/Individual/HRBackSystemI'
+import HRBackSystemE from '../page/PC/Enterprise/HRBackSystemE'
 import {deviceInfo} from "../util/device"
 
 Vue.use(VueRouter)
@@ -22,7 +24,8 @@ const routes = [
     children: [
     {path: '/Index', name: '首页', component: Index},
     {path: '/Login', name: '登录', component: Login},
-    {path: '/Sign', name: '注册', component: Sign},
+    {path: '/SignI/', name: '个人注册', component: SignI},
+    {path: '/SignE/', name: '企业注册', component: SignE},
     {path: '/Individual', name: '个人保', component: Individual},
     {path: '/Enterprise', name: '企业保', component: Enterprise},
     {path: '/News', name: '社保资讯', component: News},
@@ -32,6 +35,7 @@ const routes = [
     
     
     {path: '/HRBackSystemI', name: 'HR管理后台(个人)', component: HRBackSystemI},
+    {path: '/HRBackSystemE', name: 'HR管理后台(企业)', component: HRBackSystemE},
       {path:'*', redirect: '/Index'}
       // {path: '/article/:id', name: 'article', component: Article},
     ]

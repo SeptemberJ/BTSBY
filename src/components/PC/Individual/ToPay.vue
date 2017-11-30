@@ -144,6 +144,11 @@ export default {
     axios.get(R_PRE_URL+'/searchMemberDetail.do?member_id='+this.$store.state.userInfo.member_id
     ).then((res)=> { 
       let MemberDetail = res.data.memberDetail
+      if(!MemberDetail){
+        this.$Message.error('请先填写参保资料!')
+        console.log(this)
+        return false
+      }else{
       let CityCode = MemberDetail.city
       this.NAME = MemberDetail.real_name || ''
       this.INSURED_AREA = MemberDetail.city_name|| ''
@@ -233,7 +238,7 @@ export default {
         console.log(error)
       })
 
-
+      }
 
     }).catch((error)=> {
       console.log(error)

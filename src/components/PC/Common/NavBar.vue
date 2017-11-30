@@ -2,7 +2,7 @@
  <div class="layout">
         <Menu mode="horizontal" :active-name="activeRoute" @on-select="tabChange">
             <div class="layout-logo"></div>
-            <div class="layout-nav">
+            <div class="layout-nav" v-if="activeRoute!='个人注册' && activeRoute!='企业注册'">
                 <MenuItem name="首页">
                     首页
                 </MenuItem>
@@ -17,6 +17,14 @@
                 </MenuItem>
                 <MenuItem name="关于我们">
                     关于我们
+                </MenuItem>
+            </div>
+            <div class="layout-nav" v-else>
+                <MenuItem name="个人注册">
+                    个人注册
+                </MenuItem>
+                <MenuItem name="企业注册">
+                    企业注册
                 </MenuItem>
             </div>
         </Menu>
@@ -51,7 +59,19 @@ export default {
   },
   methods: {
     tabChange(event){
-      this.$router.push({name:event});
+        this.$router.push({name:event});
+        // switch(event){
+        //     case '个人注册':
+        //     this.$router.push({name:event,params: {type:0}});
+        //     break;
+        //     case '企业注册':
+        //     this.$router.push({name:event,params: {type:1}});
+        //     break;
+        //     default:
+        //     this.$router.push({name:event});
+        
+        // }
+      
     }, 
   }
 };
