@@ -20,6 +20,7 @@ const store = new Vuex.Store({
     newsKind:'1',
     newsPage:1,
     isMobile:'',
+    toAddMember:false,  //是否显示新增人员Modal框
     toast:{
         ifShow:false, //显示
         text:'', //提示文字

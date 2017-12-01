@@ -78,7 +78,35 @@ export function timestampToFormatTime(str){
   oTime = oYear +'-'+ formatNumber(oMonth) +'-'+ formatNumber(oDay) +' '+ formatNumber(oHour) +':'+ formatNumber(oMin) +':'+formatNumber(oSen)//最后拼接时间  
   return oTime
 }
-        
+
+
+export function autoBirthday(CARDID){
+    var birthday=getBirthday();
+    switch(birthday){
+      case 0:
+      return '不能为空';
+      break;
+      case 1:
+      return '格式不对';
+      break;
+      default: 
+      return birthday;
+    }  
+  function getBirthday(){
+    var a=CARDID;
+    if(15==a.length || 18==a.length){
+      var left=a.length-12;
+      var right=a.length-4;
+      var b=a.slice(left,right);
+      if(8==b.length){
+        return b;
+      }
+      else return 0;
+    }else{
+      return 1;
+    }
+  }
+}      
 
 // function getzf(num){  
 //             if(parseInt(num) < 10){  
