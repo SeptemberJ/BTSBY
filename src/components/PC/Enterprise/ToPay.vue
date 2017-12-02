@@ -1,40 +1,14 @@
 <template>
-  <div id="TopayI">
+  <div id="TopayE">
     <!-- top -->
     <h2>参保资料</h2>
-    <p class="securityInfo">参保城市:上海</p>
+    <p class="securityInfo">参保城市:上海  <a href="http://sbyun.com/SicOrderMain.mc?method=exportAreaMeal&areaId=10&areaName=%E4%B8%8A%E6%B5%B7" class="marginL_20"><Icon type="ios-download"></Icon>下载上海社保缴费明细</a></p>
     <Table :columns="columnsHead" :loading="ifLoading" :data="dataOrder"></Table>
-    <Form>
-        <FormItem label="">
-            <Checkbox v-model="ifSecurityChoosed">社保代缴</Checkbox>
-        </FormItem>
-        <FormItem label="">
-            <Checkbox v-model="ifFundsChoosed">公积金代缴</Checkbox>
-        </FormItem>
-        <FormItem label="公积金代缴基数：" v-if="ifFundsChoosed" :label-width="150">
-          <Row>
-            <Col span="14">
-                <Input v-model="FundsBasic" disabled style="width: 80px"></Input>
-            </Col>
-          </Row>
-        </FormItem>
-        <FormItem label="公积金个人比例：" v-if="ifFundsChoosed" :label-width="150">
-          <Row>
-            <Col span="14">
-                <Input v-model="FundsU" icon="" disabled style="width: 80px"></Input>
-            </Col>
-          </Row>
-        </FormItem>
-        <FormItem label="公积金单位比例：" v-if="ifFundsChoosed" :label-width="150">
-          <Row>
-            <Col span="14">
-                <Input v-model="FundsI" icon="" disabled style="width: 80px"></Input>
-            </Col>
-          </Row>
-        </FormItem>
-    </Form>
+    <p class="marginT_20"><span class="marginL_20 fixedWidth">社保代缴</span><span class="marginL_20">社保参保人数：0人 </span><a @click="chooseMemberS(0)"><Icon type="ios-compose" size="18"></Icon>社保参保名单</a></p>
+    <p class="marginT_20"><span class="marginL_20 fixedWidth">公积金代缴</span><span class="marginL_20">公积金参保人数：0人 </span><a @click="chooseMemberG(1)"><Icon type="ios-compose" size="18"></Icon>公积金参保名单</a></p>
+
     <!-- Bottom -->
-    <h2>选择购买月份</h2>
+    <h2 class="marginT_20">选择购买月份</h2>
     <CheckboxGroup v-model="buyMonthList" class="monthList" @on-change="changeBuyMonth">
         <Checkbox v-for="(Month,MonthIdx) in MonthList" :label="Month"></Checkbox>
     </CheckboxGroup>
@@ -45,8 +19,8 @@
       <pre>      每个月的11号为上海的社保减员截止日期</pre>
     </div>
 
-    <h2>订单费用详情</h2>
-    <div class="sumBlock">
+    <h2 class="marginT_20">订单费用详情</h2>
+    <div class="sumBlock marginT_10">
       <div>
         <h3>代收社保费用小计：<span>1740.8 元（ 1740.8元/月[1人] × 1月</span></h3>
         <h3>代收公积金费用小计：<span>306 元（ 306元/月 [1人] × 1月 ）</span></h3>
@@ -64,6 +38,8 @@
     </div>
 
     <Button type="error" class="marginT_20" @click="toSubmitOrder">立即购买</Button>
+
+    <ChoosePayMember v-if="ifShowModal" :type="type" v-on:changeVisible="changeVisible"></ChoosePayMember>
     
 
     
@@ -73,11 +49,14 @@
 <script>
 import Vue from 'vue'
 import axios from 'axios'
+import ChoosePayMember from "./ChoosePayMember.vue"
 import {getOneYearMonth,removeByValue} from "../../../util/utils"
 export default {
   data() {
   return {
+    ifShowModal:false,
     ifLoading: false,
+    type:0,  //0社保 1公积金
     NAME:'',
     INSURED_AREA:'',
     RESIDENCE:'',
@@ -115,7 +94,25 @@ export default {
     ],
     dataOrder: [
         {
+            kind: '上海本地城镇（五险）',
+            priceU: '¥1330.9',
+            priceI: '¥1330.9',
+            amount:1
+        },
+        {
             kind: '上海外地城镇（五险）',
+            priceU: '¥1330.9',
+            priceI: '¥1330.9',
+            amount:1
+        },
+        {
+            kind: '上海本地地农村（五险）',
+            priceU: '¥1330.9',
+            priceI: '¥1330.9',
+            amount:1
+        },
+        {
+            kind: '上海外地农村（五险）',
             priceU: '¥1330.9',
             priceI: '¥1330.9',
             amount:1
@@ -245,10 +242,13 @@ export default {
   computed: {
     MonthList(){
         return getOneYearMonth(12,15)
-    }
+    },
     
   },
   watch:{
+  },
+  components: {
+    ChoosePayMember
   },
   methods: {
     //选择月份获取服务费用、其他费用
@@ -322,6 +322,19 @@ export default {
       })
       
 
+    },
+    //选择社保成员
+    chooseMemberS(TYPE){
+      this.ifShowModal = true 
+      this.type = TYPE
+    },
+    chooseMemberG(TYPE){
+      this.ifShowModal = true
+      this.type = TYPE
+    },
+    //监听子组件返回
+    changeVisible(Info){
+      this.ifShowModal = Info
     }
 
    
@@ -329,10 +342,14 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-#TopayI{
+#TopayE{
   .securityInfo{
     font-size: 14px;
     line-height: 60px;
+  }
+  .fixedWidth{
+    width: 100px;
+    display: inline-block;
   }
   form{
     margin-top: 20px;
