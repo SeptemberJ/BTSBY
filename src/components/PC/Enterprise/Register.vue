@@ -20,16 +20,16 @@
                 </DropdownMenu>
             </Dropdown>
           </span>
-          <span>
+          <!-- <span>
             地区
             <Select v-model="city" size="small" style="width:80px">
               <Option v-for="(City,CityIdx) in cityList"  :value="City.city_name" :key="CityIdx">{{City.city_name}}</Option>
             </Select>
-          </span>
+          </span> -->
           <span>
             岗位
-            <Select v-model="post" size="small" style="width:120px">
-              <Option v-for="item in postList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            <Select v-model="post_name" size="small" style="width:120px">
+              <Option v-for="item in postList" :value="item.post_name" :key="item.post_name">{{ item.post_name }}</Option>
             </Select>
           </span>
           <span>
@@ -39,17 +39,50 @@
             </Select>
           </span>
           
-          <span><Button type="primary" icon="ios-search" @click="searchOrder">搜索</Button></span>
+          <span><Button type="primary" icon="ios-search" @click="searchMemberList">搜索</Button></span>
         </span>
       </h3>
       <!-- table -->
-      <Table class="marginT_20"  border ref="selection" :columns="memberList" :data="dataMember" :loading="ifLoading" ></Table>
+      <Table class="marginT_20" highlight-row  border ref="selection" :columns="memberList" :data="dataMember" :loading="ifLoading" @on-selection-change="selectChanged" @on-current-change="chooseRow"></Table>
 
       <Page class="marginT_20" :total="Total" show-total style="float: right;" :current="page_num" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer></Page>
 
 
+      <!-- 新增员工 -->
+      <AddMember v-on:refreshData="getDataMember" :writeType="writeType" :memberInfo="memberInfo"></AddMember>
 
-<AddMember></AddMember>
+      <!-- 增减员工 -->
+      <Modal v-model="ifAddOrMin">
+        <p slot="header" style="text-align:left">
+            <span>社保[公积金]增减</span>
+        </p>
+        <div style="text-align:left">
+            <p>增减员名单：</p>
+            <p><span class="marginR_10" v-for="(selection,selectionIdx) in selectArray">{{selection.name}}</span></p>
+            <Form ref="formAddOrMin" :model="formAddOrMin" :rules="ruleValidate_AddOrMin">
+              <FormItem label="操作类型：" prop="AddOrMin">
+                  <RadioGroup v-model="formAddOrMin.AddOrMin">
+                      <Radio label="增员">增员</Radio>
+                      <Radio label="减员">减员</Radio>
+                  </RadioGroup>
+              </FormItem>
+              <FormItem label="相关业务：" prop="business">
+                  <CheckboxGroup v-model="formAddOrMin.business">
+                      <Checkbox label="社保"></Checkbox>
+                      <Checkbox label="公积金"></Checkbox>
+                  </CheckboxGroup>
+              </FormItem>
+              <FormItem label="起始月份：" prop="startMonth">
+                  <DatePicker v-model="formAddOrMin.startMonth" type="month" placeholder="" style="width: 200px"></DatePicker>
+              </FormItem>
+            </Form>
+            
+        </div>
+        <div slot="footer">
+            <Button type="error" size="large"  :loading="modal_loading" @click="submitAddOrMin">提交更改</Button>
+        </div>
+    </Modal>
+
 
 
     </div>
@@ -63,24 +96,17 @@ export default {
   data() {
   return {
     modal_loading: false,
-    ifLoading:false,
+    ifLoading:true,
+    writeType:0,  //0新增 1修改
     Total:0,
     page_num:1,  //页数
     number:10,   //每页条数
     cityList:[],
-    city:'-1',     //参保城市
-    post:'-1',     //岗位
-    status:'-1',   //状态
-    postList:[
-            {
-                value: '-1',
-                label: '全部'
-            },
-            {
-                value: '0',
-                label: '测试'
-            },
-    ],
+    city:'',     //参保城市
+    post_name:'',     //岗位
+    status:'',   //状态
+    postList:[],
+    memberInfo:{},//查看的员工信息
     statusList:[
             {
                 value: '-1',
@@ -123,12 +149,50 @@ export default {
                 key: 'registered_residence'
             },
             {
-                title: '社保状态',
-                key: 's_status',
+                title: '社保详情',
+                key: 'action',
+                align: 'center',
+                render: (h, params) => {
+                    return h('div', [
+                        h('Button', {
+                            props: {
+                                type: 'primary',
+                                size: 'small'
+                            },
+                            style: {
+                                marginRight: '5px'
+                            },
+                            on: {
+                                click: () => {
+                                    this.show(params.index)
+                                }
+                            }
+                        }, '查看'),
+                    ]);
+                }
             },
             {
-                title: '公积金状态',
-                key: 'g_status',
+                title: '公积金详情',
+                key: 'action',
+                align: 'center',
+                render: (h, params) => {
+                    return h('div', [
+                        h('Button', {
+                            props: {
+                                type: 'primary',
+                                size: 'small'
+                            },
+                            style: {
+                                marginRight: '5px'
+                            },
+                            on: {
+                                click: () => {
+                                    this.show(params.index)
+                                }
+                            }
+                        }, '查看'),
+                    ]);
+                }
             },
             {
                 title: '性别',
@@ -147,21 +211,28 @@ export default {
                 key: 'entry_time',
             }
         ],
-        dataMember: [
-            {
-              name:'张三',
-              id_number:'320684123456789090',
-              city:'上海',
-              registered_residence:'本地城市(五金)',
-              s_status:'未投保',
-              g_status:'未投保',
-              sex:'男',
-              post_name:'销售员',
-              telephone:'18234567890',
-              entry_time:'2017-08-08'
-            }
+    dataMember: [],
+    ifAddOrMin:false,
+    selectArray:[],  //selected 名单
+    formAddOrMin: {
+        AddOrMin:'增员',
+        business:[],
+        startMonth:''
 
+    },
+    ruleValidate_AddOrMin: {
+        AddOrMin: [
+            { required: true, message: '请选择种类', trigger: 'blur' }
+        ],
+        business: [
+            { required: true, type: 'array', min: 1, message: '至少选择一项业务', trigger: 'change' },
+            { type: 'array', max: 2, message: '至少选择一项业务', trigger: 'change' }
+        ],
+        startMonth:[
+            { required: true, message: '请选择起始月份', trigger: 'blur' }
         ]
+      }
+
 
     
   }
@@ -173,7 +244,14 @@ export default {
     }).catch((error)=> {
       console.log(error)
     })
-    //this.getDataOrder()
+
+    axios.get(R_PRE_URL+'/searchPostNameList.do?member_id='+this.$store.state.userInfo.member_id
+    ).then((res)=> { 
+       this.postList = res.data.postNameList
+    }).catch((error)=> {
+      console.log(error)
+    })
+    this.getDataMember()
     
   },
   mounted: function(){
@@ -182,6 +260,7 @@ export default {
   },
   computed: {
     
+    
   },
   watch:{
   },
@@ -189,10 +268,12 @@ export default {
     AddMember
   },
   methods: {
+    //快捷操作
     OperationFns(event){
       switch(event){
         case '新增入职':
         // window.open(window.location.origin + '#/Login')
+        this.writeType = 0
         this.$store.state.toAddMember = true
         break;
         case '导入':
@@ -200,85 +281,86 @@ export default {
         case '离职':
         break;
         case '增减员':
+        if(this.selectArray.length<=0){
+          this.$Message.error('请选择要增(减)员的员工!')
+        }else{
+          this.ifAddOrMin = true
+        }
         break;
       }
     },
+    //增减员
+    selectChanged(LIST){
+      this.selectArray = LIST
+      console.log(this.selectArray)
+    },
+    //提交增减员名单
+    submitAddOrMin(){
+      // selectArray_  formAddOrMin
+    },
+    //查看员工信息
+    chooseRow(Member){
+      this.$store.state.toAddMember = true
+      this.writeType = 1
+      this.memberInfo = Member
+      console.log(Member)
 
+    },
     //search
-    searchOrder(){
-      this.getDataOrder()
+    searchMemberList(){
+      this.getDataMember()
     },
     //分页
     changePage(event){//当前页数
       this.page_num = event
-      this.getDataOrder()
+      this.getDataMember()
     },
     //切换每页条数
     changePageSize(event){
       this.number = event
-      this.getDataOrder()
+      this.getDataMember()
     },
-
     //获取数据
-    getDataOrder(){
+    getDataMember(){
+      this.ifLoading = true
       let member_id = this.$store.state.userInfo.member_id,
           number = this.number,
           page_num = this.page_num,
-          status = this.status=='-1'?'':this.status,
-          progress = this.progress=='-1'?'':this.progress,
-          start_time = this.start_time?timestampToFormatTime((this.start_time).getTime()):'',
-          end_time = this.end_time?timestampToFormatTime((this.end_time).getTime()):'',
-          month_name = this.month_name?(this.month_name).getMonth()+1:''
-      axios.get(R_PRE_URL+'/searchOrderList.do?member_id='+this.$store.state.userInfo.member_id+'&number='+number+'&status='+status+'&progress='+progress+'&start_time='+start_time+'&end_time='+end_time+'&month_name='+month_name+'&page_num='+ page_num
-      ).then((res)=> {
-        this.Total = res.data.orderCount
-        let temp = res.data.arr
-        temp.map((item,idx)=>{
-          switch(item.status){
-            case '0':
-            item.status = '待支付'
-            break;
-            case '1':
-            item.status = '已支付'
-            break;
-            case '2':
-            item.status = '支付成功'
-            break;
-            case '3':
-            item.status = '支付失败'
-            break;
-          }
-          switch(item.progress){
-            case '0':
-            item.progress = '订单待支付'
-            break;
-            case '1':
-            item.progress = '已支付待确认'
-            break;
-            case '2':
-            item.progress = '已确认支付成功'
-            break;
-            case '3':
-            item.progress = '未支付成功'
-            break;
-            case '4':
-            item.progress = '订单已处理'
-            break;
-            case '5':
-            item.progress = '订单完成'
-            break;
-            case '6':
-            item.progress = '订单已取消'
-            break;
-          }
-          item.pay_time = timestampToFormatTime(item.pay_time.time)
+          post_name = this.post_name
+          status = this.status
+          // post_name = this.post_name == '-1'?'':this.post_name
+          // status = this.status == '-1'?'':this.status
+   
+        axios.get(R_PRE_URL+'/searchCompanyEmployeeList.do?member_id='+member_id+'&number='+number+'&page_num='+page_num+'&post_name='+post_name+'&status='+status
+        ).then((res)=> {
+          let temp = res.data.employeeList
+          temp.map((Item,Idx)=>{
+            Item.entry_time = timestampToFormatTime(Item.entry_time.time)
+            switch(Item.registered_residence){
+              case '0':
+              Item.registered_residence = '本地城镇'
+              break
+              case '1':
+              Item.registered_residence = '本地农村'
+              break
+              case '2':
+              Item.registered_residence = '外地城镇'
+              break
+              case '3':
+              Item.registered_residence = '外地农村'
+              break
+            }
+            Item.sex = Item.sex == 0?'男':'女'
+            
+          })
+          this.dataMember = temp
+          this.Total = res.data.count
           this.ifLoading = false
+          
+        }).catch((error)=> {
+          console.log(error)
         })
-        this.dataOrder = temp
-
-      }).catch((error)=> {
-        console.log(error)
-      })
+    
     }
    
   },

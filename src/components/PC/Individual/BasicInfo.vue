@@ -1,6 +1,6 @@
 <template>
     <div id="BasicInfoI">
-       <Form ref="formBasicInfo" :model="formBasicInfo" :rules="ruleInline" :inline="false">
+       <Form ref="formBasicInfo" :model="formBasicInfo" :rules="ruleInline" :inline="false" :label-width="150">
            <FormItem prop="NAME" label="真实姓名">
             <Row>
               <Col span="18">

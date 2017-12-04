@@ -32,8 +32,8 @@
               <Col span="18">
                    <Select v-model="formInsuredInfo.RESIDENCE" style="width:200px">
                       <Option value="0">本地城镇（五险）</Option>
-                      <Option value="1">外地城镇（五险）</Option>
-                      <Option value="2">外地城市（五险）</Option>
+                      <Option value="1">外地农村（五险）</Option>
+                      <Option value="2">外地城镇（五险）</Option>
                       <Option value="3">外地农村（五险）</Option>
                    </Select>
               </Col>

@@ -2,7 +2,7 @@
  <div class="layout">
         <Menu mode="horizontal" :active-name="activeRoute" @on-select="tabChange">
             <div class="layout-logo"></div>
-            <div class="layout-nav" v-if="activeRoute!='个人注册' && activeRoute!='企业注册'">
+            <div class="layout-nav" v-if="activeRoute!='个人注册' && activeRoute!='企业注册' && activeRoute!='HR管理后台(企业)'  && activeRoute!='HR管理后台(个人)'">
                 <MenuItem name="首页">
                     首页
                 </MenuItem>
@@ -19,7 +19,7 @@
                     关于我们
                 </MenuItem>
             </div>
-            <div class="layout-nav" v-else>
+            <div class="layout-nav" v-if="activeRoute=='个人注册' || activeRoute=='企业注册'">
                 <MenuItem name="个人注册">
                     个人注册
                 </MenuItem>
@@ -27,6 +27,7 @@
                     企业注册
                 </MenuItem>
             </div>
+            <div v-else></div>
         </Menu>
     </div>
 </template>

@@ -20,6 +20,7 @@
                       <MyAccount v-if="curMneu == '我的账户'"></MyAccount>
                       <!-- <BasicInfo v-if="curMneu == '基本资料'"></BasicInfo>
                       <InsuredInfo v-if="curMneu == '参保资料'"></InsuredInfo> -->
+                      <BasicInfo v-if="curMneu == '企业资料'"></BasicInfo>
                       <AccountSafe v-if="curMneu == '账号安全'"></AccountSafe>        
                     </div>
                 </Col>
@@ -42,7 +43,7 @@ import ToPay from '../../../components/PC/Enterprise/ToPay.vue'
 // import Vas from '../../../components/PC/Individual/Vas.vue'
 // import VasOrder from '../../../components/PC/Individual/VasOrder.vue'
  import MyAccount from '../../../components/PC/Individual/MyAccount.vue'
-// import BasicInfo from '../../../components/PC/Individual/BasicInfo.vue'
+import BasicInfo from '../../../components/PC/Enterprise/BasicInfo.vue'
 // import InsuredInfo from '../../../components/PC/Individual/InsuredInfo.vue'
  import AccountSafe from '../../../components/PC/Individual/AccountSafe.vue'
 
@@ -50,7 +51,7 @@ import ToPay from '../../../components/PC/Enterprise/ToPay.vue'
 export default {
   data() {
   return {
-    curMneu:'我的订单'
+    curMneu:'花名册'
     
   }
   },
@@ -81,7 +82,7 @@ export default {
       // Vas,
       // VasOrder,
        MyAccount,
-      // BasicInfo,
+       BasicInfo,
       // InsuredInfo,
        AccountSafe
   },

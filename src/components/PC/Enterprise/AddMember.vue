@@ -1,7 +1,7 @@
 <template>
     <div id="AddMember">
           <Card :bordered="false" dis-hover v-if="ifShowModal">
-                <p slot="title">新增员工</p>
+                <p slot="title">{{writeType==0?'新增员工':'修改员工信息'}}</p>
                 <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
                 <Row>
                     <Col span="24">
@@ -17,9 +17,7 @@
                                     <Input v-model="formValidate.employee_no" placeholder="若不输入系统自动生成"></Input>
                                 </FormItem>
                                 <FormItem label="投保地" prop="city">
-                                    <Select v-model="formValidate.city" size="small">
-                                      <Option v-for="(City,CityIdx) in cityList"  :value="City.city_name" :key="CityIdx">{{City.city_name}}</Option>
-                                    </Select>
+                                    <Input v-model="formValidate.city" disabled placeholder=""></Input>
                                 </FormItem>
                                 <FormItem label="入职时间" prop="entry_time">
                                     <DatePicker v-model="formValidate.entry_time" type="date" placeholder="选择入职时间" @on-change="changeEntryTime"></DatePicker>
@@ -28,7 +26,9 @@
                                     <Input v-model="formValidate.post_name" placeholder=""></Input>
                                 </FormItem>
                                 <FormItem label="用工类型" prop="employment_type">
-                                    <Input v-model="formValidate.employment_type" placeholder=""></Input>
+                                    <Select v-model="formValidate.employment_type" size="small">
+                                      <Option v-for="item in emTypeList" :value="item.typecode" :key="item.value">{{ item.typename }}</Option>
+                                    </Select>
                                 </FormItem>
                                 <FormItem label="直接上司" prop="direct_supervisor">
                                     <Input v-model="formValidate.direct_supervisor" placeholder=""></Input>
@@ -43,37 +43,36 @@
                             <Col span="8">
                                 <FormItem label="政治面貌" prop="political_visage">
                                     <Select v-model="formValidate.political_visage" size="small">
-                                      <Option v-for="item in politicalVisageList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                      <Option v-for="item in politicalVisageList" :value="item.typecode" :key="item.value">{{ item.typename }}</Option>
                                     </Select>
                                     <!-- <Input v-model="formValidate.political_visage" placeholder=""></Input> -->
                                 </FormItem>
-                                <FormItem label="民族" prop="nation">
-                                    <Input v-model="formValidate.nation" placeholder=""></Input>
+                                <FormItem label="民族" prop="ethnic">
+                                    <Select v-model="formValidate.ethnic">
+                                      <Option v-for="item in nationList" :value="item.typecode" :key="item.value">{{ item.typename }}</Option>
+                                   </Select>
                                 </FormItem>
                                 <FormItem label="籍贯" prop="origin">
                                     <Input v-model="formValidate.origin" placeholder=""></Input>
                                 </FormItem>
                                 <FormItem label="户口性质" prop="registered_residence">
                                     <Select v-model="formValidate.registered_residence">
-                                      <Option value="0">本地城镇（五险）</Option>
-                                      <Option value="1">外地城镇（五险）</Option>
-                                      <Option value="2">外地城市（五险）</Option>
-                                      <Option value="3">外地农村（五险）</Option>
+                                      <Option v-for="item in hkList" :value="item.typecode" :key="item.value">{{ item.typename }}</Option>
                                    </Select>
                                 </FormItem>
                                 <FormItem label="婚姻状况" prop="marital_status">
                                     <Select v-model="formValidate.marital_status" size="small">
-                                      <Option v-for="item in maritalStatusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                      <Option v-for="item in maritalStatusList" :value="item.typecode" :key="item.value">{{ item.typename }}</Option>
                                     </Select>
                                 </FormItem>
                                 <FormItem label="最高学历" prop="highest_educational">
                                     <Select v-model="formValidate.highest_educational" size="small">
-                                      <Option v-for="item in educationList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                      <Option v-for="item in educationList" :value="item.typecode" :key="item.value">{{ item.typename }}</Option>
                                     </Select>
                                 </FormItem>
                                 <FormItem label="健康状况" prop="health">
                                     <Select v-model="formValidate.health" size="small">
-                                      <Option v-for="item in heathStatusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                      <Option v-for="item in heathStatusList" :value="item.typecode" :key="item.value">{{ item.typename }}</Option>
                                     </Select>
                                 </FormItem>
                                 <FormItem label="开卡银行" prop="bank_card">
@@ -100,7 +99,7 @@
                                   action=""
                                   style="display: inline-block;">
                                           <div class="demo-upload-list">
-                                            <img :src="URL + formValidate.avatar">
+                                            <img :src="URL + formValidate.head_pic">
                                           </div>
                                           <p>*(2寸证件照)</p>
                                         </Upload>
@@ -109,12 +108,12 @@
                                 <FormItem label="姓名拼音" prop="name_spelling">
                                     <Input v-model="name_spelling" placeholder=""></Input>
                                 </FormItem>
-                                <FormItem label="出生日期" prop="birthdate">
-                                    <Input v-model="formValidate.birthdate" placeholder=""></Input>
+                                <FormItem label="出生日期" prop="birthDate">
+                                    <DatePicker v-model="formValidate.birthDate" type="date" placeholder="选择出生日期" @on-change="changebirthDate"></DatePicker>
                                 </FormItem>
                                 <FormItem label="性别" prop="sex">
                                     <Select v-model="formValidate.sex" size="small">
-                                      <Option v-for="item in sexList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                       <Option v-for="item in sexList" :value="item.typecode" :key="item.value">{{ item.typename }}</Option>
                                     </Select>    
                                 </FormItem>
                             </Col>
@@ -160,7 +159,7 @@
                                 </FormItem>
                                 <FormItem label="国籍" prop="nationality">
                                     <Select v-model="formValidate.nationality" size="small">
-                                      <Option v-for="item in nationList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                      <Option v-for="item in nationalitList" :value="item.typecode" :key="item.value">{{ item.typename }}</Option>
                                     </Select>
                                 </FormItem>
                             </Col>
@@ -168,8 +167,8 @@
                     </Col>
                     <Col span="24">
                       <FormItem>
-                        <Button type="primary" @click="handleSubmit('formValidate')">提交</Button>
-                        <Button type="ghost" @click="handleBack" style="margin-left: 8px">返回</Button>
+                        <Button type="primary" v-on:click="handleSubmit('formValidate')">提交</Button>
+                        <Button type="ghost" v-on:click="handleBack" style="margin-left: 8px">返回</Button>
                         <!-- <Button type="ghost" @click="handleReset('formValidate')" style="margin-left: 8px">Reset</Button> -->
                     </FormItem>
                     </Col>
@@ -188,50 +187,53 @@ import {autoBirthday} from '../../../util/utils'
 
 
 export default {
+  props:['writeType','memberInfo'],
   data() {
   return {
     modal_loading:false,
-    formValidate: {
-        id_number: '',
-        name:'',
-        employee_no:'',
-        city:'',
-        entry_time: '',//new Date()
-        post_name: '',
-        employment_type: '',
-        direct_supervisor: '',
-        telephone: '',
-        residential_address: '',
+    // formValidate: {
+    //     id_number: '',
+    //     name:'',
+    //     employee_no:'',
+    //     city:'',
+    //     entry_time: '',//new Date()
+    //     post_name: '',
+    //     employment_type: '',
+    //     direct_supervisor: '',
+    //     telephone: '',
+    //     residential_address: '',
 
-        political_visage: '1',
-        nation: '',
-        origin: '',
-        registered_residence: '',
-        marital_status: '0',
-        highest_educational: '',
-        health: '0',
-        bank_card: '',
-        bank_no: '',
+    //     political_visage: '1',
+    //     ethnic: '',
+    //     origin: '',
+    //     registered_residence: '',
+    //     marital_status: '0',
+    //     highest_educational: '',
+    //     health: '0',
+    //     bank_card: '',
+    //     bank_no: '',
 
-        avatar:'',
-        // name_spelling: '',
-        birthdate: '',
-        sex: '',
+    //     head_pic:'',
+    //     //name_spelling: this.name_spelling ||'',
+    //     birthDate: '',
+    //     sex: '0',
 
-        email: '',
-        home_mobile: '',
-        joining_date: '',
-        work_time: '',
+    //     email: '',
+    //     home_mobile: '',
+    //     joining_date: '',
+    //     work_time: '',
 
-        emergency_contact: '',
-        home_address: '',
-        graduation_school: '',
-        work_age: '',
+    //     emergency_contact: '',
+    //     home_address: '',
+    //     graduation_school: '',
+    //     work_age: '',
 
-        emergency_mobile: '',
-        graduation_time: '',
-        nationality: '0',
-    },
+    //     emergency_mobile: '',
+    //     graduation_time: '',
+    //     nationality: '0',
+
+    //     status:'0'
+    // },
     ruleValidate: {
         id_number: [
             { required: true, message: '身份证号为必填项!', trigger: 'blur' }
@@ -267,37 +269,52 @@ export default {
             { required: true, message: '最高学历为必填项!', trigger: 'blur' }
         ],
     },
-    cityList:[],  //投保地selection
+    //cityList:[],  //投保地selection
+    emTypeList:[],//用工类型selection
     politicalVisageList:[],//政治面貌selection
+    nationList:[],//民族selection
+    hkList:[],//户口selection
     maritalStatusList:[],//婚姻状况selection
     educationList:[],//最高学历selection
-    heathStatusList:[],
-    sexList:[],
-    nationList:[]
+    heathStatusList:[],//健康selection
+    sexList:[],//性别selection
+    nationalitList:[] //国籍selection
 
 
     
   }
   },
   created(){
-    axios.get(R_PRE_URL+'/searchCityList.do'
+    axios.get(R_PRE_URL+'/searchCompanyDetail.do?member_id='+this.$store.state.userInfo.member_id
     ).then((res)=> { 
-      this.cityList = res.data.arr
+      this.formValidate.city = res.data.companyDetail.fcity
     }).catch((error)=> {
       console.log(error)
     })
-    axios.get('static/json/MemberInfo.json'
-    ).then((res)=> { 
-        console.log(res)
-      this.politicalVisageList = res.data.politicalVisageList
-      this.maritalStatusList = res.data.maritalStatusList
-      this.educationList = res.data.educationList
-      this.heathStatusList = res.data.heathStatusList
-      this.sexList = res.data.sexList
-      this.nationList = res.data.nationList
-    }).catch((error)=> {
-      console.log(error)
+
+    let mapArray = [{'type':'emtype','typeTxt':'emTypeList'},{'type':'politics','typeTxt':'politicalVisageList'},{'type':'Ethnic','typeTxt':'nationList'},{'type':'Huji','typeTxt':'hkList'},{'type':'marry','typeTxt':'maritalStatusList'},{'type':'XueLi','typeTxt':'educationList'},{'type':'health','typeTxt':'heathStatusList'},{'type':'sex','typeTxt':'sexList'},{'type':'GuoJi','typeTxt':'nationalitList'}]
+    mapArray.map((Item,Idx)=>{
+        axios.get(R_PRE_URL+'/searchTypeList.do?typeGroupCode='+Item.type
+        ).then((res)=> { 
+          this[Item.typeTxt] = res.data.typeList
+        }).catch((error)=> {
+          console.log(error)
+        })
     })
+
+    
+    // axios.get('static/json/MemberInfo.json'
+    // ).then((res)=> { 
+    //     console.log(res)
+    //   this.politicalVisageList = res.data.politicalVisageList
+    //   this.maritalStatusList = res.data.maritalStatusList
+    //   this.educationList = res.data.educationList
+    //   this.heathStatusList = res.data.heathStatusList
+    //   this.sexList = res.data.sexList
+    //   this.nationList = res.data.nationList
+    // }).catch((error)=> {
+    //   console.log(error)
+    // })
 
 
     
@@ -307,6 +324,9 @@ export default {
   
   },
   computed: {
+    URL(){
+      return R_PRE_URL+'/'
+    },
     ifShowModal: {
         get: function () {
           return this.$store.state.toAddMember
@@ -317,7 +337,64 @@ export default {
     },
     name_spelling(){
       return toPingyin(this.formValidate.name)
+    },
+    formValidate(){
+        if(this.writeType == 1){
+            console.log('this.memberInfo----')
+            let temp = this.memberInfo
+            temp.birthDate = new Date(this.memberInfo.birthDate.time)
+            console.log(temp)
+            return temp
+
+        }else{
+            let data ={
+                id_number: '',
+                name:'',
+                employee_no:'',
+                city:'',
+                entry_time: '',//new Date()
+                post_name: '',
+                employment_type: '',
+                direct_supervisor: '',
+                telephone: '',
+                residential_address: '',
+
+                political_visage: '1',
+                ethnic: '',
+                origin: '',
+                registered_residence: '',
+                marital_status: '0',
+                highest_educational: '',
+                health: '0',
+                bank_card: '',
+                bank_no: '',
+
+                head_pic:'',
+                //name_spelling: this.name_spelling ||'',
+                birthDate: '',
+                sex: '0',
+
+                email: '',
+                home_mobile: '',
+                joining_date: '',
+                work_time: '',
+
+                emergency_contact: '',
+                home_address: '',
+                graduation_school: '',
+                work_age: '',
+
+                emergency_mobile: '',
+                graduation_time: '',
+                nationality: '0',
+
+                status:'0'
+            }
+          return  data
+
+        }
     }
+        
     
   },
   watch:{
@@ -338,7 +415,7 @@ export default {
         console.log(this.result.replace(reg, ""))
         axios.get(R_PRE_URL+'/uploadBase64.do?imgStr='+this.result.replace(reg, "")
         ).then((res)=> {
-          _this.formValidate.avatar = res.data.fileName
+          _this.formValidate.head_pic = res.data.fileName
         }).catch((error)=> {
           console.log(error)
         })
@@ -370,47 +447,81 @@ export default {
     },
     handleSubmit (name) {
         this.$refs[name].validate((valid) => {
+            
             if (valid) {
-                this.$Message.success('Success!');
+                this.formValidate.name_spelling = this.name_spelling
+                this.formValidate.member_id = this.$store.state.userInfo.member_id
+                let DATA = this.formValidate
+                console.log(DATA)
+                if(this.writeType == 0){  //新增
+                    axios.post(R_PRE_URL+'/insertCompanyEmployee.do',DATA
+                    ).then((res)=> { 
+                      if(res.data.result == 2){
+                        this.$Message.success('新增员工成功!')
+                      }else{
+                        this.$Message.error('新增员工失败!')
+                      }
+                    }).catch((error)=> {
+                      console.log(error)
+                    })
+                }else{   //1修改
+                    axios.post(R_PRE_URL+'/updateMemberBasic.do',DATA
+                    ).then((res)=> { 
+                      if(res.data.result == 2){
+                        this.$Message.success('修改员工信息成功!')
+                        this.$store.state.toAddMember = false
+                        this.$emit('refreshData')
+                      }else{
+                        this.$Message.error('修改员工信息失败!')
+                      }
+                    }).catch((error)=> {
+                      console.log(error)
+                    })
+                }
+                this.$store.state.toAddMember = false
+                this.$emit('refreshData')  //返回刷新
                 
             } else {
                 this.$Message.error('Fail!');
             }
         })
-console.log(this.formValidate)
-console.log(this.formValidate.entry_time)
+        
         
     },
     handleReset (name) {
         this.$refs[name].resetFields()
     },
     handleBack(){
+      this.$emit('refreshData')
       this.$store.state.toAddMember = false
     },
     changeEntryTime(event){
       this.formValidate.entry_time = event
-      console.log(this.formValidate.entry_time)
+    },
+    changebirthDate(event){
+      this.formValidate.birthDate = event
     },
     //根据身份证获得出生日期
     autoToBirthday(){
       switch(autoBirthday(this.formValidate.id_number)){
         case '格式不对':
         this.formValidate.id_number = ''
-        this.formValidate.birthdate = ''
+        this.formValidate.birthDate = ''
         this.$Message.error('请输入正确的身份证号码!')
         break;
         case '不能为空':
         this.formValidate.id_number = ''
-        this.formValidate.birthdate = ''
+        this.formValidate.birthDate = ''
         this.$Message.error('请输入身份证号码!')
         break;
         default:
-        this.formValidate.birthdate = autoBirthday(this.formValidate.id_number)
+        this.formValidate.birthDate = autoBirthday(this.formValidate.id_number)
       }
     }
     // submit(){
     //     window.open(window.location.origin)
     // }
+
    
   },
 };
