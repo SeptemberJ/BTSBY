@@ -106,7 +106,7 @@ export default {
     post_name:'',     //岗位
     status:'',   //状态
     postList:[],
-    memberInfo:{},//查看的员工信息
+    memberInfo:{},//查看的员工的信息
     statusList:[
             {
                 value: '-1',
@@ -146,7 +146,7 @@ export default {
             },
             {
                 title: '户口性质',
-                key: 'registered_residence'
+                key: 'registered_residenceTxt'
             },
             {
                 title: '社保详情',
@@ -196,7 +196,7 @@ export default {
             },
             {
                 title: '性别',
-                key: 'sex',
+                key: 'sexTxt',
             },
             {
                 title: '岗位',
@@ -247,6 +247,7 @@ export default {
 
     axios.get(R_PRE_URL+'/searchPostNameList.do?member_id='+this.$store.state.userInfo.member_id
     ).then((res)=> { 
+       res.data.postNameList.unshift({"post_name": "全部"})
        this.postList = res.data.postNameList
     }).catch((error)=> {
       console.log(error)
@@ -326,7 +327,7 @@ export default {
       let member_id = this.$store.state.userInfo.member_id,
           number = this.number,
           page_num = this.page_num,
-          post_name = this.post_name
+          post_name = this.post_name == '全部'?'':this.post_name
           status = this.status
           // post_name = this.post_name == '-1'?'':this.post_name
           // status = this.status == '-1'?'':this.status
@@ -338,19 +339,29 @@ export default {
             Item.entry_time = timestampToFormatTime(Item.entry_time.time)
             switch(Item.registered_residence){
               case '0':
-              Item.registered_residence = '本地城镇'
+              Item.registered_residenceTxt = '本地城镇'
               break
               case '1':
-              Item.registered_residence = '本地农村'
+              Item.registered_residenceTxt = '本地农村'
               break
               case '2':
-              Item.registered_residence = '外地城镇'
+              Item.registered_residenceTxt = '外地城镇'
               break
               case '3':
-              Item.registered_residence = '外地农村'
+              Item.registered_residenceTxt = '外地农村'
               break
             }
-            Item.sex = Item.sex == 0?'男':'女'
+             switch(Item.sex){
+              case '0':
+              Item.sexTxt = '男'
+              break
+              case '1':
+              Item.sexTxt = '女'
+              break
+              default:
+              Item.sexTxt = ''
+            }
+            
             
           })
           this.dataMember = temp

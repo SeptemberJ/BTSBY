@@ -292,6 +292,7 @@ export default {
     },
     //获取数据
     getDataOrder(){
+      this.ifLoading = true
       let member_id = this.$store.state.userInfo.member_id,
           number = this.number,
           page_num = this.page_num,
@@ -346,6 +347,7 @@ export default {
           this.ifLoading = false
         })
         this.dataOrder = temp
+        this.ifLoading = false
 
       }).catch((error)=> {
         console.log(error)

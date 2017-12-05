@@ -108,8 +108,8 @@
                                 <FormItem label="姓名拼音" prop="name_spelling">
                                     <Input v-model="name_spelling" placeholder=""></Input>
                                 </FormItem>
-                                <FormItem label="出生日期" prop="birthDate">
-                                    <DatePicker v-model="formValidate.birthDate" type="date" placeholder="选择出生日期" @on-change="changebirthDate"></DatePicker>
+                                <FormItem label="出生日期" prop="birthdate">
+                                    <DatePicker v-model="formValidate.birthdate" type="date" placeholder="选择出生日期" @on-change="changebirthdate"></DatePicker>
                                 </FormItem>
                                 <FormItem label="性别" prop="sex">
                                     <Select v-model="formValidate.sex" size="small">
@@ -130,10 +130,10 @@
                                     <Input v-model="formValidate.home_mobile" placeholder=""></Input>
                                 </FormItem>
                                 <FormItem label=" 入党团日期" prop="joining_date">
-                                    <Input v-model="formValidate.joining_date" placeholder=""></Input>
+                                    <DatePicker v-model="formValidate.joining_date" type="date" placeholder="选择入党团日期" @on-change="changeJoiningDate"></DatePicker>
                                 </FormItem>
                                 <FormItem label=" 参加工作时间" prop="work_time">
-                                    <Input v-model="formValidate.work_time" placeholder=""></Input>
+                                    <DatePicker v-model="formValidate.work_time" type="date" placeholder="选择参加工作时间" @on-change="changeWorkTime"></DatePicker>
                                 </FormItem>
                             </Col>
                             <Col span="8">
@@ -155,7 +155,7 @@
                                     <Input v-model="formValidate.emergency_mobile" placeholder=""></Input>
                                 </FormItem>
                                 <FormItem label="毕业时间" prop="graduation_time">
-                                    <Input v-model="formValidate.graduation_time" placeholder=""></Input>
+                                    <DatePicker v-model="formValidate.graduation_time" type="date" placeholder="选择毕业时间" @on-change="changeGraduationTime"></DatePicker>
                                 </FormItem>
                                 <FormItem label="国籍" prop="nationality">
                                     <Select v-model="formValidate.nationality" size="small">
@@ -215,7 +215,7 @@ export default {
 
     //     head_pic:'',
     //     //name_spelling: this.name_spelling ||'',
-    //     birthDate: '',
+    //     birthdate: '',
     //     sex: '0',
 
     //     email: '',
@@ -303,18 +303,7 @@ export default {
     })
 
     
-    // axios.get('static/json/MemberInfo.json'
-    // ).then((res)=> { 
-    //     console.log(res)
-    //   this.politicalVisageList = res.data.politicalVisageList
-    //   this.maritalStatusList = res.data.maritalStatusList
-    //   this.educationList = res.data.educationList
-    //   this.heathStatusList = res.data.heathStatusList
-    //   this.sexList = res.data.sexList
-    //   this.nationList = res.data.nationList
-    // }).catch((error)=> {
-    //   console.log(error)
-    // })
+    
 
 
     
@@ -340,12 +329,22 @@ export default {
     },
     formValidate(){
         if(this.writeType == 1){
-            console.log('this.memberInfo----')
-            let temp = this.memberInfo
-            temp.birthDate = new Date(this.memberInfo.birthDate.time)
-            console.log(temp)
-            return temp
-
+              let temp = this.memberInfo
+              temp.birthdate = new Date(this.memberInfo.birthdate.time)
+              console.log('temp---')
+              console.log(temp)
+              return temp
+            // axios.get(R_PRE_URL+'/searchCompanyEmployee.do?id='+this.memberInfo
+            // ).then((res)=> { 
+            //   let temp = res.data.employee
+            //   temp.birthdate = new Date(res.data.employee.birthdate.time)
+            //   console.log('temp---')
+            //   console.log(temp)
+            //   return temp
+            // }).catch((error)=> {
+            //   console.log(error)
+            // })
+            
         }else{
             let data ={
                 id_number: '',
@@ -371,7 +370,7 @@ export default {
 
                 head_pic:'',
                 //name_spelling: this.name_spelling ||'',
-                birthDate: '',
+                birthdate: '',
                 sex: '0',
 
                 email: '',
@@ -465,10 +464,11 @@ export default {
                       console.log(error)
                     })
                 }else{   //1修改
-                    axios.post(R_PRE_URL+'/updateMemberBasic.do',DATA
+                    axios.post(R_PRE_URL+'/updateCompanyEmployee.do',DATA
                     ).then((res)=> { 
                       if(res.data.result == 2){
                         this.$Message.success('修改员工信息成功!')
+                        console.log(DATA)
                         this.$store.state.toAddMember = false
                         this.$emit('refreshData')
                       }else{
@@ -498,24 +498,33 @@ export default {
     changeEntryTime(event){
       this.formValidate.entry_time = event
     },
-    changebirthDate(event){
-      this.formValidate.birthDate = event
+    changebirthdate(event){
+      this.formValidate.birthdate = event
+    },
+    changeJoiningDate(event){
+      this.formValidate.joining_date = event
+    },
+    changeWorkTime(event){
+      this.formValidate.work_time = event
+    },
+    changeGraduationTime(event){
+      this.formValidate.graduation_time = event
     },
     //根据身份证获得出生日期
     autoToBirthday(){
       switch(autoBirthday(this.formValidate.id_number)){
         case '格式不对':
         this.formValidate.id_number = ''
-        this.formValidate.birthDate = ''
+        this.formValidate.birthdate = ''
         this.$Message.error('请输入正确的身份证号码!')
         break;
         case '不能为空':
         this.formValidate.id_number = ''
-        this.formValidate.birthDate = ''
+        this.formValidate.birthdate = ''
         this.$Message.error('请输入身份证号码!')
         break;
         default:
-        this.formValidate.birthDate = autoBirthday(this.formValidate.id_number)
+        this.formValidate.birthdate = autoBirthday(this.formValidate.id_number)
       }
     }
     // submit(){

@@ -7,6 +7,7 @@
             </p>
             <div style="text-align:center;">
                 <Table border ref="selection" :columns="columnsS" :data="dataS" @on-selection-change="MemberchangedS"></Table>
+                <Page class="marginT_20" :total="Total" show-total style="float: right;" :current="page_num" @on-change="" @on-page-size-change="" show-sizer></Page>
             </div>
             <div slot="footer">
                 <Button type="error" size="large" long :loading="modal_loading" @click="submitMemberS">确定</Button>
@@ -19,6 +20,7 @@
             </p>
             <div style="text-align:center;">
                 <Table border ref="selection" :columns="columnsG" :data="dataG" @on-selection-change="MemberchangedG"></Table>
+                <Page class="marginT_20" :total="Total" show-total style="float: right;" :current="page_num" @on-change="" @on-page-size-change="" show-sizer></Page>
             </div>
             <div slot="footer">
                 <Button type="error" size="large" long :loading="modal_loading" @click="submitMemberG">确定</Button>
@@ -37,6 +39,9 @@ export default {
   return {
     ifChooseMember:false,
     modal_loading:false,
+    Total:0,
+    page_num:1,  //页数
+    number:10,   //每页条数
     columnsS: [
         {
             type: 'selection',
@@ -44,16 +49,17 @@ export default {
             align: 'center'
         },
         {
+            type: 'index',
+            width: 60,
+            align: 'center'
+        },
+        {
             title: '姓名',
-            key: 'name'
+            key: 'name',
         },
         {
             title: '身份证号',
-            key: 'id_card'
-        },
-        {
-            title: '是否在职',
-            key: 'postStatus'
+            key: 'id_number',
         },
         {
             title: '参保城市',
@@ -61,15 +67,7 @@ export default {
         },
         {
             title: '户口性质',
-            key: 'resident'
-        },
-        {
-            title: '性别',
-            key: 'sex'
-        },
-        {
-            title: '入职时间',
-            key: 'time'
+            key: 'registered_residenceTxt'
         },
         {
           title: 'Action',
@@ -153,26 +151,7 @@ export default {
           }
         }
     ],
-    dataS: [
-        {
-            name: '张三',
-            id_card: 320684198212123663,
-            postStatus: '在职',
-            city:'上海',
-            resident:'本地城镇（五金）',
-            sex:'男',
-            time: '2016-10-03'
-        },
-        {
-            name: '李四',
-            id_card: 320684198212123663,
-            postStatus: '在职',
-            city:'上海',
-            resident:'本地城镇（五金）',
-            sex:'男',
-            time: '2016-10-03'
-        },
-    ],
+    dataS: [],
     dataG: [
         {
             name: '张三',
@@ -202,6 +181,7 @@ export default {
   },
   created(){
     this.ifChooseMember = true
+    this.getDataMember()
     // axios.get(R_PRE_URL+'/searchCityList.do'
     // ).then((res)=> { 
     //   this.cityList = res.data.arr
@@ -246,6 +226,55 @@ export default {
     //提交公积金人员名单
     submitMemberG(){
         // window.open(window.location.origin)
+    },
+    getDataMember(){
+      this.ifLoading = true
+      let member_id = this.$store.state.userInfo.member_id,
+          number = this.number,
+          page_num = this.page_num,
+          post_name = ''
+          status = 0
+   
+        axios.get(R_PRE_URL+'/searchCompanyEmployeeList.do?member_id='+member_id+'&number='+number+'&page_num='+page_num+'&post_name='+post_name+'&status='+status
+        ).then((res)=> {
+          let temp = res.data.employeeList
+          temp.map((Item,Idx)=>{
+            Item.entry_time = timestampToFormatTime(Item.entry_time.time)
+            switch(Item.registered_residence){
+              case '0':
+              Item.registered_residenceTxt = '本地城镇'
+              break
+              case '1':
+              Item.registered_residenceTxt = '本地农村'
+              break
+              case '2':
+              Item.registered_residenceTxt = '外地城镇'
+              break
+              case '3':
+              Item.registered_residenceTxt = '外地农村'
+              break
+            }
+             switch(Item.sex){
+              case '0':
+              Item.sexTxt = '男'
+              break
+              case '1':
+              Item.sexTxt = '女'
+              break
+              default:
+              Item.sexTxt = ''
+            }
+            
+            
+          })
+          this.dataS = temp
+          this.Total = res.data.count
+          this.ifLoading = false
+          
+        }).catch((error)=> {
+          console.log(error)
+        })
+    
     }
    
   },
