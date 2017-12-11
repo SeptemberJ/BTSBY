@@ -1,7 +1,7 @@
 <template>
     <div id="ChooseMember">
           <!-- Modal 社保-->
-          <Modal v-if="type==0" v-model="ifChooseMember" @on-visible-change="changeVisible" width="800">
+          <Modal v-if="type==0" v-model="ifChooseMember" :mask-closable="false"  @on-visible-change="changeVisible" width="800">
             <p slot="header" style="text-align:left">
                 <span>编辑社保参保名单</span><span class="colorRed tips">注:勾选的人员表示加入参保,如需不参保请取消勾选</span>
             </p>

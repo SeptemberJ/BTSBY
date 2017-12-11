@@ -1,11 +1,13 @@
 <template>
     <div id="MyorderI">
-      <h3>
+      <h3 style="">
         <span style="font-size: 18px;">
           <Icon type="ios-cart" size="24"></Icon>
           我的订单
         </span>
-        <span style="float: right;">
+      <!-- </h3>
+      <h3 class="marginT_10" style="text-align: right;"> -->
+      <span style="margin-left: 20px;">
           <span>
             支付状态
             <Select v-model="status" size="small" style="width:80px">
@@ -29,10 +31,10 @@
             <DatePicker type="month" v-model="month_name" placeholder="缴纳月份" style="width: 100px"></DatePicker>
           </span>
           <span><Button type="primary" icon="ios-search" @click="searchOrder">搜索</Button></span>
-        </span>
-      </h3>
+          </span>
+        </h3>
       <!-- table -->
-      <Table class="marginT_20" border highlight-row :columns="myOrderList" :loading="ifLoading" :data="dataOrder"></Table>
+      <Table class="marginT_10" border highlight-row :columns="myOrderList" :loading="ifLoading" :data="dataOrder"></Table>
 
       <Page class="marginT_20" :total="Total" show-total style="float: right;" :current="page_num" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer></Page>
       

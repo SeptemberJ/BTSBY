@@ -149,18 +149,18 @@ export default {
                                             this.show(params)
                                         }
                                     }
-                                }, 'View'),
-                                h('Button', {
-                                    props: {
-                                        type: 'error',
-                                        size: 'small'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.remove(params.index)
-                                        }
-                                    }
-                                }, 'Delete')
+                                }, '办理'),
+                                // h('Button', {
+                                //     props: {
+                                //         type: 'error',
+                                //         size: 'small'
+                                //     },
+                                //     on: {
+                                //         click: () => {
+                                //             this.remove(params.index)
+                                //         }
+                                //     }
+                                // }, 'Delete')
                             ]);
                         }
                           

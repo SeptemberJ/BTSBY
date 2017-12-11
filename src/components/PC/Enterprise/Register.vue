@@ -43,7 +43,7 @@
         </span>
       </h3>
       <!-- table -->
-      <Table class="marginT_20" highlight-row  border ref="selection" :columns="memberList" :data="dataMember" :loading="ifLoading" @on-selection-change="selectChanged" @on-current-change="chooseRow"></Table>
+      <Table class="marginT_20" highlight-row  border ref="selection" :columns="memberList" :data="dataMember" :loading="ifLoading" @on-selection-change="selectChanged"></Table>
 
       <Page class="marginT_20" :total="Total" show-total style="float: right;" :current="page_num" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer></Page>
 
@@ -51,8 +51,13 @@
       <!-- 新增员工 -->
       <AddMember v-on:refreshData="getDataMember" :writeType="writeType" :memberInfo="memberInfo"></AddMember>
 
+      <!-- 离职 -->
+      <DisMission></DisMission>
+
+
+
       <!-- 增减员工 -->
-      <Modal v-model="ifAddOrMin">
+      <Modal v-model="ifAddOrMin" :mask-closable="false">
         <p slot="header" style="text-align:left">
             <span>社保[公积金]增减</span>
         </p>
@@ -82,6 +87,22 @@
             <Button type="error" size="large"  :loading="modal_loading" @click="submitAddOrMin">提交更改</Button>
         </div>
     </Modal>
+    <!-- 查看缴纳历史 -->
+    <Modal v-model="ifShowRecord" width="800" :mask-closable="false">
+        <p slot="header" style="">
+            <Icon type="information-circled"></Icon>
+            <span>投保历史</span>
+        </p>
+        <div style="text-align:center">
+            <Table :columns="columnsRecord" :data="dataRecord"></Table>
+        </div>
+        <div slot="footer">
+            <Button type="primary" size="large" @click="CloseRecord">关闭</Button>
+        </div>
+    </Modal>
+  <!--   <Modal v-model="ifShowRecord" title="投保历史" @on-ok="" @on-cancel="" :mask-closable="false" width="800" cancel-text="">
+        <Table :columns="columnsRecord" :data="dataRecord"></Table>
+    </Modal> -->
 
 
 
@@ -91,10 +112,12 @@
 import Vue from 'vue'
 import axios from 'axios'
 import AddMember from './AddMember.vue'
+import DisMission from './MemberOperation/DisMission.vue'
 import {timestampToFormatTime} from '../../../util/utils'
 export default {
   data() {
   return {
+    // ifDisMission:false, //离职显示
     modal_loading: false,
     ifLoading:true,
     writeType:0,  //0新增 1修改
@@ -135,6 +158,24 @@ export default {
             {
                 title: '姓名',
                 key: 'name',
+                render: (h, params) => {
+                    return h('div', [
+                        h('Button', {
+                            props: {
+                                type: 'text',
+                                size: 'small'
+                            },
+                            style: {
+                                marginRight: '5px'
+                            },
+                            on: {
+                                click: () => {
+                                    this.SearchMemberInfo(params.row)
+                                }
+                            }
+                        }, params.row.name),
+                    ]);
+                }
             },
             {
                 title: '身份证号',
@@ -164,7 +205,7 @@ export default {
                             },
                             on: {
                                 click: () => {
-                                    this.show(params.index)
+                                    this.showRecord(0,params.index)
                                 }
                             }
                         }, '查看'),
@@ -187,7 +228,7 @@ export default {
                             },
                             on: {
                                 click: () => {
-                                    this.show(params.index)
+                                    this.showRecord(1,params.index)
                                 }
                             }
                         }, '查看'),
@@ -212,6 +253,7 @@ export default {
             }
         ],
     dataMember: [],
+    ifShowRecord:false,
     ifAddOrMin:false,
     selectArray:[],  //selected 名单
     formAddOrMin: {
@@ -231,7 +273,52 @@ export default {
         startMonth:[
             { required: true, message: '请选择起始月份', trigger: 'blur' }
         ]
-      }
+      },
+    columnsRecord: [
+          {
+              type: 'index',
+              width:60
+          },
+          {
+              title: '缴纳月份',
+              key: 'Month'
+          },
+          {
+              title: '订单号',
+              key: 'Order_no'
+          },
+          {
+              title: '购买时间',
+              key: 'Pay_date'
+          },
+          {
+              title: '单位费用',
+              key: 'Sum_U'
+          },
+          {
+              title: '个人费用',
+              key: 'Sum_I'
+          },
+          {
+              title: '费用合计',
+              key: 'Sum'
+          },
+          {
+              title: '服务状态',
+              key: 'Status'
+          }
+    ],
+    dataRecord: [
+          {
+              Month: '2017-09',
+              Order_no: 'OR123456',
+              Pay_date: '2017-09-09',
+              Sum_U: 2999,
+              Sum_I:1000,
+              Sum:3999,
+              Status:'XX状态'
+          },
+    ],
 
 
     
@@ -266,9 +353,32 @@ export default {
   watch:{
   },
   components: {
-    AddMember
+    AddMember,
+    DisMission
   },
   methods: {
+    //查看员工缴纳历史
+    showRecord(TYPE,INFO){
+      this.ifShowRecord = true
+      // if(TYPE==0){ //社保历史
+      //   axios.get(R_PRE_URL+''
+      //   ).then((res)=> { 
+      //     this.dataRecord = res.data
+      //   }).catch((error)=> {
+      //     console.log(error)
+      //   })
+      // }else{ //公积金历史
+      //   axios.get(R_PRE_URL+''
+      //   ).then((res)=> { 
+      //     this.dataRecord = res.data
+      //   }).catch((error)=> {
+      //     console.log(error)
+      //   })
+      // }
+    },
+    CloseRecord(){
+      this.ifShowRecord = false
+    },
     //快捷操作
     OperationFns(event){
       switch(event){
@@ -280,6 +390,12 @@ export default {
         case '导入':
         break;
         case '离职':
+        if(this.selectArray.length<=0){
+          this.$Message.error('请选择要离职的员工!')
+        }else{
+          this.$store.state.ifDisMission = true
+          //this.$store.state.ifDisMission = true
+        }
         break;
         case '增减员':
         if(this.selectArray.length<=0){
@@ -300,7 +416,7 @@ export default {
       // selectArray_  formAddOrMin
     },
     //查看员工信息
-    chooseRow(Member){
+    SearchMemberInfo(Member){
       this.$store.state.toAddMember = true
       this.writeType = 1
       this.memberInfo = Member
@@ -309,6 +425,7 @@ export default {
     },
     //search
     searchMemberList(){
+      this.page_num = 1
       this.getDataMember()
     },
     //分页

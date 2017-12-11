@@ -4,6 +4,12 @@
                 <p slot="title">{{writeType==0?'新增员工':'修改员工信息'}}</p>
                 <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
                 <Row>
+                   <!--  <Col span="24">
+                      <Button type="text">
+                            <Icon type="chevron-left"></Icon>
+                            返回
+                        </Button>
+                    </Col> -->
                     <Col span="24">
                         <Row>
                             <Col span="8">
