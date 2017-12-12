@@ -52,12 +52,13 @@
       <AddMember v-on:refreshData="getDataMember" :writeType="writeType" :memberInfo="memberInfo"></AddMember>
 
       <!-- 离职 -->
-      <DisMission></DisMission>
+      <DisMission v-on:refreshData="getDataMember" :memberInfo="memberInfo"></DisMission>
 
 
 
       <!-- 增减员工 -->
-      <Modal v-model="ifAddOrMin" :mask-closable="false">
+      <AddOrMin  v-on:refreshData="getDataMember" :selectArray="selectArray"></AddOrMin>
+      <!-- <Modal v-model="ifAddOrMin" :mask-closable="false">
         <p slot="header" style="text-align:left">
             <span>社保[公积金]增减</span>
         </p>
@@ -86,7 +87,7 @@
         <div slot="footer">
             <Button type="error" size="large"  :loading="modal_loading" @click="submitAddOrMin">提交更改</Button>
         </div>
-    </Modal>
+    </Modal> -->
     <!-- 查看缴纳历史 -->
     <Modal v-model="ifShowRecord" width="800" :mask-closable="false">
         <p slot="header" style="">
@@ -111,9 +112,11 @@
 <script>
 import Vue from 'vue'
 import axios from 'axios'
-import AddMember from './AddMember.vue'
+import AddMember from './MemberOperation/AddMember.vue'
+import AddOrMin from './MemberOperation/AddOrMin.vue'
 import DisMission from './MemberOperation/DisMission.vue'
 import {timestampToFormatTime} from '../../../util/utils'
+import * as Moment from 'moment'
 export default {
   data() {
   return {
@@ -238,6 +241,7 @@ export default {
             {
                 title: '性别',
                 key: 'sexTxt',
+                width:70
             },
             {
                 title: '岗位',
@@ -256,24 +260,24 @@ export default {
     ifShowRecord:false,
     ifAddOrMin:false,
     selectArray:[],  //selected 名单
-    formAddOrMin: {
-        AddOrMin:'增员',
-        business:[],
-        startMonth:''
+    // formAddOrMin: {
+    //     AddOrMin:'增员',
+    //     business:[],
+    //     startMonth:''
 
-    },
-    ruleValidate_AddOrMin: {
-        AddOrMin: [
-            { required: true, message: '请选择种类', trigger: 'blur' }
-        ],
-        business: [
-            { required: true, type: 'array', min: 1, message: '至少选择一项业务', trigger: 'change' },
-            { type: 'array', max: 2, message: '至少选择一项业务', trigger: 'change' }
-        ],
-        startMonth:[
-            { required: true, message: '请选择起始月份', trigger: 'blur' }
-        ]
-      },
+    // },
+    // ruleValidate_AddOrMin: {
+    //     AddOrMin: [
+    //         { required: true, message: '请选择种类', trigger: 'blur' }
+    //     ],
+    //     business: [
+    //         { required: true, type: 'array', min: 1, message: '至少选择一项业务', trigger: 'change' },
+    //         { type: 'array', max: 2, message: '至少选择一项业务', trigger: 'change' }
+    //     ],
+    //     startMonth:[
+    //         { required: true, message: '请选择起始月份', trigger: 'blur' }
+    //     ]
+    //   },
     columnsRecord: [
           {
               type: 'index',
@@ -340,6 +344,7 @@ export default {
       console.log(error)
     })
     this.getDataMember()
+
     
   },
   mounted: function(){
@@ -354,6 +359,7 @@ export default {
   },
   components: {
     AddMember,
+    AddOrMin,
     DisMission
   },
   methods: {
@@ -392,16 +398,18 @@ export default {
         case '离职':
         if(this.selectArray.length<=0){
           this.$Message.error('请选择要离职的员工!')
+        }else if(this.selectArray.length>1){
+          this.$Message.warning('只能选择一个离职的员工!')
         }else{
+          this.memberInfo = this.selectArray[0]
           this.$store.state.ifDisMission = true
-          //this.$store.state.ifDisMission = true
         }
         break;
         case '增减员':
         if(this.selectArray.length<=0){
           this.$Message.error('请选择要增(减)员的员工!')
         }else{
-          this.ifAddOrMin = true
+          this.$store.state.ifAddOrMin = true
         }
         break;
       }
@@ -411,15 +419,16 @@ export default {
       this.selectArray = LIST
       console.log(this.selectArray)
     },
-    //提交增减员名单
-    submitAddOrMin(){
-      // selectArray_  formAddOrMin
-    },
+    // //提交增减员名单
+    // submitAddOrMin(){
+    //   // selectArray_  formAddOrMin
+    // },
     //查看员工信息
     SearchMemberInfo(Member){
       this.$store.state.toAddMember = true
       this.writeType = 1
       this.memberInfo = Member
+      console.log('Member----p')
       console.log(Member)
 
     },
@@ -453,7 +462,11 @@ export default {
         ).then((res)=> {
           let temp = res.data.employeeList
           temp.map((Item,Idx)=>{
+            Item.birthdate = timestampToFormatTime(Item.birthdate.time)
             Item.entry_time = timestampToFormatTime(Item.entry_time.time)
+            // Item.joining_date = timestampToFormatTime(Item.joining_date.time)
+            // Item.work_time = timestampToFormatTime(Item.work_time.time)
+            // Item.graduation_time = timestampToFormatTime(Item.graduation_time.time)
             switch(Item.registered_residence){
               case '0':
               Item.registered_residenceTxt = '本地城镇'

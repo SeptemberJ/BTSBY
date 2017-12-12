@@ -8,6 +8,7 @@ import VueDND from 'awe-dnd'
 import 'babel-polyfill'
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
+
 // import 'theme/theme.less';
 
 

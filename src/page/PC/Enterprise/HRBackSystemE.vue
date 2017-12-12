@@ -2,11 +2,11 @@
 <div id="HRBackSystemI" class="layout">\
         <div class="layout-content">
             <Row>
-                <Col span="5">
+                <Col span="4">
                 企业
                   <SideBar v-on:SideMenu-click="listenFromSideMenu"></SideBar>
                 </Col>
-                <Col span="19" style="border-left: 1px solid #ddd;">
+                <Col span="20" style="border-left: 1px solid #ddd;">
                     <div class="layout-content-main">
                       <Register v-if="curMneu == '花名册'"></Register>
                       <Myorder v-if="curMneu == '我的订单'"></Myorder>

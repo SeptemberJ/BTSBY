@@ -188,8 +188,8 @@
 <script>
 import Vue from 'vue'
 import axios from 'axios'
-import {toPingyin} from '../../../util/toPingyin'
-import {autoBirthday} from '../../../util/utils'
+import {toPingyin} from '../../../../util/toPingyin'
+import * as Moment from 'moment'
 
 
 export default {
@@ -197,6 +197,7 @@ export default {
   data() {
   return {
     modal_loading:false,
+    City:'',
     // formValidate: {
     //     id_number: '',
     //     name:'',
@@ -294,6 +295,7 @@ export default {
     axios.get(R_PRE_URL+'/searchCompanyDetail.do?member_id='+this.$store.state.userInfo.member_id
     ).then((res)=> { 
       this.formValidate.city = res.data.companyDetail.fcity
+      this.City = res.data.companyDetail.fcity
     }).catch((error)=> {
       console.log(error)
     })
@@ -336,7 +338,9 @@ export default {
     formValidate(){
         if(this.writeType == 1){
               let temp = this.memberInfo
-              temp.birthdate = new Date(this.memberInfo.birthdate.time)
+              // if(temp.birthdate.time){
+              // temp.birthdate = new Date(this.memberInfo.birthdate.time)
+              // }
               console.log('temp---')
               console.log(temp)
               return temp
@@ -356,7 +360,7 @@ export default {
                 id_number: '',
                 name:'',
                 employee_no:'',
-                city:'',
+                city:this.City,
                 entry_time: '',//new Date()
                 post_name: '',
                 employment_type: '',
@@ -451,44 +455,61 @@ export default {
         });
     },
     handleSubmit (name) {
+        var _this = this
+        
         this.$refs[name].validate((valid) => {
-            
             if (valid) {
-                this.formValidate.name_spelling = this.name_spelling
-                this.formValidate.member_id = this.$store.state.userInfo.member_id
-                let DATA = this.formValidate
-                console.log(DATA)
-                if(this.writeType == 0){  //新增
+                _this.formValidate.name_spelling = _this.name_spelling
+                _this.formValidate.member_id = _this.$store.state.userInfo.member_id
+                let DATA = _this.formValidate
+                //传输时ISODATE加一天
+                var arr = ['entry_time','birthdate','joining_date','work_time','graduation_time']
+                arr.map(function(Item,Idx){
+                    if(_this.formValidate[Item]){
+                        DATA[Item] = Moment(_this.formValidate[Item]).add(1,'days')
+                    }
+                })
+                
+                //DATA.entry_time = Moment(_this.formValidate.entry_time).add(1,'days')
+                //DATA.birthdate = Moment(_this.formValidate.birthdate).add(1,'days')
+                // DATA.joining_date = Moment(_this.formValidate.joining_date).add(1,'days')
+                // DATA.work_time = Moment(_this.formValidate.work_time).add(1,'days')
+                // DATA.graduation_time = Moment(_this.formValidate.graduation_time).add(1,'days')
+                
+
+                if(_this.writeType == 0){  //新增
                     axios.post(R_PRE_URL+'/insertCompanyEmployee.do',DATA
                     ).then((res)=> { 
                       if(res.data.result == 2){
-                        this.$Message.success('新增员工成功!')
+                        _this.$Message.success('新增员工成功!')
+                        _this.$store.state.toAddMember = false
+                        _this.$emit('refreshData')  //返回刷新
                       }else{
-                        this.$Message.error('新增员工失败!')
+                        _this.$Message.error('新增员工失败!')
                       }
                     }).catch((error)=> {
                       console.log(error)
                     })
                 }else{   //1修改
                     axios.post(R_PRE_URL+'/updateCompanyEmployee.do',DATA
-                    ).then((res)=> { 
+                    ).then((res)=> {
+                      console.log(DATA) 
                       if(res.data.result == 2){
-                        this.$Message.success('修改员工信息成功!')
-                        console.log(DATA)
-                        this.$store.state.toAddMember = false
-                        this.$emit('refreshData')
+                        _this.$Message.success('修改员工信息成功!')
+                        _this.$store.state.toAddMember = false
+                        _this.$emit('refreshData')
                       }else{
-                        this.$Message.error('修改员工信息失败!')
+                        _this.$Message.error('修改员工信息失败!')
                       }
                     }).catch((error)=> {
                       console.log(error)
                     })
                 }
-                this.$store.state.toAddMember = false
-                this.$emit('refreshData')  //返回刷新
+                // this.$store.state.toAddMember = false
+                // this.$emit('refreshData')  //返回刷新
                 
             } else {
-                this.$Message.error('Fail!');
+                _this.$Message.error('Fail!');
             }
         })
         
@@ -502,19 +523,19 @@ export default {
       this.$store.state.toAddMember = false
     },
     changeEntryTime(event){
-      this.formValidate.entry_time = event
+      this.formValidate.entry_time = event//Moment(event).add(0,'days')
     },
     changebirthdate(event){
-      this.formValidate.birthdate = event
+      this.formValidate.birthdate = event//Moment(event).add(0,'days')
     },
     changeJoiningDate(event){
-      this.formValidate.joining_date = event
+      this.formValidate.joining_date = event//Moment(event).add(0,'days')
     },
     changeWorkTime(event){
-      this.formValidate.work_time = event
+      this.formValidate.work_time = event//Moment(event).add(0,'days')
     },
     changeGraduationTime(event){
-      this.formValidate.graduation_time = event
+      this.formValidate.graduation_time = event//Moment(event).add(0,'days')
     },
     //根据身份证获得出生日期
     autoToBirthday(){

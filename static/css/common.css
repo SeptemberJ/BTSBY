@@ -1,0 +1,66 @@
+#app{        
+    margin: 0 auto;
+}
+.selfAdaptionWrap{
+    display: flex;
+    flex-direction:row;
+    flex-wrap:wrap;
+    justify-content:center;
+    align-items:center;
+}
+.fontSizeSmall{
+    font-size: 14px;
+}
+.colorRed{
+    color: #ff150e;
+}
+.colorOrange{
+  color: #FF7800;
+}
+.colorLightBlack{
+    color: #6d7380;
+}
+.lightBlue{
+  background-color: #F3F8FE;
+}
+.ivu-menu-horizontal.ivu-menu-light:after{
+    height: 0px !important;
+}
+.marginT_10{
+    margin-top: 10px;
+}
+.marginT_20{
+    margin-top: 20px;
+}
+.TextCenter{
+    text-align: center;
+}
+.colorGray{
+  color: #989898;
+}
+.marginTB_10{
+    margin: 10px auto;
+}
+.marginTB_20{
+    margin: 20px auto;
+}
+.marginB_20{
+    margin-bottom: 20px;
+}
+.marginT_20{
+    margin-top: 20px;
+}
+.marginTB_40{
+    margin: 40px auto;
+}
+.marginL_20{
+    margin-left: 20px;
+}
+.marginR_10{
+    margin-right: 10px;
+}
+.fixWidthSpan_60{
+    width: 60px;
+    display: inline-block;
+
+}

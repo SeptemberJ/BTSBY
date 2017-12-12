@@ -32,6 +32,7 @@
 <script>
 import Vue from 'vue'
 import axios from 'axios'
+import {setCookie} from '../../../util/utils'
 export default {
   data() {
   return {
@@ -81,8 +82,6 @@ export default {
                 this.$Message.error('请输入正确的用户名和密码!');
             }
         })
-        
-
     },
     LoginIn(NAME,PSD){
       axios.get(R_PRE_URL+'/login.do?mobile='+NAME+'&psw='+PSD
@@ -100,6 +99,7 @@ export default {
           this.$store.state.userInfo.member_id = res.data.member_id
           this.$store.state.userInfo.register_type = res.data.register_type
           this.$store.state.ifLogined = true
+          setCookie('btsby_cookie',res.data.member_id,1)
           this.$Message.success('登录成功!');
           this.$router.push({name:'首页'})
           break;
@@ -116,6 +116,33 @@ export default {
         console.log(error)
       })
     },
+     // //设置cookie
+     //        setCookie(cname, cvalue, exdays) {
+     //            var d = new Date();
+     //            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+     //            var expires = "expires=" + d.toUTCString();
+     //            console.info(cname + "=" + cvalue + "; " + expires);
+     //            document.cookie = cname + "=" + cvalue + "; " + expires;
+     //            // console.info('document.cookie---');
+     //            // console.info(document.cookie);
+     //            alert(this.getCookie('btsby_cookie'))
+     //        },
+     //        //获取cookie
+     //        getCookie(cname){
+     //            var name = cname + "=";
+     //            var ca = document.cookie.split(';');
+     //            for (var i = 0; i < ca.length; i++) {
+     //                var c = ca[i];
+     //                while (c.charAt(0) == ' ') c = c.substring(1);
+     //                if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
+     //            }
+     //            return "";
+     //        },
+     //        //清除cookie
+     //        clearCookie(){
+     //            this.setCookie("username", "", -1);
+
+     //        },
   }
 };
 </script>

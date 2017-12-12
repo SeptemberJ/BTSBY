@@ -14,6 +14,7 @@ import AboutUs from '../page/PC/Common/AboutUs'
 import HRBackSystemI from '../page/PC/Individual/HRBackSystemI'
 import HRBackSystemE from '../page/PC/Enterprise/HRBackSystemE'
 import {deviceInfo} from "../util/device"
+import {setCookie,getCookie} from '../util/utils'
 
 Vue.use(VueRouter)
 
@@ -30,12 +31,12 @@ const routes = [
     {path: '/Enterprise', name: '企业保', component: Enterprise},
     {path: '/News', name: '社保资讯', component: News},
     {path: '/NewsDetail/:id', name: '资讯详情', component: NewsDetail},
-    {path: '/AboutUs', name: '关于我们', component: AboutUs},
+    {path: '/AboutUs', name: '关于我们', component: AboutUs,meta: {requireAuth: true},},
 
     
     
-    {path: '/HRBackSystemI', name: 'HR管理后台(个人)', component: HRBackSystemI},
-    {path: '/HRBackSystemE', name: 'HR管理后台(企业)', component: HRBackSystemE},
+    {path: '/HRBackSystemI', name: 'HR管理后台(个人)', component: HRBackSystemI,meta: {requireAuth: true}},
+    {path: '/HRBackSystemE', name: 'HR管理后台(企业)', component: HRBackSystemE,meta: {requireAuth: true}},
       {path:'*', redirect: '/Index'}
       // {path: '/article/:id', name: 'article', component: Article},
     ]
@@ -52,10 +53,14 @@ const router = new VueRouter({
 //登录控制
 router.beforeEach((to, from, next) => {
     if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
-        if (localStorage.getItem("user_token")) {  // 通过vuex state获取当前的token是否存在
+        if (getCookie('btsby_cookie')) {  // 通过vuex state获取当前的token是否存在
             next();
         }
         else {
+            localStorage.clear();
+            Store.state.userInfo.username = ''
+            Store.state.userInfo.member_id = ''
+            Store.state.ifLogined = false
             next({
                 path: '/Login',
             })
