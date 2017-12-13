@@ -13,6 +13,16 @@ import NewsDetail from '../page/PC/Common/NewsDetail'
 import AboutUs from '../page/PC/Common/AboutUs'
 import HRBackSystemI from '../page/PC/Individual/HRBackSystemI'
 import HRBackSystemE from '../page/PC/Enterprise/HRBackSystemE'
+
+import PeripheryTab from '../page/Mobile/PeripheryTab'
+import ArticleDetail from '../page/Mobile/ArticleDetail'
+import WhyBuy from '../page/Mobile/WhyBuy'
+import Service from '../page/Mobile/Service'
+import HowBuy from '../page/Mobile/HowBuy'
+
+import PaySecurity from '../page/Mobile/PaySecurity'
+
+
 import {deviceInfo} from "../util/device"
 import {setCookie,getCookie} from '../util/utils'
 
@@ -34,9 +44,17 @@ const routes = [
     {path: '/AboutUs', name: '关于我们', component: AboutUs,meta: {requireAuth: true},},
 
     
-    
     {path: '/HRBackSystemI', name: 'HR管理后台(个人)', component: HRBackSystemI,meta: {requireAuth: true}},
     {path: '/HRBackSystemE', name: 'HR管理后台(企业)', component: HRBackSystemE,meta: {requireAuth: true}},
+
+    {path: '/PeripheryTab', name: '社保周边', component: PeripheryTab},
+    {path: '/ArticleDetail/:id', name: '详情', component: ArticleDetail},
+    {path: '/WhyBuy', name: '为何购买社保', component: WhyBuy},
+    {path: '/Service', name: '社保服务介绍', component: Service},
+    {path: '/HowBuy', name: '如何在线购买', component: HowBuy},
+    {path: '/PaySecurity', name: '缴纳社保', component: PaySecurity,meta: {requireAuth: true}},
+
+    
       {path:'*', redirect: '/Index'}
       // {path: '/article/:id', name: 'article', component: Article},
     ]

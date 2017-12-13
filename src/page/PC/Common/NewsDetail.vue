@@ -19,7 +19,7 @@ export default {
   },
   created() {
     let ID = this.$router.history.current.params.id
-      axios.get(R_PRE_URL+'/searchArticleInfo.do?id='+ID
+    axios.get(R_PRE_URL+'/searchArticleInfo.do?id='+ID
     ).then((res)=> { 
       this.Tit = res.data.arr.s_title
       this.Time = timestampToFormatTime(res.data.arr.sub_time.time)

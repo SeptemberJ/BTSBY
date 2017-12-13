@@ -1,6 +1,29 @@
-#app{        
+html,body{  
+    min-height: 100% !important;  
+}
+html {
+  font-family: sans-serif;
+  -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+}
+#app,.com-app{
+    min-height: 100% !important;  
     margin: 0 auto;
 }
+
+/*@media only handheld{
+  body{width: 100%;background: yellow;}
+}*/
+
+
+
+
+/*@media (min-width: 1280px){
+  body{min-width: 1280px;background: pink;}
+}
+@media screen (min-width:320x) and (max-width:767px){
+  body{min-width: 100%;width:100%;background: red;}
+}*/
 .selfAdaptionWrap{
     display: flex;
     flex-direction:row;

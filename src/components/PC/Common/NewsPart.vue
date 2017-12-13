@@ -19,7 +19,8 @@
             <Col span="16">
               <Row>
                 <Col class="marginT_10" span="12" v-for="(NewsKind,NewsKindIdx) in Infor.contents.newsList">
-                  <Card style="width:350px">
+                 <!--  <Card style="width:350px"> -->
+                 <Card style="width:auto">
                     <p slot="title">
                         <Icon type="ios-film-outline"></Icon>
                         {{NewsKind.kind}}

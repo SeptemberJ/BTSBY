@@ -1,7 +1,14 @@
 <template>
     <div class="Index"  :style="{'margin-bottom':isMobile ? '50px':'0px'}" >
         <!-- Mobile -->
-        <div id="Mwrap" v-if="isMobile"></div>
+        <div id="Mwrap" v-if="isMobile">
+          <Carousel></Carousel>
+          <FourModule></FourModule>
+          <BlankBar></BlankBar>
+          <DoubleLine></DoubleLine>
+          <BlankBar></BlankBar>
+          <PolicyUnscramble></PolicyUnscramble>
+        </div>
         <!-- PC -->
         <div id="Pwrap" v-else>
           <Carousel></Carousel>
@@ -26,6 +33,10 @@ import ImgTwoColumn from '../../components/PC/Common/ImgTwoColumn'
 import NewsPart from '../../components/PC/Common/NewsPart'
 import Partner from '../../components/PC/Common/Partner'
 
+import FourModule from '../../components/Mobile/FourModule'
+import BlankBar from '../../components/Mobile/BlankBar'
+import DoubleLine from '../../components/Mobile/DoubleLine'
+import PolicyUnscramble from '../../components/Mobile/PolicyUnscramble'
 
   export default{
     data: function () {
@@ -56,7 +67,12 @@ import Partner from '../../components/PC/Common/Partner'
       TMBPart,
       ImgTwoColumn,
       NewsPart,
-      Partner
+      Partner,
+
+      FourModule,
+      BlankBar,
+      DoubleLine,
+      PolicyUnscramble
       
     },
     

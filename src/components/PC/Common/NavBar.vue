@@ -1,7 +1,7 @@
 <template>
  <div class="layout">
         <Menu mode="horizontal" :active-name="activeRoute" @on-select="tabChange">
-            <div class="layout-logo"></div>
+            <div class="layout-logo" @click="ToIndex"></div>
             <div class="layout-nav" v-if="activeRoute!='个人注册' && activeRoute!='企业注册' && activeRoute!='HR管理后台(企业)'  && activeRoute!='HR管理后台(个人)'">
                 <MenuItem name="首页">
                     首页
@@ -74,6 +74,9 @@ export default {
         // }
       
     }, 
+    ToIndex(){
+        this.$router.push({name:'首页'})
+    }
   }
 };
 </script>

@@ -1,5 +1,28 @@
 <template>
- <div id="Login" style="min-width: 1150px;min-height: 600px;padding: 20px;">
+<!-- Mobile -->
+<div class="LoginM" v-if="isMobile">
+  <BackBar></BackBar>
+  <div class="MainContent">
+     <Form ref="formLogin" :model="formLogin" :rules="ruleInline" :inline="false">
+        <FormItem prop="UserName">
+            <Input type="text" v-model="formLogin.UserName" placeholder="用户名">
+                <Icon type="person" slot="prepend"></Icon>
+            </Input>
+        </FormItem>
+        <FormItem prop="UserPsd">
+            <Input type="password" v-model="formLogin.UserPsd" placeholder="密码">
+                <Icon type="locked" slot="prepend"></Icon>
+            </Input>
+        </FormItem>
+        <FormItem>
+            <Button type="primary" @click="handleSubmit('formLogin')">登录</Button>
+            <Button type="text" style="float: right;" @click="">去注册</Button>
+        </FormItem>
+      </Form>
+  </div>
+</div>
+<!-- PC -->
+ <div v-else id="LoginP" style="min-width: 1150px;min-height: 600px;padding: 20px;">
    <div class="LoginBox">
         <Card :bordered="false" :dis-hover="false">
             <p slot="title">用户登录</p>
@@ -33,6 +56,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import {setCookie} from '../../../util/utils'
+import BackBar from '../../../components/Mobile/BackBar'
 export default {
   data() {
   return {
@@ -57,21 +81,20 @@ export default {
   }
   },
   mounted: function(){
-    //获取导航菜单
-    // axios.get(PRE_URL+'static/json/Navbar.json'
-    //     ).then((res)=> {
-    //       this.navbarInfo = res.data.navbar
-    //   }).catch((error)=> {
-    //     console.log(error)
-    //   })
     
   
   },
   computed: {
+    isMobile(){
+      return this.$store.state.isMobile
+     }
     
   },
   watch:{
   },
+  components: {
+      BackBar
+    },
   methods: {
     handleSubmit(name) {
         this.$refs[name].validate((valid) => {
@@ -116,38 +139,19 @@ export default {
         console.log(error)
       })
     },
-     // //设置cookie
-     //        setCookie(cname, cvalue, exdays) {
-     //            var d = new Date();
-     //            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-     //            var expires = "expires=" + d.toUTCString();
-     //            console.info(cname + "=" + cvalue + "; " + expires);
-     //            document.cookie = cname + "=" + cvalue + "; " + expires;
-     //            // console.info('document.cookie---');
-     //            // console.info(document.cookie);
-     //            alert(this.getCookie('btsby_cookie'))
-     //        },
-     //        //获取cookie
-     //        getCookie(cname){
-     //            var name = cname + "=";
-     //            var ca = document.cookie.split(';');
-     //            for (var i = 0; i < ca.length; i++) {
-     //                var c = ca[i];
-     //                while (c.charAt(0) == ' ') c = c.substring(1);
-     //                if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
-     //            }
-     //            return "";
-     //        },
-     //        //清除cookie
-     //        clearCookie(){
-     //            this.setCookie("username", "", -1);
-
-     //        },
   }
 };
 </script>
 <style lang="scss" scoped>
-#Login{
+.LoginM{
+  margin-bottom: 130px;
+  .MainContent{
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 62px;
+  }
+}
+#LoginP{
   background: url('http://sbyun.com/skins2/images/login-banner.jpg');
   background-size: cover;
   background-repeat: no-repeat;

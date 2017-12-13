@@ -454,7 +454,7 @@ export default {
           number = this.number,
           page_num = this.page_num,
           post_name = this.post_name == '全部'?'':this.post_name
-          status = this.status
+          status = this.status == -1?'':this.status
           // post_name = this.post_name == '-1'?'':this.post_name
           // status = this.status == '-1'?'':this.status
    

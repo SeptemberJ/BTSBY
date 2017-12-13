@@ -1,8 +1,8 @@
 <template>
-  <div class="com-app">
+  <div class="com-app" v-bind:class="{ MOBILE: isMobile, PC: !isMobile }">
     <div class="layout">
-      <TopBlock></TopBlock>
-      <NavBar></NavBar>
+      <TopBlock v-if="!isMobile"></TopBlock>
+      <NavBar v-if="!isMobile"></NavBar>
       <!-- <Carousel></Carousel> -->
        
        
@@ -11,9 +11,10 @@
             <router-view class="child-view"></router-view>
           </transition>
         </div>
-        <div class="layout-copy">
+        <div class="layout-copy"  v-if="!isMobile">
             <FooterPart></FooterPart>
         </div>
+        <FooterPartM v-if="isMobile"></FooterPartM>
     </div>
 
     
@@ -27,6 +28,7 @@ import TopBlock from 'components/PC/Common/TopBlock'
 import NavBar from 'components/PC/Common/NavBar'
 import Carousel from 'components/PC/Common/Carousel'
 import FooterPart from 'components/PC/Common/FooterPart'
+import FooterPartM from 'components/Mobile/FooterPartM'
   export default{
     data: function () {
       return {
@@ -40,6 +42,9 @@ import FooterPart from 'components/PC/Common/FooterPart'
       
     },
     computed: {
+      isMobile(){
+        return this.$store.state.isMobile
+       }
       
     },
     watch: {
@@ -49,7 +54,8 @@ import FooterPart from 'components/PC/Common/FooterPart'
       TopBlock,
       NavBar,
       Carousel,
-      FooterPart
+      FooterPart,
+      FooterPartM
       
 
     },
@@ -60,12 +66,15 @@ import FooterPart from 'components/PC/Common/FooterPart'
   }
 </script>
 <style lang="scss">
+.com-app{
+
   .layout{
         border: 0px solid #d7dde4;
         background: #fff;
         position: relative;
         border-radius: 4px;
         overflow: hidden;
+        min-height: 100%;
     }
     .layout-header{
         height: 60px;
@@ -102,4 +111,13 @@ import FooterPart from 'components/PC/Common/FooterPart'
     .layout-ceiling-main a{
         color: #9ba7b5;
     }
+}
+.PC{
+  min-width: 1280px;
+  margin: 0 auto;
+}
+.MOBILE{
+  width: 100%;
+  margin: 0 auto;
+}
 </style>
