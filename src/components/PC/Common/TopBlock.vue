@@ -21,6 +21,7 @@
 <script>
 import Vue from 'vue'
 import axios from 'axios'
+import {clearCookie} from '../../../util/utils'
 export default {
   data() {
   return {
@@ -73,7 +74,8 @@ export default {
        this.$store.state.userInfo.username = ''
        this.$store.state.userInfo.member_id = ''
        this.$store.state.ifLogined = false
-       this.$router.push({name:'登录'});
+       this.$router.push({name:'登录'})
+       clearCookie('btsby_cookie')
     },
   }
 };

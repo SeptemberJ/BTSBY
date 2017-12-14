@@ -21,6 +21,15 @@ import Service from '../page/Mobile/Service'
 import HowBuy from '../page/Mobile/HowBuy'
 
 import PaySecurity from '../page/Mobile/PaySecurity'
+import My from '../page/Mobile/My'
+import MyWallet from '../page/Mobile/My/MyWallet'
+import PersonalData from '../page/Mobile/My/PersonalData'
+import PsdModification from '../page/Mobile/My/PsdModification'
+import Message from '../page/Mobile/My/Message'
+import Feedback from '../page/Mobile/My/Feedback'
+import CostRecord from '../page/Mobile/My/CostRecord'
+import MyOrder from '../page/Mobile/My/MyOrder'
+import MyOrderDetail from '../page/Mobile/My/MyOrderDetail'
 
 
 import {deviceInfo} from "../util/device"
@@ -53,7 +62,15 @@ const routes = [
     {path: '/Service', name: '社保服务介绍', component: Service},
     {path: '/HowBuy', name: '如何在线购买', component: HowBuy},
     {path: '/PaySecurity', name: '缴纳社保', component: PaySecurity,meta: {requireAuth: true}},
-
+    {path: '/My', name: '我的', component: My,meta: {requireAuth: true}},
+    {path: '/MyWallet', name: '我的钱包', component: MyWallet,meta: {requireAuth: true}},
+    {path: '/PersonalData', name: '个人资料', component: PersonalData,meta: {requireAuth: true}},
+    {path: '/PsdModification', name: '修改密码', component: PsdModification,meta: {requireAuth: true}},
+    {path: '/Message', name: '我的消息', component: Message,meta: {requireAuth: true}},
+    {path: '/Feedback', name: '意见反馈', component: Feedback,meta: {requireAuth: true}},
+    {path: '/CostRecord', name: '消费记录', component: CostRecord,meta: {requireAuth: true}},
+    {path: '/MyOrder', name: '我的订单', component: MyOrder,meta: {requireAuth: true}},
+    {path: '/MyOrderDetail/:OrderNo', name: '订单详情', component: MyOrderDetail,meta: {requireAuth: true}},
     
       {path:'*', redirect: '/Index'}
       // {path: '/article/:id', name: 'article', component: Article},

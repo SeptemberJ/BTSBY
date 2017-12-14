@@ -51,8 +51,8 @@
           </FormItem>
 
           <FormItem>
-            <Row>
-              <Col span="24">
+            <Row >
+              <Col span="24" class="marginT_20">
                 <Upload
           ref="upload"
           :show-upload-list="false"
@@ -73,7 +73,7 @@
                 </Upload>
               </Col>
 
-              <Col span="24">
+              <Col span="24" class="marginT_20">
                 <Upload
           ref="upload"
           :show-upload-list="false"
@@ -94,7 +94,7 @@
                 </Upload>
               </Col>
 
-              <Col span="24">
+              <Col span="24" class="marginT_20">
                 <Upload
           ref="upload"
           :show-upload-list="false"
@@ -115,7 +115,7 @@
                 </Upload>
               </Col>
 
-              <Col span="24">
+              <Col span="24" class="marginT_20">
                 <Upload
           ref="upload"
           :show-upload-list="false"
@@ -136,7 +136,7 @@
                 </Upload>
               </Col>
 
-              <Col span="24">
+              <Col span="24" class="marginT_20">
                 <Upload
           ref="upload"
           :show-upload-list="false"

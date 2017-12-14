@@ -7,29 +7,29 @@
         </span>
       <!-- </h3>
       <h3 class="marginT_10" style="text-align: right;"> -->
-      <span style="margin-left: 20px;">
-          <span>
+      <span style="margin-left: 20px;" class="InlineBlock">
+          <span style="display: inline-block;">
             支付状态
             <Select v-model="status" size="small" style="width:80px">
               <Option v-for="item in statusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
           </span>
-          <span>
+          <span class="InlineBlock">
             订单进度
             <Select v-model="progress" size="small" style="width:120px">
               <Option v-for="item in progressList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
           </span>
-          <span>
+          <span class="InlineBlock">
             <DatePicker type="datetime" v-model="start_time" @on-change="changeStartTime" placeholder="创建起始时间" style="width: 160px"></DatePicker>
           </span>
           至
-          <span>
+          <span class="InlineBlock">
             <DatePicker type="datetime" v-model="end_time" @on-change="changeEndTime" placeholder="创建结束时间" style="width: 160px"></DatePicker>
           </span>
-          <span>
+          <span class="InlineBlock">
             <DatePicker type="month" v-model="month_name" placeholder="缴纳月份" style="width: 100px"></DatePicker>
-          </span>
+          </span class="InlineBlock">
           <span><Button type="primary" icon="ios-search" @click="searchOrder">搜索</Button></span>
           </span>
         </h3>
@@ -365,5 +365,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-#MyorderI{}
+#MyorderI{
+  .InlineBlock{
+    display: inline-block;
+  }
+}
 </style>

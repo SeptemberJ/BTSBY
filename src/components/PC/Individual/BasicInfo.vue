@@ -55,6 +55,7 @@ export default {
         ],
         EAMIL: [
             { required: true, message: '请输入电子邮箱.', trigger: 'blur' },
+            { type: 'email', message: '邮箱格式不正确!', trigger: 'blur' }
         ],
     }
     

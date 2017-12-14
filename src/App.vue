@@ -39,6 +39,10 @@ import FooterPartM from 'components/Mobile/FooterPartM'
       
     },
     created: function () {
+      this.$Message.config({
+          top: 42,
+          duration: 1.5
+      });
       
     },
     computed: {

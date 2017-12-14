@@ -27,7 +27,7 @@
    <!-- 返回顶部 -->
    <BackTop :height="100" :bottom="200">
         <div class="top"><Icon type="android-arrow-dropup" :size="24"></Icon></div>
-    </BackTop>
+   </BackTop>
   </div> 
 </template>
 <script>
