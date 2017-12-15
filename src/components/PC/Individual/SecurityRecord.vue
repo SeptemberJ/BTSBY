@@ -5,9 +5,9 @@
           <Icon type="ios-paper" size="24"></Icon>
           社保公积金缴费记录
         </span>
-        <span style="float: right;">
+        <span class="InlineBlock FloatRight">
           缴纳年份
-          <DatePicker type="year" placeholder="请选择" style="width: 100px" v-model="Year" @on-change="YearChange"></DatePicker>
+          <DatePicker class="InlineBlock" type="year" placeholder="请选择" style="width: 100px" v-model="Year" @on-change="YearChange"></DatePicker>
           <Button type="primary" icon="ios-search" @click="searchRecord">搜索</Button>
         </span>
       </h3>

@@ -30,6 +30,7 @@ import Feedback from '../page/Mobile/My/Feedback'
 import CostRecord from '../page/Mobile/My/CostRecord'
 import MyOrder from '../page/Mobile/My/MyOrder'
 import MyOrderDetail from '../page/Mobile/My/MyOrderDetail'
+import SecurityRecord from '../page/Mobile/My/SecurityRecord'
 
 
 import {deviceInfo} from "../util/device"
@@ -71,7 +72,8 @@ const routes = [
     {path: '/CostRecord', name: '消费记录', component: CostRecord,meta: {requireAuth: true}},
     {path: '/MyOrder', name: '我的订单', component: MyOrder,meta: {requireAuth: true}},
     {path: '/MyOrderDetail/:OrderNo', name: '订单详情', component: MyOrderDetail,meta: {requireAuth: true}},
-    
+    {path: '/SecurityRecord', name: '投保记录', component: SecurityRecord,meta: {requireAuth: true}},
+
       {path:'*', redirect: '/Index'}
       // {path: '/article/:id', name: 'article', component: Article},
     ]

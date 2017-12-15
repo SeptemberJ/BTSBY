@@ -98,6 +98,11 @@ html {
     display: inline-block;
 
 }
+
 .InlineBlock{
   display: inline-block;
+}
+
+.FloatRight{
+  float: right;
 }
