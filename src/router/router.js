@@ -20,6 +20,8 @@ import WhyBuy from '../page/Mobile/WhyBuy'
 import Service from '../page/Mobile/Service'
 import HowBuy from '../page/Mobile/HowBuy'
 
+
+import SecurityInfo from '../page/Mobile/SecurityInfo'
 import PaySecurity from '../page/Mobile/PaySecurity'
 import My from '../page/Mobile/My'
 import MyWallet from '../page/Mobile/My/MyWallet'
@@ -31,7 +33,8 @@ import CostRecord from '../page/Mobile/My/CostRecord'
 import MyOrder from '../page/Mobile/My/MyOrder'
 import MyOrderDetail from '../page/Mobile/My/MyOrderDetail'
 import SecurityRecord from '../page/Mobile/My/SecurityRecord'
-
+import Calculation from '../page/Mobile/Calculation'
+import Search from '../page/Mobile/Search'
 
 import {deviceInfo} from "../util/device"
 import {setCookie,getCookie} from '../util/utils'
@@ -62,7 +65,8 @@ const routes = [
     {path: '/WhyBuy', name: '为何购买社保', component: WhyBuy},
     {path: '/Service', name: '社保服务介绍', component: Service},
     {path: '/HowBuy', name: '如何在线购买', component: HowBuy},
-    {path: '/PaySecurity', name: '缴纳社保', component: PaySecurity,meta: {requireAuth: true}},
+    {path: '/SecurityInfo', name: '参保信息', component: SecurityInfo,meta: {requireAuth: false}},
+    {path: '/PaySecurity', name: '缴纳社保', component: PaySecurity,meta: {requireAuth: false}},
     {path: '/My', name: '我的', component: My,meta: {requireAuth: true}},
     {path: '/MyWallet', name: '我的钱包', component: MyWallet,meta: {requireAuth: true}},
     {path: '/PersonalData', name: '个人资料', component: PersonalData,meta: {requireAuth: true}},
@@ -71,8 +75,11 @@ const routes = [
     {path: '/Feedback', name: '意见反馈', component: Feedback,meta: {requireAuth: true}},
     {path: '/CostRecord', name: '消费记录', component: CostRecord,meta: {requireAuth: true}},
     {path: '/MyOrder', name: '我的订单', component: MyOrder,meta: {requireAuth: true}},
-    {path: '/MyOrderDetail/:OrderNo', name: '订单详情', component: MyOrderDetail,meta: {requireAuth: true}},
+    {path: '/MyOrderDetail/:OrderNo', name: '订单详情', component: MyOrderDetail,meta: {requireAuth: false}},
     {path: '/SecurityRecord', name: '投保记录', component: SecurityRecord,meta: {requireAuth: true}},
+    {path: '/Calculation', name: '社保计算器', component: Calculation},
+    {path: '/Search', name: '查社保', component: Search},
+
 
       {path:'*', redirect: '/Index'}
       // {path: '/article/:id', name: 'article', component: Article},

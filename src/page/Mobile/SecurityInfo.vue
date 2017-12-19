@@ -1,6 +1,8 @@
 <template>
-    <div id="InsuredInfoI">
-       <Form ref="formInsuredInfo" :model="formInsuredInfo" :rules="ruleInline" :inline="false">
+  <div class="SecurityInfo">
+  	<TitBar></TitBar>
+    <div class="MainContent">
+      <Form ref="formInsuredInfo" :model="formInsuredInfo" :rules="ruleInline" :inline="false">
            <FormItem prop="NAME" label="真实姓名">
             <Row>
               <Col span="18">
@@ -49,8 +51,8 @@
           </FormItem>
 
           <FormItem>
-            <Row>
-              <Col span="5">
+            <Row >
+              <Col span="24" class="marginT_20">
                 <Upload
           ref="upload"
           :show-upload-list="false"
@@ -63,7 +65,7 @@
           multiple
           type="drag"
           action=""
-          style="display: inline-block;">
+          style="display: block;">
                   <div class="demo-upload-list">
                     <img :src="URL + formInsuredInfo.AvatarSource.sfz_front">
                   </div>
@@ -71,7 +73,7 @@
                 </Upload>
               </Col>
 
-              <Col span="5">
+              <Col span="24" class="marginT_20">
                 <Upload
           ref="upload"
           :show-upload-list="false"
@@ -84,7 +86,7 @@
           multiple
           type="drag"
           action=""
-          style="display: inline-block;">
+          style="display: block;">
                   <div class="demo-upload-list">
                     <img :src="URL + formInsuredInfo.AvatarSource.sfz_back">
                   </div>
@@ -92,7 +94,7 @@
                 </Upload>
               </Col>
 
-              <Col span="5">
+              <Col span="24" class="marginT_20">
                 <Upload
           ref="upload"
           :show-upload-list="false"
@@ -105,7 +107,7 @@
           multiple
           type="drag"
           action=""
-          style="display: inline-block;">
+          style="display: block;">
                   <div class="demo-upload-list">
                     <img :src="URL + formInsuredInfo.AvatarSource.hkb_hz">
                   </div>
@@ -113,7 +115,7 @@
                 </Upload>
               </Col>
 
-              <Col span="5">
+              <Col span="24" class="marginT_20">
                 <Upload
           ref="upload"
           :show-upload-list="false"
@@ -126,7 +128,7 @@
           multiple
           type="drag"
           action=""
-          style="display: inline-block;">
+          style="display: block;">
                   <div class="demo-upload-list">
                     <img :src="URL + formInsuredInfo.AvatarSource.hkb_br">
                   </div>
@@ -134,7 +136,7 @@
                 </Upload>
               </Col>
 
-              <Col span="5">
+              <Col span="24" class="marginT_20">
                 <Upload
           ref="upload"
           :show-upload-list="false"
@@ -147,7 +149,7 @@
           multiple
           type="drag"
           action=""
-          style="display: inline-block;">
+          style="display: block;">
                   <div class="demo-upload-list">
                     <img :src="URL + formInsuredInfo.AvatarSource.personal_detail">
                   </div>
@@ -159,21 +161,21 @@
 
 
         
-          <FormItem>
-              <Button type="primary" @click="saveSecurityInfo('formInsuredInfo')">保存</Button>
+          <FormItem class="TextCenter">
+              <Button type="primary" @click="saveSecurityInfo('formInsuredInfo')">下一步</Button>
           </FormItem>
       </Form>
-
-
     </div>
+  </div> 
 </template>
 <script>
 import Vue from 'vue'
 import axios from 'axios'
-export default {
-  data() {
-  return {
-    cityList:'',//城市列表
+import TitBar from '../../components/Mobile/TitBar'
+  export default{
+    data: function () {
+      return {
+        cityList:'',//城市列表
     formInsuredInfo: {
       memberDetail:{},
       NAME:'',//用户名
@@ -184,7 +186,7 @@ export default {
       // STREET:'',//街道
       AvatarSource:{   //upload img
         sfz_front:'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar',
-        sfz_back:'https://o5wwk8baw.qnssl.com/bc7521e033abdd1e92222d733590f104/avatar',
+        sfz_back:'',
         hkb_hz:'',
         hkb_br:'',
         personal_detail:'',
@@ -203,6 +205,9 @@ export default {
         RESIDENCE: [
             { required: true, message: '请选择户口性质！', trigger: 'blur' },
         ],
+        sfz_front: [
+            { required: true, message: '请上传身份证正面！', trigger: 'blur' },
+        ],
     },
     defaultList: [
     'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
@@ -210,11 +215,10 @@ export default {
     imgName: '',
     visible: false,
     uploadList: []
-    
-  }
-  },
-
-  created() {
+        
+      }
+    },
+    created() {
     axios.get(R_PRE_URL+'/searchCityList.do'
     ).then((res)=> { 
       this.cityList = res.data.arr
@@ -255,85 +259,54 @@ export default {
       return R_PRE_URL+'/'
     },
   },
+  components: {
+      TitBar
+      
+
+    },
   methods: {
     saveSecurityInfo(name) {
-        this.$refs[name].validate((valid) => {
-            if (valid) {
-              if(!(/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(this.formInsuredInfo.IDNUMBER))){
-                this.$Message.error('身份证格式不正确!')
-                return false
-              }
-              //必填项校验
-              if(!this.formInsuredInfo.AvatarSource.sfz_front || !this.formInsuredInfo.AvatarSource.sfz_back || !this.formInsuredInfo.AvatarSource.hkb_hz || !this.formInsuredInfo.AvatarSource.hkb_br ||!this.formInsuredInfo.AvatarSource.personal_detail ){
-                this.$Message.error('请先上传需要的文件!')
-                return false
-              }
-              let DATA = {
-                member_id:this.$store.state.userInfo.member_id,
-                real_name:this.formInsuredInfo.NAME,
-                sfz_no:this.formInsuredInfo.IDNUMBER,
-                city:this.formInsuredInfo.INSURED_AREA,
-                type:this.formInsuredInfo.RESIDENCE,
-                sfz_front:this.formInsuredInfo.AvatarSource.sfz_front,
-                sfz_back:this.formInsuredInfo.AvatarSource.sfz_back,
-                hkb_hz:this.formInsuredInfo.AvatarSource.hkb_hz,
-                hkb_br:this.formInsuredInfo.AvatarSource.hkb_br,
-                personal_detail:this.formInsuredInfo.AvatarSource.personal_detail
-              }
-              console.log(DATA)
-                axios.post(R_PRE_URL+'/updateMemberDetail.do',DATA
-              ).then((res)=> {
-                if(res.data.code==2){
-                  this.$Message.success('信息更新成功!')
-                }else{
-                  this.$Message.error('信息更新失败!')
-                  return false
-                }
-              }).catch((error)=> {
-                console.log(error)
-              })
+        // this.$refs[name].validate((valid) => {
+        //     if (valid) {
+        //       if(!(/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(this.formInsuredInfo.IDNUMBER))){
+        //         this.$Message.error('身份证格式不正确!')
+        //         return false
+        //       }
+        //       //必填项校验
+        //       if(!this.formInsuredInfo.AvatarSource.sfz_front || !this.formInsuredInfo.AvatarSource.sfz_back || !this.formInsuredInfo.AvatarSource.hkb_hz || !this.formInsuredInfo.AvatarSource.hkb_br ||!this.formInsuredInfo.AvatarSource.personal_detail ){
+        //         this.$Message.error('请先上传需要的文件!')
+        //         return false
+        //       }
+        //       let DATA = {
+        //         member_id:this.$store.state.userInfo.member_id,
+        //         real_name:this.formInsuredInfo.NAME,
+        //         sfz_no:this.formInsuredInfo.IDNUMBER,
+        //         city:this.formInsuredInfo.INSURED_AREA,
+        //         type:this.formInsuredInfo.RESIDENCE,
+        //         sfz_front:this.formInsuredInfo.AvatarSource.sfz_front,
+        //         sfz_back:this.formInsuredInfo.AvatarSource.sfz_back,
+        //         hkb_hz:this.formInsuredInfo.AvatarSource.hkb_hz,
+        //         hkb_br:this.formInsuredInfo.AvatarSource.hkb_br,
+        //         personal_detail:this.formInsuredInfo.AvatarSource.personal_detail
+        //       }
+        //       console.log(DATA)
+        //         axios.post(R_PRE_URL+'/updateMemberDetail.do',DATA
+        //       ).then((res)=> {
+        //         if(res.data.code==2){
+        //           this.$Message.success('信息更新成功!')
+        //         }else{
+        //           this.$Message.error('信息更新失败!')
+        //           return false
+        //         }
+        //       }).catch((error)=> {
+        //         console.log(error)
+        //       })
                 
-            } else {
-                this.$Message.error('带*号的为必填项!')
-            }
-        })
-        //必填项校验
-      // if(!this.NAME || !this.IDNUMBER || !this.INSURED_AREA || !this.RESIDENCE || !this.AvatarSource.sfz_front || !this.AvatarSource.sfz_back || !this.AvatarSource.hkb_hz || !this.AvatarSource.hkb_br ||!this.AvatarSource.personal_detail ){
-      //   this.$store.commit('SNACKBAR',{text:'带*号为必填项!'})
-      //   this.$parent.$parent.$parent.$parent.$refs.Snackbar.$refs.Snackbar.open()
-      //   return false
-      // }
-      // if(!(/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(this.IDNUMBER))){
-      //   this.$store.commit('SNACKBAR',{text:'身份证格式不正确!'})
-      //   this.$parent.$parent.$parent.$parent.$refs.Snackbar.$refs.Snackbar.open()
-      //   return false
-      // }
-      // let DATA = {
-      //   member_id:this.$store.state.userInfo.member_id,
-      //   real_name:this.NAME,
-      //   sfz_no:this.IDNUMBER,
-      //   city:this.INSURED_AREA,
-      //   type:this.RESIDENCE,
-      //   sfz_front:this.AvatarSource.sfz_front,
-      //   sfz_back:this.AvatarSource.sfz_back,
-      //   hkb_hz:this.AvatarSource.hkb_hz,
-      //   hkb_br:this.AvatarSource.hkb_br,
-      //   personal_detail:this.AvatarSource.personal_detail
-      // }
-      // console.log(DATA)
-      //   axios.post(R_PRE_URL+'/updateMemberDetail.do',DATA
-      // ).then((res)=> {
-      //   if(res.data.code==2){
-      //     this.$store.commit('SNACKBAR',{text:'信息更新成功!'})
-      //     this.$parent.$parent.$parent.$parent.$refs.Snackbar.$refs.Snackbar.open()
-      //   }else{
-      //     this.$store.commit('SNACKBAR',{text:'信息更新失败!'})
-      //     this.$parent.$parent.$parent.$parent.$refs.Snackbar.$refs.Snackbar.open()
-      //     return false
-      //   }
-      // }).catch((error)=> {
-      //   console.log(error)
-      // })
+        //     } else {
+        //         this.$Message.error('带*号的为必填项!')
+        //     }
+        // })
+        this.$router.push({name:'缴纳社保'})
     },
     // upload
     // 身份证正面
@@ -457,48 +430,14 @@ export default {
     },
 };
 </script>
-<style lang="scss" scoped>
-#BasicInfoI{
-  form{
-    width: 500px;
-    margin-left: 40px;
+<style lang="scss">
+.SecurityInfo{
+  margin-bottom: 130px;
+  .MainContent{
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 52px;
+
   }
 }
-.demo-upload-list{
-        display: inline-block;
-        width: 150px;
-        height: 150px;
-        text-align: center;
-        line-height: 150px;
-        border: 1px solid transparent;
-        border-radius: 4px;
-        overflow: hidden;
-        background: #fff;
-        position: relative;
-        box-shadow: 0 1px 1px rgba(0,0,0,.2);
-        margin-right: 4px;
-    }
-    .demo-upload-list img{
-        width: 100%;
-        height: 100%;
-        margin: 0 auto;
-    }
-    .demo-upload-list-cover{
-        display: none;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: rgba(0,0,0,.6);
-    }
-    .demo-upload-list:hover .demo-upload-list-cover{
-        display: block;
-    }
-    .demo-upload-list-cover i{
-        color: #fff;
-        font-size: 20px;
-        cursor: pointer;
-        margin: 0 2px;
-    }
 </style>

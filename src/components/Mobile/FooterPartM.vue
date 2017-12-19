@@ -52,7 +52,7 @@ import axios from 'axios'
           this.$router.push({name:'首页'})
           break
           case '1':
-          this.$router.push({name:'缴纳社保'})
+          this.$router.push({name:'参保信息'})
           break
           case '2':
           this.$router.push({name:'查社保'})

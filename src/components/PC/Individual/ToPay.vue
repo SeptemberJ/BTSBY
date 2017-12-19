@@ -207,7 +207,7 @@ export default {
                       },
                       {
                           kind: '生育',
-                          basic: 3902,
+                          basic: BASIC,
                           proportionI: InsuranceDetail.procreationinductrial,
                           priceI: BASIC*InsuranceDetail.procreationinductrial,
                           proportionU: InsuranceDetail.procreationunit,
@@ -280,6 +280,11 @@ export default {
     },
     //提交订单
     toSubmitOrder(){
+      if(this.buyMonthList.length<=0){
+        this.$Message.error('请选择代缴年月！')
+        return
+      }
+
       if(!this.ifFundsChoosed && !this.ifSecurityChoosed){
         this.$Message.error('请选择代缴种类！')
         return

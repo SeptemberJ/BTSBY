@@ -2,169 +2,74 @@
   <div class="PaySecurity">
   	<BackBar></BackBar>
     <div class="MainContent">
-      <Form ref="formInsuredInfo" :model="formInsuredInfo" :rules="ruleInline" :inline="false">
-           <FormItem prop="NAME" label="真实姓名">
-            <Row>
-              <Col span="18">
-                  <Input v-model="formInsuredInfo.NAME" placeholder="请输入真实姓名"></Input>
-              </Col>
-            </Row>
-          </FormItem>
+      <div class="List">
+        <Row class="BgGray">
+          <Col span="2"><Icon type="calendar" size="18"></Icon></Col>
+          <Col span="22">缴纳月份</Col>
+        </Row>
+        <Row  class="ListItem MonthList">
+          <CheckboxGroup v-model="buyMonthList" class="monthList" @on-change="changeBuyMonth">
+            <Col span="8" class="marginTB_10 TextCenter"  v-for="(Month,MonthIdx) in MonthList" >
+              <Checkbox :label="Month"></Checkbox>
+            </Col>
+          </CheckboxGroup>
+        </Row>
 
-          <FormItem prop="IDNUMBER" label="身份证号">
-            <Row>
-              <Col span="18">
-                  <Input v-model="formInsuredInfo.IDNUMBER" placeholder="请输入身份证号"></Input>
-              </Col>
-            </Row>
-          </FormItem>
-
-          <FormItem prop="INSURED_AREA" label="参保地区">
-            <Row>
-              <Col span="18">
-                   <Select v-model="formInsuredInfo.INSURED_AREA" style="width:200px;">
-                      <Option v-for="(City,CityIdx) in cityList"  :value="City.city_name" :key="CityIdx">{{City.city_name}}</Option>
-                   </Select>
-              </Col>
-            </Row>
-          </FormItem>
-
-          <FormItem prop="RESIDENCE" label="户口性质">
-            <Row>
-              <Col span="18">
-                   <Select v-model="formInsuredInfo.RESIDENCE" style="width:200px">
-                      <Option value="0">本地城镇（五险）</Option>
-                      <Option value="1">外地农村（五险）</Option>
-                      <Option value="2">外地城镇（五险）</Option>
-                      <Option value="3">外地农村（五险）</Option>
-                   </Select>
-              </Col>
-            </Row>
-          </FormItem>
-
-          <FormItem>
-            <Row>
-              <Col span="24">
-                相关附件：<a href="http://sbyun.com/template/%E4%B8%8A%E6%B5%B7/%E4%B8%AA%E4%BA%BA%E5%9F%BA%E6%9C%AC%E4%BF%A1%E6%81%AF%E9%87%87%E9%9B%86%E8%A1%A8%EF%BC%881412%E7%89%88%EF%BC%89.pdf" target="_blank">个人基本信息采集表（1412版）.pdf</a>
-              </Col>
-            </Row>
-          </FormItem>
-
-          <FormItem>
-            <Row >
-              <Col span="24" class="marginT_20">
-                <Upload
-          ref="upload"
-          :show-upload-list="false"
-          :on-success="handleSuccess"
-          :format="['jpg','jpeg','png']"
-          :max-size="2048"
-          :on-format-error="handleFormatError"
-          :on-exceeded-size="handleMaxSize"
-          :before-upload="handleBeforeUploadSF"
-          multiple
-          type="drag"
-          action=""
-          style="display: block;">
-                  <div class="demo-upload-list">
-                    <img :src="URL + formInsuredInfo.AvatarSource.sfz_front">
-                  </div>
-                  <p>*身份证正面</p>
-                </Upload>
-              </Col>
-
-              <Col span="24" class="marginT_20">
-                <Upload
-          ref="upload"
-          :show-upload-list="false"
-          :on-success="handleSuccess"
-          :format="['jpg','jpeg','png']"
-          :max-size="2048"
-          :on-format-error="handleFormatError"
-          :on-exceeded-size="handleMaxSize"
-          :before-upload="handleBeforeUploadSB"
-          multiple
-          type="drag"
-          action=""
-          style="display: block;">
-                  <div class="demo-upload-list">
-                    <img :src="URL + formInsuredInfo.AvatarSource.sfz_back">
-                  </div>
-                  <p>*身份证反面</p>
-                </Upload>
-              </Col>
-
-              <Col span="24" class="marginT_20">
-                <Upload
-          ref="upload"
-          :show-upload-list="false"
-          :on-success="handleSuccess"
-          :format="['jpg','jpeg','png']"
-          :max-size="2048"
-          :on-format-error="handleFormatError"
-          :on-exceeded-size="handleMaxSize"
-          :before-upload="handleBeforeUploadHZ"
-          multiple
-          type="drag"
-          action=""
-          style="display: block;">
-                  <div class="demo-upload-list">
-                    <img :src="URL + formInsuredInfo.AvatarSource.hkb_hz">
-                  </div>
-                  <p>*户口簿主页</p>
-                </Upload>
-              </Col>
-
-              <Col span="24" class="marginT_20">
-                <Upload
-          ref="upload"
-          :show-upload-list="false"
-          :on-success="handleSuccess"
-          :format="['jpg','jpeg','png']"
-          :max-size="2048"
-          :on-format-error="handleFormatError"
-          :on-exceeded-size="handleMaxSize"
-          :before-upload="handleBeforeUploadBR"
-          multiple
-          type="drag"
-          action=""
-          style="display: block;">
-                  <div class="demo-upload-list">
-                    <img :src="URL + formInsuredInfo.AvatarSource.hkb_br">
-                  </div>
-                  <p>*户口簿本人页</p>
-                </Upload>
-              </Col>
-
-              <Col span="24" class="marginT_20">
-                <Upload
-          ref="upload"
-          :show-upload-list="false"
-          :on-success="handleSuccess"
-          :format="['jpg','jpeg','png']"
-          :max-size="2048"
-          :on-format-error="handleFormatError"
-          :on-exceeded-size="handleMaxSize"
-          :before-upload="handleBeforeUploadPD"
-          multiple
-          type="drag"
-          action=""
-          style="display: block;">
-                  <div class="demo-upload-list">
-                    <img :src="URL + formInsuredInfo.AvatarSource.personal_detail">
-                  </div>
-                  <p>*个人基本信息采集表</p>
-                </Upload>
-              </Col>
-            </Row>
-          </FormItem>
+        <Row class="BgGray">
+          <Col span="2"><Icon type="ios-pricetag" size="18"></Icon></Col>
+          <Col span="22">参保类型</Col>
+        </Row>
+        <Row  class="ListItem">
+          <Col span="6">社保</Col>
+          <Col span="18" class="TextRight">
+            <i-switch v-model="switchS"></i-switch>
+          </Col>
+        </Row>
+        <Row  class="ListItem">
+          <Col span="6">公积金</Col>
+          <Col span="18" class="TextRight">
+            <i-switch v-model="switchG" @on-change=""></i-switch>
+          </Col>
+        </Row>
 
 
-        
-          <FormItem>
-              <Button type="primary" @click="handleSaveBasicInfo('formBasicInfo')">保存</Button>
-          </FormItem>
-      </Form>
+
+        <Row class="BgGray">
+          <Col span="2"><Icon type="cash" size="18"></Icon></Col>
+          <Col span="22">费用信息</Col>
+        </Row>
+        <Row  class="ListItem">
+          <Col span="6">社保费用</Col>
+          <Col span="18" class="TextRight" v-if="switchS">¥{{Security}}元/月/人* {{buyMonthList.length}}月 = ¥{{Security*buyMonthList.length}}</Col>
+          <Col span="18" class="TextRight" v-else>¥0</Col>
+        </Row>
+        <Row  class="ListItem">
+          <Col span="6">公积金费用</Col>
+          <Col span="18" class="TextRight" v-if="switchG">¥{{Funds}}元/月/人* {{buyMonthList.length}}月 = ¥{{Funds*buyMonthList.length}}</Col>
+          <Col span="18" class="TextRight" v-else>¥0</Col>
+        </Row>
+        <Row  class="ListItem">
+          <Col span="6">服务费用</Col>
+          <Col span="18" class="TextRight">{{service_fee}}元/月/人 * {{buyMonthList.length}}月 = ¥{{service_fee*buyMonthList.length}}</Col>
+        </Row>
+        <Row  class="ListItem">
+          <Col span="6">其他费用</Col>
+          <Col span="18" class="TextRight">¥{{material_fee}}</Col>
+        </Row>
+        <Row  class="ListItem">
+          <Col span="6">合计费用</Col>
+          <Col span="18" class="TextRight" v-if="switchS && !switchG">¥{{((Security + service_fee)*buyMonthList.length+material_fee).toFixed(2)}}</Col>
+          <Col span="18" class="TextRight" v-if="!switchS && switchG">¥{{((Funds + service_fee)*buyMonthList.length+material_fee).toFixed(2)}}</Col>
+          <Col span="18" class="TextRight" v-if="switchG && switchS">¥{{((Security + Funds + service_fee)*buyMonthList.length+material_fee).toFixed(2)}}</Col>
+          <Col span="18" class="TextRight" v-if="!switchS && !switchG">¥0</Col>
+        </Row>
+
+        <Row type="flex" justify="center" class="code-row-bg marginT_20">
+          <Col span="12"><Button type="error" long @click="toSubmitOrder">提交订单</Button></Col>
+        </Row>
+
+
+      </div>
     </div>
   </div> 
 </template>
@@ -172,239 +77,187 @@
 import Vue from 'vue'
 import axios from 'axios'
 import BackBar from '../../components/Mobile/BackBar'
-  export default{
-    data: function () {
+import {getOneYearMonth} from "../../util/utils"
+export default{
+  data: function () {
       return {
-        cityList:'',//城市列表
-    formInsuredInfo: {
-      memberDetail:{},
-      NAME:'',//用户名
-      IDNUMBER:'',//身份证
-      INSURED_AREA:'',//参保城市
-      RESIDENCE:'',//户口性质
-      // JOB:'',//岗位
-      // STREET:'',//街道
-      AvatarSource:{   //upload img
-        sfz_front:'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar',
-        sfz_back:'https://o5wwk8baw.qnssl.com/bc7521e033abdd1e92222d733590f104/avatar',
-        hkb_hz:'',
-        hkb_br:'',
-        personal_detail:'',
-      }
-    },
-    ruleInline: {
-        NAME: [
-            { required: true, message: '请输入真实姓名！', trigger: 'blur' }
-        ],
-        IDNUMBER: [
-            { required: true, message: '请输入身份证号！', trigger: 'blur' },
-        ],
-        INSURED_AREA: [
-            { required: true, message: '请选择参保城市！', trigger: 'blur' },
-        ],
-        RESIDENCE: [
-            { required: true, message: '请选择户口性质！', trigger: 'blur' },
-        ],
-    },
-    defaultList: [
-    'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
-    ],
-    imgName: '',
-    visible: false,
-    uploadList: []
+        buyMonthList:[],
+        switchS:true,     //是否交社保
+        switchG:false,    //是否交公积金
+        Security:3209,    //社保费用
+        Funds:304.5,       //公积金费用
+        service_fee:0, //服务费
+        material_fee:0,//其他费用
+        SumS:0,
+        SumG:0,
+        Sum:0,          //合计
+        securityID:'',
+        INSURED_AREA:''
         
       }
-    },
-    mounted: function () {
-      
-    },
-    created() {
-    axios.get(R_PRE_URL+'/searchCityList.do'
-    ).then((res)=> { 
-      this.cityList = res.data.arr
-    }).catch((error)=> {
-      console.log(error)
-    })
-    axios.get(R_PRE_URL+'/searchMemberDetail.do?member_id='+this.$store.state.userInfo.member_id
-    ).then((res)=> { 
-      console.log('searchMemberDetail-------------------')
-      console.log(res.data.memberDetail)
-      let MemberDetail = res.data.memberDetail
-      this.formInsuredInfo.NAME = MemberDetail.real_name || ''
-      this.formInsuredInfo.IDNUMBER = MemberDetail.sfz_no || ''
-      this.formInsuredInfo.INSURED_AREA = MemberDetail.city_name|| ''
-      this.formInsuredInfo.RESIDENCE = MemberDetail.type || ''
-      this.formInsuredInfo.AvatarSource = {  
-            sfz_front:MemberDetail.sfz_front || '',
-            sfz_back:MemberDetail.sfz_back || '',
-            hkb_hz:MemberDetail.hkb_hz || '',
-            hkb_br:MemberDetail.hkb_br || '',
-            personal_detail:MemberDetail.personal_detail || ''
-     }
-    }).catch((error)=> {
-      console.log(error)
-    })
+  },
+  created() {
+    // axios.get(R_PRE_URL+'/searchMemberDetail.do?member_id='+this.$store.state.userInfo.member_id
+    // ).then((res)=> {
+    //   let MemberDetail = res.data.memberDetail
+    //   let CityCode = MemberDetail.city
+    //   this.INSURED_AREA = MemberDetail.city_name
+    //   axios.get(R_PRE_URL+'/searchInsurance.do?city='+CityCode
+    //   ).then((RES)=> {
+    //     let InsuranceDetail = RES.data.insuranceDetail
+    //     this.securityID = InsuranceDetail.id
+    //     this.Security = InsuranceDetail.person_total + InsuranceDetail.company_total
+    //     this.Funds = InsuranceDetail.providen_base*(InsuranceDetail.person_total + InsuranceDetail.company_total)
+    //   }).catch((error)=> {
+    //     console.log(error)
+    //   })
+
+    // }).catch((error)=> {
+    //   console.log(error)
+    // })
   },
   mounted: function(){
-    this.uploadList = this.$refs.upload.fileList;
+    
   
   },
   computed: {
-    URL(){
-      return R_PRE_URL+'/'
-    },
+    MonthList(){
+        return getOneYearMonth(12,15)
+    }
+    
   },
   watch:{
-    URL(){
-      return R_PRE_URL+'/'
-    },
-  },
+    
+  },  
   components: {
       BackBar
       
 
-    },
+  },
   methods: {
-    handleSaveBasicInfo(name) {
-        this.$refs[name].validate((valid) => {
-            if (valid) {
-                
-              this.$Message.success('修改成功!');
-            } else {
-                this.$Message.error('带*号的为必填项!');
-            }
-        })
+    //缴纳月份变化
+    changeBuyMonth(){
+      axios.get(R_PRE_URL+'/searchSbyFee.do?month_count='+this.buyMonthList.length
+      ).then((res)=> { 
+        let Data = res.data
+        if(Data.hasOwnProperty("feeInfo")){
+          this.service_fee = Data.feeInfo.service_fee
+          this.material_fee = Data.feeInfo.material_fee
+        }else{
+          this.service_fee = 0
+          this.material_fee = 0
+        }
+        console.log(this.material_fee +'---' + this.service_fee)
+      }).catch((error)=> {
+        console.log(error)
+      })
     },
-    // upload
-    // 身份证正面
-    handleBeforeUploadSF(event) {
-      var _this = this
-      var file = event
-      console.log(file) 
-      var reader = new FileReader();   
-      reader.readAsDataURL(file);   
-      reader.onload = function(e){
-        let reg = /^data:image\/(jpeg|png|gif);base64,/
-        console.log(this.result.replace(reg, ""))
-        axios.get(R_PRE_URL+'/uploadBase64.do?imgStr='+this.result.replace(reg, "")
-        ).then((res)=> {
-          _this.AvatarSource[sfz_front] = res.data.fileName
-        }).catch((error)=> {
-          console.log(error)
-        })
-      } 
-    },
-    // 身份证反面
-    handleBeforeUploadSB(event) {
-      var _this = this
-      var file = event
-      console.log(file) 
-      var reader = new FileReader();   
-      reader.readAsDataURL(file);   
-      reader.onload = function(e){
-        let reg = /^data:image\/(jpeg|png|gif);base64,/
-        console.log(this.result.replace(reg, ""))
-        axios.get(R_PRE_URL+'/uploadBase64.do?imgStr='+this.result.replace(reg, "")
-        ).then((res)=> {
-          _this.AvatarSource[sfz_back] = res.data.fileName
-        }).catch((error)=> {
-          console.log(error)
-        })
-      } 
-    },
-    //户口簿主页
-    handleBeforeUploadHZ(event) {
-      var _this = this
-      var file = event
-      console.log(file) 
-      var reader = new FileReader();   
-      reader.readAsDataURL(file);   
-      reader.onload = function(e){
-        let reg = /^data:image\/(jpeg|png|gif);base64,/
-        console.log(this.result.replace(reg, ""))
-        axios.get(R_PRE_URL+'/uploadBase64.do?imgStr='+this.result.replace(reg, "")
-        ).then((res)=> {
-          _this.AvatarSource[hkb_hz] = res.data.fileName
-        }).catch((error)=> {
-          console.log(error)
-        })
-      } 
-    },
-    //户口簿本人页
-    handleBeforeUploadBR(event) {
-      var _this = this
-      var file = event
-      console.log(file) 
-      var reader = new FileReader();   
-      reader.readAsDataURL(file);   
-      reader.onload = function(e){
-        let reg = /^data:image\/(jpeg|png|gif);base64,/
-        console.log(this.result.replace(reg, ""))
-        axios.get(R_PRE_URL+'/uploadBase64.do?imgStr='+this.result.replace(reg, "")
-        ).then((res)=> {
-          _this.AvatarSource[hkb_br] = res.data.fileName
-        }).catch((error)=> {
-          console.log(error)
-        })
-      } 
-    },
-    //个人基本信息采集表
-    handleBeforeUploadPD(event) {
-      var _this = this
-      var file = event
-      console.log(file) 
-      var reader = new FileReader();   
-      reader.readAsDataURL(file);   
-      reader.onload = function(e){
-        let reg = /^data:image\/(jpeg|png|gif);base64,/
-        console.log(this.result.replace(reg, ""))
-        axios.get(R_PRE_URL+'/uploadBase64.do?imgStr='+this.result.replace(reg, "")
-        ).then((res)=> {
-          _this.AvatarSource[personal_detail] = res.data.fileName
-        }).catch((error)=> {
-          console.log(error)
-        })
-      } 
-    },
-    
-    handleView (name) {
-        this.imgName = name;
-        this.visible = true;
-    },
-    handleRemove (file) {
-        const fileList = this.$refs.upload.fileList;
-        this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
-    },
-    handleSuccess (res, file) {
-        file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar';
-        file.name = '7eb99afb9d5f317c912f08b5212fd69a';
-    },
-    handleFormatError (file) {
-        this.$Notice.warning({
-            title: 'The file format is incorrect',
-            desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
-        });
-    },
-    handleMaxSize (file) {
-        this.$Notice.warning({
-            title: 'Exceeding file size limit',
-            desc: 'File  ' + file.name + ' is too large, no more than 2M.'
-        });
-    },
-    handleBeforeUpload () {
+    //提交订单
+    toSubmitOrder(){
+      if(this.buyMonthList.length<=0){
+        this.$Message.error('请选择代缴年月！')
+        return
+      }
+      if(!this.switchS && !this.switchG){
+        this.$Message.error('请选择代缴种类！')
+        return
+      }
+      let Amount =0
+      let monthListStr=''
+      this.buyMonthList.map(function(item,idx){
+        monthListStr = monthListStr + item.replace("-","") +'-'
+      })
+      let Pay_type = this.switchG && this.switchS ?'0':this.switchG?'2':'1'
+      switch(Pay_type){
+        case '0':
+        Amount = ((this.Security + this.Funds + this.service_fee)*this.buyMonthList.length+this.material_fee).toFixed(2)
+        break;
+        case '1':
+        Amount = ((this.Security + this.service_fee)*this.buyMonthList.length+this.material_fee).toFixed(2)
+        break;
+        case '2':
+        Amount = ((this.Funds + this.service_fee)*this.buyMonthList.length+this.material_fee).toFixed(2)
+        break;
+      }
+      let monthObjList =[]
+      this.buyMonthList.map(function(item,idx){
+        let obj = {'pay_month':item.replace("-","")}
+        monthObjList.push(obj)
+      })
+
+      let orderInfo = {
+        'order_name':'代缴'+ this.INSURED_AREA + monthListStr + (Pay_type==0?'社保公积金':Pay_type==1?'社保':'公积金'),
+        'amount':Amount,
+        'pay_time':new Date(),
+        'service_charge':this.service_fee,
+        'member_id':this.$store.state.userInfo.member_id,
+        'insurance_detail_id':this.securityID,
+        'city':this.INSURED_AREA,
+        'order_month':'',//monthListStr
+        'pay_type':Pay_type,
+        'sbEntryList':monthObjList,
+        'gjjEntryList':monthObjList
+      }
+      console.log(orderInfo)
+
+      // axios.post(R_PRE_URL+'/insertOrder.do',orderInfo
+      // ).then((res)=> {
+      //   switch(res.data.result){
+      //     case '2':
+      //     this.$Message.success('下单成功!')
+      //     this.$router.push({name:'订单详情',params:{OrderNo:res.data.订单号}})
+      //     break;
+      //     case '0':
+      //     this.$Message.error(res.data.message+':'+res.data.detail)
+      //     break;
+      //   }
+      //   console.log(res)
+      // }).catch((error)=> {
+      //   console.log(error)
+      // })
+      this.$router.push({name:'订单详情',params:{OrderNo:123}})
+      
     }
-   
-    },
+    
+  },
 };
 </script>
 <style lang="scss">
 .PaySecurity{
   margin-bottom: 130px;
   .MainContent{
-    width: 90%;
+    width: 100%;
     margin: 0 auto;
-    margin-top: 52px;
+    margin-top: 42px;
+    .List{
+      width: 100%;
+      margin: 0 auto;
+    .ListItem{
+        padding: 0 10px;
+        height: 45px;
+        line-height: 45px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        img{
+          width: 32px;
+          height: 32px;
+          margin-top: 5px;
+        }
+        .ivu-select-selection{
+          border: 0px;
+        }
+      }
+      .MonthList{
+        height: 100%;
+        line-height: 100%;
+        padding: 0 0px;
+      }
+    }
 
+  }
+  .BgGray{
+    background-color: #efeff4;
+    padding: 5px 10px;
   }
 }
 </style>

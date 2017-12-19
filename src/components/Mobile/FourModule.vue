@@ -65,10 +65,10 @@ import axios from 'axios'
       GoModule(KIND){
         switch(KIND){
           case 0:
-          this.$router.push({name:'缴纳社保'})
+          this.$router.push({name:'参保信息'})
           break
           case 1:
-          this.$router.push({name:'社保计算'})
+          this.$router.push({name:'社保计算器'})
           break
           case 2:
           this.$router.push({name:'社保周边'})

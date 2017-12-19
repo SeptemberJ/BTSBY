@@ -84,6 +84,15 @@ html {
 .marginT_20{
     margin-top: 20px;
 }
+.marginB_20{
+    margin-bottom: 20px;
+}
+.marginT_40{
+    margin-top: 40px;
+}
+.marginB_40{
+    margin-bottom: 40px;
+}
 .marginTB_40{
     margin: 40px auto;
 }
