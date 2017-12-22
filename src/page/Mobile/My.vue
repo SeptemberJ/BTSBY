@@ -1,12 +1,13 @@
 <template>
   <div class="My">
-  	<BackBar></BackBar>
+  	<TitBar></TitBar>
     <div class="MainContent">
       <Row class="TopBlock">
         <Col span="24" class="TextCenter">
           <Avatar src="https://i.loli.net/2017/08/21/599a521472424.jpg" size="small"/>
         </Col>
-        <Col span="24" class="TextCenter marginTB_10">{{UserName}}</Col>
+        <div @click="UserName?'':ToLogin()"><Col span="24" class="TextCenter marginTB_10">{{UserName?UserName:'点击登录'}}</Col></div>
+
       </Row>
       <!-- middle two -->
       <Row class="MiddleTwo">
@@ -84,7 +85,7 @@
 <script>
 import Vue from 'vue'
 import axios from 'axios'
-import BackBar from '../../components/Mobile/BackBar'
+import TitBar from '../../components/Mobile/TitBar'
 import BlankBar from '../../components/Mobile/BlankBar'
 import {clearCookie} from '../../util/utils'
   export default{
@@ -108,7 +109,7 @@ import {clearCookie} from '../../util/utils'
       
     },
     components: {
-      BackBar,
+      TitBar,
       BlankBar
       
 
@@ -150,7 +151,11 @@ import {clearCookie} from '../../util/utils'
         this.$router.push({name:'首页'})
         clearCookie('btsby_cookie')
       },
-    }
+      ToLogin(){
+        this.$router.push({name:'登录'})
+      }
+    },
+    
   }
 </script>
 <style lang="scss">

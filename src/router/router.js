@@ -67,7 +67,7 @@ const routes = [
     {path: '/HowBuy', name: '如何在线购买', component: HowBuy},
     {path: '/SecurityInfo', name: '参保信息', component: SecurityInfo,meta: {requireAuth: false}},
     {path: '/PaySecurity', name: '缴纳社保', component: PaySecurity,meta: {requireAuth: false}},
-    {path: '/My', name: '我的', component: My,meta: {requireAuth: true}},
+    {path: '/My', name: '我的', component: My,meta: {requireAuth: false}},
     {path: '/MyWallet', name: '我的钱包', component: MyWallet,meta: {requireAuth: true}},
     {path: '/PersonalData', name: '个人资料', component: PersonalData,meta: {requireAuth: true}},
     {path: '/PsdModification', name: '修改密码', component: PsdModification,meta: {requireAuth: true}},

@@ -1,6 +1,6 @@
 <template>
   <div class="FooterPartM">
-    <Menu mode="horizontal" :theme="theme1" active-name="0" @on-select="ChangeMenu">
+    <Menu mode="horizontal" :theme="theme1" :active-name="FMenu" @on-select="ChangeMenu">
           <MenuItem name="0">
               <Icon type="home" :size='24'></Icon>
               <span class="BlockSpan">首页</span>
@@ -26,7 +26,7 @@ import axios from 'axios'
   export default{
     data: function () {
       return {
-        theme1: 'primary'
+        theme1: 'primary',
       }
     },
     mounted: function () {
@@ -36,6 +36,43 @@ import axios from 'axios'
       
     },
     computed: {
+      FMenu(){
+        switch(this.$store.state.activeRoute){
+          case '首页':
+          return '0'
+          break
+          case '社保计算器':
+          return '0'
+          break
+          case '社保周边':
+          return '0'
+          break
+          case '详情':
+          return '0'
+          break
+          case '为何购买社保':
+          return '0'
+          break
+          case '如何在线购买':
+          return '0'
+          break
+          case '社保服务介绍':
+          return '0'
+          break
+          case '参保信息':
+          return '1'
+          break
+          case '缴纳社保':
+          return '1'
+          break
+          case '查社保':
+          return '2'
+          break
+          default:
+          return '3'
+          break
+        }
+      }
       
     },
     watch: {

@@ -15,8 +15,11 @@
             </Input>
         </FormItem>
         <FormItem>
+            <Button type="text" @click="">找回密码</Button>
+            <Button type="text" @click="">去注册</Button>
+        </FormItem>
+        <FormItem>
             <Button type="primary" @click="handleSubmit('formLogin')">登录</Button>
-            <Button type="text" style="float: right;" @click="">去注册</Button>
         </FormItem>
       </Form>
   </div>

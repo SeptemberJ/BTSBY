@@ -18,11 +18,13 @@
         <Col span="12" class="TextCenter  marginT_10">
           <Input v-model="searchKey" placeholder="输入查询地区"></Input>
         </Col>
-        <Col span="12" class="TextCenter  marginT_10">
-          <Button type="primary" shape="circle" icon="ios-search" long>立即查询</Button>
+        <Col span="8" class="TextCenter  marginT_10">
+          <Button type="primary" icon="ios-search">搜索</Button>
         </Col>
-        
     </Row>
+    <!-- <Row>
+        <Col span="8">{{CityList[0].cityname}}</Col>
+    </Row> -->
   </div>
   </div> 
 
@@ -45,7 +47,10 @@ import BlankBar from '../../components/Mobile/BlankBar'
   export default{
     data: function () {
       return {
-        searchKey:''
+        searchKey:'',
+        CityList:[
+        {cityname:'上海',urlG:'http://www.shgjj.com/',urlS:'http://www.12333sh.gov.cn/'}
+        ]
       }
     },
     mounted: function () {
