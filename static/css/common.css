@@ -115,3 +115,7 @@ html {
 .FloatRight{
   float: right;
 }
+
+.Border{
+  border: 1px solid #ddd;
+}

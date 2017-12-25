@@ -1,0 +1,35 @@
+{
+  "result":1,
+  "arr":[
+  	{
+  		"city_name":"上海",
+  		"city_code":"1",
+  		"securityInfo":{"tel":"400","netLink":"http://www.baidu.com"},
+  		"pubilcInfo":{"tel":"400","netLink":"http://www.baidu.com"}
+  	},
+  	{
+  		"city_name":"广州",
+  		"city_code":"1",
+  		"securityInfo":{"tel":"400","netLink":"http://www.baidu.com"},
+  		"pubilcInfo":{"tel":"400","netLink":"http://www.baidu.com"}
+  	},
+  	{
+  		"city_name":"苏州",
+  		"city_code":"1",
+  		"securityInfo":{"tel":"400","netLink":"http://www.baidu.com"},
+  		"pubilcInfo":{"tel":"400","netLink":"http://www.baidu.com"}
+  	},
+  	{
+  		"city_name":"厦门",
+  		"city_code":"1",
+  		"securityInfo":{"tel":"400","netLink":"http://www.baidu.com"},
+  		"pubilcInfo":{"tel":"400","netLink":"http://www.baidu.com"}
+  	},
+  	{
+  		"city_name":"福建",
+  		"city_code":"1",
+  		"securityInfo":{"tel":"400","netLink":"http://www.baidu.com"},
+  		"pubilcInfo":{"tel":"400","netLink":"http://www.baidu.com"}
+  	}
+  ]
+}

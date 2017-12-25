@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta charset="utf-8">
+    <title>社保云</title>
+    <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
+    <link rel="stylesheet" href="static/css/common.css">
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://a.alipayobjects.com/g/h5-lib/alipayjsapi/3.0.6/alipayjsapi.min.js"></script>
+
+</head>
+<body>
+<p id="result">result: </p>
+
+<script type="application/javascript">
+    // 调试时可以通过在页面定义一个元素，打印信息，使用alert方法不够优雅
+    function log(obj) {
+        $("#result").append(obj).append(" ").append("<br />");
+    }
+
+    $(document).ready(function(){
+        // 页面载入完成后即唤起收银台
+        // 此处${tradeNO}为模板语言语法，实际调用样例类似为tradePpay("2016072621001004200000000752")
+        tradePay("2016072621001004200000000752"); 
+
+        // 点击payButton按钮后唤起收银台
+        $("#payButton").click(function() {
+           tradePay("2016072621001004200000000752");
+        });
+
+        // 通过jsapi关闭当前窗口，仅供参考，更多jsapi请访问
+        // /aod/54/104510
+        $("#closeButton").click(function() {
+           AlipayJSBridge.call('closeWebview');
+        });
+     });
+
+    // 由于js的载入是异步的，所以可以通过该方法，当AlipayJSBridgeReady事件发生后，再执行callback方法
+    function ready(callback) {
+         if (window.AlipayJSBridge) {
+             callback && callback();
+         } else {
+             document.addEventListener('AlipayJSBridgeReady', callback, false);
+         }
+    }
+
+    function tradePay(tradeNO) {
+        ready(function(){
+             // 通过传入交易号唤起快捷调用方式(注意tradeNO大小写严格)
+             AlipayJSBridge.call("tradePay", {
+                  tradeNO: tradeNO
+             }, function (data) {
+                 log(JSON.stringify(data));
+                 if ("9000" == data.resultCode) {
+                     log("支付成功");
+                 }
+             });
+        });
+    }
+</script>
+</body>
+</html>

@@ -2,7 +2,7 @@
  <div class="layout">
         <Menu mode="horizontal" :active-name="activeRoute" @on-select="tabChange">
             <div class="layout-logo" @click="ToIndex"></div>
-            <div class="layout-nav" v-if="activeRoute!='个人注册' && activeRoute!='企业注册' && activeRoute!='HR管理后台(企业)'  && activeRoute!='HR管理后台(个人)'">
+            <div class="layout-nav" v-if="activeRoute!='个人注册' && activeRoute!='企业注册' && activeRoute!='HR管理后台(企业)'  && activeRoute!='HR管理后台(个人)' && activeRoute!='提交订单'">
                 <MenuItem name="首页">
                     首页
                 </MenuItem>

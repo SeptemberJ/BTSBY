@@ -13,6 +13,8 @@ import NewsDetail from '../page/PC/Common/NewsDetail'
 import AboutUs from '../page/PC/Common/AboutUs'
 import HRBackSystemI from '../page/PC/Individual/HRBackSystemI'
 import HRBackSystemE from '../page/PC/Enterprise/HRBackSystemE'
+import SubmitOrder from '../page/PC/Common/SubmitOrder'
+import Pay from '../page/PC/Common/Pay'
 
 import PeripheryTab from '../page/Mobile/PeripheryTab'
 import ArticleDetail from '../page/Mobile/ArticleDetail'
@@ -35,6 +37,7 @@ import MyOrderDetail from '../page/Mobile/My/MyOrderDetail'
 import SecurityRecord from '../page/Mobile/My/SecurityRecord'
 import Calculation from '../page/Mobile/Calculation'
 import Search from '../page/Mobile/Search'
+import CityInfo from '../page/Mobile/CityInfo'
 
 import {deviceInfo} from "../util/device"
 import {setCookie,getCookie} from '../util/utils'
@@ -55,6 +58,8 @@ const routes = [
     {path: '/News', name: '社保资讯', component: News},
     {path: '/NewsDetail/:id', name: '资讯详情', component: NewsDetail},
     {path: '/AboutUs', name: '关于我们', component: AboutUs,meta: {requireAuth: true},},
+    {path: '/SubmitOrder', name: '提交订单', component: SubmitOrder,meta: {requireAuth: false},},
+    {path: '/Pay', name: '订单支付', component: Pay,meta: {requireAuth: false},},
 
     
     {path: '/HRBackSystemI', name: 'HR管理后台(个人)', component: HRBackSystemI,meta: {requireAuth: true}},
@@ -79,6 +84,8 @@ const routes = [
     {path: '/SecurityRecord', name: '投保记录', component: SecurityRecord,meta: {requireAuth: true}},
     {path: '/Calculation', name: '社保计算器', component: Calculation},
     {path: '/Search', name: '查社保', component: Search},
+    {path: '/CityInfo/:CityCode', name: '城市查询信息', component: CityInfo},
+    
 
 
       {path:'*', redirect: '/Index'}
