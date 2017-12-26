@@ -1,17 +1,17 @@
 <template>
-  <div id="TopBlock" class="layout-ceiling">
+  <div id="TopBlock" class="layout-ceiling" v-if="activeRoute!='个人注册' && activeRoute!='企业注册'">
       <div class="layout-ceiling-main">
-          <Row>
-              <Col span="12">
+          <Row type="flex" justify="space-around">
+              <Col span="11">
                 <Button type="text" v-if="ifLogined?false:true" @click="ToLogin">登录</Button>
                 <Button type="text" v-if="ifLogined?false:true" @click="ToSign">注册</Button>
                 <Button type="text" v-if="ifLogined?true:false" @click="ToLogin">{{UserName}}</Button>
                 <Button type="text" v-if="ifLogined?true:false" @click="Logout"><Icon type="power"></Icon> 退出</Button>
               </Col>
-              <Col span="12" class="ContRight">
+              <Col span="11" class="ContRight">
                 <Button type="text" v-if="ifLogined?true:false" @click="GoHR">HR管理后台</Button>
                 <Button type="text" @click="GoNews">社保资讯</Button>
-                <!-- <Button type="text">帮助</Button> -->
+                <Icon type="ios-telephone"></Icon> 021-3100-7227
               </Col>
           </Row>
       </div>
@@ -41,6 +41,9 @@ export default {
   computed: {
     isMobile(){
       return this.$store.state.isMobile
+    },
+    activeRoute(){
+      return this.$store.state.activeRoute
     },
     UserName(){
       return this.$store.state.userInfo.username

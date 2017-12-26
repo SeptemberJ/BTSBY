@@ -29,9 +29,9 @@
         <Col span="20">
           <Card :bordered="false" dis-hover style="width: 100%">
               <p slot="title">
-                  社保知识
+                  {{newsKind==1?'社保知识':(newsKind==2?'案例分析':(newsKind==3?'常见问题':'社保资讯'))}}
               </p>
-              <ul>
+              <ul v-if="newsListInfo.length>0">
                   <li v-for="(News,NewsIdx) in newsListInfo" style="margin-top: 10px;">
                       <p @click='newsDetail(News.id)'>{{ News.s_title }}</p>
                       <span style="float: right;">
@@ -39,8 +39,11 @@
                       </span>
                   </li>
               </ul>
+              <div v-else class="TextCenter">
+                <Icon type="social-tux" :size="36"></Icon> 暂无数据
+              </div>
           </Card>
-          <Page class="marginT_20" :total="Total" show-total style="float: right;" :current="newsPage" @on-change="changePage"></Page>
+          <Page class="marginT_20" :total="Total" show-total style="float: right;" :current="newsPage" @on-change="changePage" v-if="newsListInfo.length>0"></Page>
         </Col>
       </Row>
     </div>
@@ -63,6 +66,10 @@ export default {
   }
   },
   created() {
+    //手机端自动跳转手机端首页
+    if(this.$store.state.isMobile){
+      this.$router.push({name:'首页'})
+    }
     this.getNewsData(this.$store.state.newsKind,this.$store.state.newsPage)
   },
   mounted: function(){

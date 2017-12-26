@@ -57,7 +57,7 @@ const routes = [
     {path: '/Enterprise', name: '企业保', component: Enterprise},
     {path: '/News', name: '社保资讯', component: News},
     {path: '/NewsDetail/:id', name: '资讯详情', component: NewsDetail},
-    {path: '/AboutUs', name: '关于我们', component: AboutUs,meta: {requireAuth: true},},
+    {path: '/AboutUs', name: '关于我们', component: AboutUs},
     {path: '/SubmitOrder', name: '提交订单', component: SubmitOrder,meta: {requireAuth: false},},
     {path: '/Pay', name: '订单支付', component: Pay,meta: {requireAuth: false},},
 

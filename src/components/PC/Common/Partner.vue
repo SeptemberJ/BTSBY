@@ -6,7 +6,7 @@
           <p class="TextCenter">{{Infor.tits.SmallTit}}</p>
         </Col>
         <Col span="24">
-          <Row>
+          <Row type="flex" justify="space-around">
             <Col span="4" v-for="(Content,ContentIdx) in Infor.contents">
               <Card :bordered="false" dis-hover>
                 <div style="text-align:center">

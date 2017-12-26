@@ -7,6 +7,8 @@
     <ImgTxt  :Infor="IdividualInfor.superiority"></ImgTxt>
     <OnlyImg  :Infor="IdividualInfor.flow"></OnlyImg>
     <FoldBrand  :Infor="IdividualInfor.problems"></FoldBrand>
+    <!-- 返回顶部 -->
+    <BackTop></BackTop>
     
     
   </div>
@@ -28,6 +30,10 @@ export default {
   }
   },
   created() {
+    //手机端自动跳转手机端首页
+    if(this.$store.state.isMobile){
+      this.$router.push({name:'首页'})
+    }
     axios.get(PRE_URL+'static/json/Individual.json'
         ).then((res)=> {
           this.IdividualInfor = res.data

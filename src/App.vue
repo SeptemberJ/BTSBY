@@ -4,8 +4,6 @@
       <TopBlock v-if="!isMobile"></TopBlock>
       <NavBar v-if="!isMobile"></NavBar>
       <!-- <Carousel></Carousel> -->
-       
-       
         <div>
           <transition>
             <router-view class="child-view"></router-view>
@@ -17,17 +15,15 @@
         <FooterPartM v-if="isMobile"></FooterPartM>
     </div>
 
-    
-    
+    <Affix v-if="!isMobile"></Affix>
   </div>
-
-
 </template>
 <script>
 import TopBlock from 'components/PC/Common/TopBlock'
 import NavBar from 'components/PC/Common/NavBar'
 import Carousel from 'components/PC/Common/Carousel'
 import FooterPart from 'components/PC/Common/FooterPart'
+import Affix from 'components/PC/Common/Affix'
 import FooterPartM from 'components/Mobile/FooterPartM'
   export default{
     data: function () {
@@ -59,7 +55,8 @@ import FooterPartM from 'components/Mobile/FooterPartM'
       NavBar,
       Carousel,
       FooterPart,
-      FooterPartM
+      FooterPartM,
+      Affix
       
 
     },
@@ -81,23 +78,13 @@ import FooterPartM from 'components/Mobile/FooterPartM'
         min-height: 100%;
     }
     .layout-header{
-        height: 60px;
+        height: 50px;
         margin: 0 auto;
         background: #fff;
         box-shadow: 0 1px 1px rgba(0,0,0,.1);
 
     }
-    .layout-logo{
-        width: 220px;
-        height: 60px;
-        border-radius: 3px;
-        float: left;
-        position: relative;
-        top: 0px;
-        left: 20px;
-       
-        
-    }
+
     .layout-copy{
         text-align: center;
         padding: 10px 0 20px;
@@ -124,4 +111,5 @@ import FooterPartM from 'components/Mobile/FooterPartM'
   width: 100%;
   margin: 0 auto;
 }
+
 </style>

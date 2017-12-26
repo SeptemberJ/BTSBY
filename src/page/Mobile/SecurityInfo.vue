@@ -62,7 +62,7 @@
           :on-format-error="handleFormatError"
           :on-exceeded-size="handleMaxSize"
           :before-upload="handleBeforeUploadSF"
-          multiple
+          accept=".png, .jpg, .jpeg"
           type="drag"
           action=""
           style="display: block;">
@@ -83,7 +83,7 @@
           :on-format-error="handleFormatError"
           :on-exceeded-size="handleMaxSize"
           :before-upload="handleBeforeUploadSB"
-          multiple
+          accept=".png, .jpg, .jpeg"
           type="drag"
           action=""
           style="display: block;">
@@ -104,7 +104,7 @@
           :on-format-error="handleFormatError"
           :on-exceeded-size="handleMaxSize"
           :before-upload="handleBeforeUploadHZ"
-          multiple
+          accept=".png, .jpg, .jpeg"
           type="drag"
           action=""
           style="display: block;">
@@ -125,7 +125,7 @@
           :on-format-error="handleFormatError"
           :on-exceeded-size="handleMaxSize"
           :before-upload="handleBeforeUploadBR"
-          multiple
+          accept=".png, .jpg, .jpeg"
           type="drag"
           action=""
           style="display: block;">
@@ -146,7 +146,7 @@
           :on-format-error="handleFormatError"
           :on-exceeded-size="handleMaxSize"
           :before-upload="handleBeforeUploadPD"
-          multiple
+          accept=".png, .jpg, .jpeg"
           type="drag"
           action=""
           style="display: block;">

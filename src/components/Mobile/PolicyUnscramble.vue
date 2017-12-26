@@ -11,7 +11,7 @@
         </a>
         <ul>
             <li v-for="item in policyList">
-                <a :href="item.url" class="ellipsis" style="color: #333;">{{ item.title }}</a>
+                <a @click="GoArticleDetail(item.id)" class="ellipsis" style="color: #333;">{{ item.title }}</a>
                 <span style="float: right;">
                     {{item.date}}
                 </span>
@@ -65,7 +65,9 @@ import BlankBar from './BlankBar'
         LoadMore(){
             this.$store.state.PeripheryTab_cur = 3
             this.$router.push({name:'社保周边'})
-
+        },
+        GoArticleDetail(ID){
+            this.$router.push({name:'详情',params:{id:ID}})
         }
     }
   }

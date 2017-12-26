@@ -50,15 +50,12 @@ export default {
   }
   },
   mounted: function(){
-    //获取导航菜单
-    // axios.get(PRE_URL+'static/json/Navbar.json'
-    //     ).then((res)=> {
-    //       this.navbarInfo = res.data.navbar
-    //   }).catch((error)=> {
-    //     console.log(error)
-    //   })
-    
-  
+  },
+  created() {
+    //手机端自动跳转手机端首页
+    if(this.$store.state.isMobile){
+      this.$router.push({name:'首页'})
+    }
   },
   computed: {
     

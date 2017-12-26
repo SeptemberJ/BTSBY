@@ -7,7 +7,8 @@
     <ImgTxt  :Infor="EnterpriseInfor.superiority"></ImgTxt>
     <OnlyImg  :Infor="EnterpriseInfor.flow"></OnlyImg>
     <FoldBrand  :Infor="EnterpriseInfor.problems"></FoldBrand>
-    
+    <!-- 返回顶部 -->
+    <BackTop></BackTop>
     
   </div>
 </template>
@@ -28,12 +29,16 @@ export default {
   }
   },
   created() {
+    //手机端自动跳转手机端首页
+    if(this.$store.state.isMobile){
+      this.$router.push({name:'首页'})
+    }
     axios.get(PRE_URL+'static/json/Enterprise.json'
-        ).then((res)=> {
-          this.EnterpriseInfor = res.data
-      }).catch((error)=> {
-        console.log(error)
-      })
+      ).then((res)=> {
+        this.EnterpriseInfor = res.data
+    }).catch((error)=> {
+      console.log(error)
+    })
   },
   mounted: function(){
 

@@ -6,13 +6,13 @@
           <p class="TextCenter">{{Infor.tits.SmallTit}}</p>
         </Col>
         <Col span="24">
-          <Row>
-            <Col span="8" v-for="(Content,ContentIdx) in Infor.contents">
-              <Card :bordered="false" dis-hover>
+          <Row type="flex" justify="space-around">
+            <Col span="7" v-for="(Content,ContentIdx) in Infor.contents">
+              <Card :bordered="false" dis-hover class="marginB_20">
                 <div style="text-align:center">
                     <img :src="Content.img" alt="图片" style="max-width: 80%;">
                     <h2 class="colorOrange">{{Content.slogan}}</h2>
-                    <p>{{Content.paragraph}}</p>
+                    <p style="text-align:left">{{Content.paragraph}}</p>
                 </div>
               </Card>
             </Col>

@@ -1,127 +1,128 @@
 <template>
 <div id="Sign">
-        
-    <Steps class="StepBar" :current="NavCur" >
-        <Step title="II设置用户名" :content="NavCur==0?'进行中':'已完成'"></Step>
-        <Step title="填写账号信息" :content="NavCur==0?'待进行':NavCur==1?'进行中':'已完成'"></Step>
-        <Step title="注册成功" :content="NavCur==2?'进行中':'待进行'"></Step>
-    </Steps>
-    <!-- step1 -->
-    <Card class="stepOne" v-if="NavCur == 0" :bordered="false" :dis-hover="false"> 
-       <Form  ref="formStepOne" :model="formStepOne" :rules="ruleInlineOne" :inline="false">
-          <FormItem prop="TEL" label="手机号码*">
-            <Row>
-              <Col span="14">
-                  <Input v-model="formStepOne.TEL" placeholder="请输入手机号码"></Input>
-              </Col>
-              <Col span="4" offset="1">
-                  <Button type="error" :disabled="disabled" @click="toGetCode">{{timerCount}}</Button>
-              </Col>
-            </Row>
-          </FormItem>
+    <div class="SignInnerBox">
+      <Steps class="StepBar" :current="NavCur" >
+          <Step title="设置用户名" :content="NavCur==0?'进行中':'已完成'"></Step>
+          <Step title="填写账号信息" :content="NavCur==0?'待进行':NavCur==1?'进行中':'已完成'"></Step>
+          <Step title="注册成功" :content="NavCur==2?'进行中':'待进行'"></Step>
+      </Steps>
+      <!-- step1 -->
+      <Card class="stepOne" v-if="NavCur == 0" :bordered="false" dis-hover> 
+         <Form  ref="formStepOne" :model="formStepOne" :rules="ruleInlineOne" :inline="false">
+            <FormItem prop="TEL" label="手机号码">
+              <Row>
+                <Col span="14">
+                    <Input v-model="formStepOne.TEL" placeholder="请输入手机号码"></Input>
+                </Col>
+                <Col span="4" offset="1">
+                    <Button type="error" :disabled="disabled" @click="toGetCode">{{timerCount}}</Button>
+                </Col>
+              </Row>
+            </FormItem>
 
-          <FormItem prop="RIMGCODE" label="图形验证码*">
-            <Row>
-              <Col span="14">
-                  <Input v-model="formStepOne.RIMGCODE" placeholder="请输入图形验证码"></Input>
-              </Col>
-              <Col span="4" offset="1">
-                  <Button type="error" @click="changeIMGCODE">{{formStepOne.IMGCODE}}</Button>
-              </Col>
-            </Row>
-          </FormItem>
+            <FormItem prop="RIMGCODE" label="图形验证码">
+              <Row>
+                <Col span="14">
+                    <Input v-model="formStepOne.RIMGCODE" placeholder="请输入图形验证码"></Input>
+                </Col>
+                <Col span="4" offset="1">
+                    <Button type="error" @click="changeIMGCODE">{{formStepOne.IMGCODE}}</Button>
+                </Col>
+              </Row>
+            </FormItem>
 
-          <FormItem prop="CODE" label="手机验证码*">
-            <Row>
-              <Col span="18">
-                  <Input v-model="formStepOne.CODE" placeholder="请输入手机验证码"></Input>
-              </Col>
-            </Row>
-          </FormItem>
+            <FormItem prop="CODE" label="手机验证码">
+              <Row>
+                <Col span="18">
+                    <Input v-model="formStepOne.CODE" placeholder="请输入手机验证码"></Input>
+                </Col>
+              </Row>
+            </FormItem>
 
-          <FormItem prop="EMAIL" label="电子邮箱*">
-            <Row>
-              <Col span="18">
-                  <Input v-model="formStepOne.EMAIL" placeholder="请输入电子邮箱"></Input>
-              </Col>
-            </Row>
-          </FormItem>
+            <FormItem prop="EMAIL" label="电子邮箱">
+              <Row>
+                <Col span="18">
+                    <Input v-model="formStepOne.EMAIL" placeholder="请输入电子邮箱"></Input>
+                </Col>
+              </Row>
+            </FormItem>
 
-         <!--  <FormItem label="" prop="checkAgreement">
-            <CheckboxGroup v-model="formStepOne.checkAgreement[0]">
-              <Checkbox label="同意社保云个人保协议"></Checkbox>
-            </CheckboxGroup>
-          </FormItem> -->
-          
-          <FormItem>
-              <Button type="primary" long @click="handleStepOne('formStepOne')">下一步</Button>
-          </FormItem>
-       </Form>       
-    </Card>
-    <!-- step2 -->
-    <Card class="stepTwo" v-if="NavCur == 1" :bordered="false" :dis-hover="false"> 
-       <Form  ref="formStepTwo" :model="formStepOne" :rules="ruleInlineOne" :inline="false">
-          <FormItem  label="用户名">
-            <Row>
-              <Col span="18">
-                  <Input v-model="formStepOne.TEL"  disabled ></Input>
-              </Col>
-            </Row>
-          </FormItem>
+           <!--  <FormItem label="" prop="checkAgreement">
+              <CheckboxGroup v-model="formStepOne.checkAgreement[0]">
+                <Checkbox label="同意社保云个人保协议"></Checkbox>
+              </CheckboxGroup>
+            </FormItem> -->
+            
+            <FormItem>
+                <Button type="primary" long @click="handleStepOne('formStepOne')">下一步</Button>
+            </FormItem>
+         </Form>       
+      </Card>
+      <!-- step2 -->
+      <Card class="stepTwo" v-if="NavCur == 1" :bordered="false" dis-hover> 
+         <Form  ref="formStepTwo" :model="formStepOne" :rules="ruleInlineOne" :inline="false">
+            <FormItem  label="用户名">
+              <Row>
+                <Col span="18">
+                    <Input v-model="formStepOne.TEL"  disabled ></Input>
+                </Col>
+              </Row>
+            </FormItem>
 
-          <FormItem prop="PSD" label="登录密码">
-            <Row>
-              <Col span="18">
-                  <Input  type="password" v-model="formStepTwo.PSD" placeholder="请输入登录密码"></Input>
-              </Col>
-            </Row>
-          </FormItem>
+            <FormItem prop="PSD" label="登录密码">
+              <Row>
+                <Col span="18">
+                    <Input  type="password" v-model="formStepTwo.PSD" placeholder="请输入登录密码"></Input>
+                </Col>
+              </Row>
+            </FormItem>
 
-          <FormItem prop="PSDAGAIN" label="密码确认">
-            <Row>
-              <Col span="18">
-                  <Input type="password" v-model="formStepTwo.PSDAGAIN" placeholder="请再次输入登录密码"></Input>
-              </Col>
-            </Row>
-          </FormItem>
+            <FormItem prop="PSDAGAIN" label="密码确认">
+              <Row>
+                <Col span="18">
+                    <Input type="password" v-model="formStepTwo.PSDAGAIN" placeholder="请再次输入登录密码"></Input>
+                </Col>
+              </Row>
+            </FormItem>
 
-          <FormItem prop="REALNAME" label="真实姓名">
-            <Row>
-              <Col span="18">
-                  <Input  v-model="formStepTwo.REALNAME" placeholder="请再次输入登录密码"></Input>
-              </Col>
-            </Row>
-          </FormItem>
+            <FormItem prop="REALNAME" label="真实姓名">
+              <Row>
+                <Col span="18">
+                    <Input  v-model="formStepTwo.REALNAME" placeholder="请再次输入登录密码"></Input>
+                </Col>
+              </Row>
+            </FormItem>
 
-          <FormItem prop="INVITECODE" label="邀请码">
-            <Row>
-              <Col span="18">
-                  <Input v-model="formStepTwo.INVITECODE" placeholder="请输入邀请码(选填)"></Input>
-              </Col>
-            </Row>
-          </FormItem>
+            <FormItem prop="INVITECODE" label="邀请码">
+              <Row>
+                <Col span="18">
+                    <Input v-model="formStepTwo.INVITECODE" placeholder="请输入邀请码(选填)"></Input>
+                </Col>
+              </Row>
+            </FormItem>
 
-          <FormItem prop="PREFERENTIALCODE" label="优惠码">
-            <Row>
-              <Col span="18">
-                  <Input v-model="formStepTwo.PREFERENTIALCODE" placeholder="请输入优惠码(选填)"></Input>
-              </Col>
-            </Row>
-          </FormItem>
-          
-          <FormItem>
-              <Button type="primary" long @click="handleStepTwo('formStepTwo')">下一步</Button>
-          </FormItem>
-       </Form>       
-    </Card>
-    <!-- step3 -->
-    <Card class="stepThree" v-if="NavCur == 2" :bordered="false" :dis-hover="false"> 
-       <h3>恭喜注册成功，你的帐号为：</h3>
-       <br>
-       <p><b>登录名：{{formStepOne.TEL}} (账号通用于社保云和EHR的管理)</b></p>
-       <Button type="primary"  @click="GoLogin" style="margin-top: 20px;">去登录</Button>
+            <FormItem prop="PREFERENTIALCODE" label="优惠码">
+              <Row>
+                <Col span="18">
+                    <Input v-model="formStepTwo.PREFERENTIALCODE" placeholder="请输入优惠码(选填)"></Input>
+                </Col>
+              </Row>
+            </FormItem>
+            
+            <FormItem>
+                <Button type="primary" long @click="handleStepTwo('formStepTwo')">下一步</Button>
+            </FormItem>
+         </Form>       
+      </Card>
+      <!-- step3 -->
+      <Card class="stepThree" v-if="NavCur == 2" :bordered="false" dis-hover> 
+         <h3>恭喜注册成功，你的帐号为：</h3>
+         <br>
+         <p><b>登录名：{{formStepOne.TEL}} (账号通用于社保云和EHR的管理)</b></p>
+         <Button type="primary"  @click="GoLogin" style="margin-top: 20px;">去登录</Button>
 
-    </Card>
+      </Card>
+    </div>
   </div>
 </template>
 <script>
@@ -181,6 +182,10 @@ export default {
   }
   },
   created() {
+    //手机端自动跳转手机端首页
+    if(this.$store.state.isMobile){
+      this.$router.push({name:'首页'})
+    }
     this.formStepOne.IMGCODE = generateMixed(4)
   },
   mounted: function(){
@@ -312,22 +317,30 @@ export default {
 </script>
 <style lang="scss" scoped>
 #Sign{
-  width: 90%;
-  display: block;
-  margin: 20px auto;
-  .StepBar{
+  width: 100%;
+  padding: 20px 0;
+  margin: 10px auto;
+  background-color: #efeff4;
+  .SignInnerBox{
     width: 90%;
-    margin:  20px auto 20px 10%;
-  }
-  .stepOne, .stepTwo ,.stepThree{
-    width: 500px;
-    margin: 20px auto;
-  }
-  .stepThree{
-    h3{
-      color: red;
-
+    margin:  20px auto;
+    padding: 20px 0;
+    background-color: #fff;
+    .StepBar{
+      width: 100%;
+      margin:  20px auto 20px 10%;
     }
+    .stepOne, .stepTwo ,.stepThree{
+      width: 500px;
+      margin: 20px auto;
+    }
+    .stepThree{
+      h3{
+        color: red;
+
+      }
+    }
+
   }
 }
 .ivu-card-head{

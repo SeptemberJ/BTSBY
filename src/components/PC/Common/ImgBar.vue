@@ -6,14 +6,14 @@
           <p class="TextCenter">{{Infor.tits.SmallTit}}</p>
         </Col>
         <Col span="24">
-          <Row>
-            <Col :span="24/Infor.contents.length" v-for="(Content,ContentIdx) in Infor.contents">
-              <Card :bordered="false" dis-hover>
+          <Row type="flex" justify="space-around">
+            <Col span="7" v-for="(Content,ContentIdx) in Infor.contents">
+              <Card :bordered="true" dis-hover class="marginB_20">
                 <div style="text-align:center">
                     <img :src="Content.img" alt="图片">
-                      <h3 class="colorGray marginTB_10">原价：<span class="lineThrough">{{Content.oldPrice}}元</span> 现价：<b>{{Content.newPrice}}元</b></h3>
-                      <p class="marginTB_10" v-for="(Section,SectionIdx) in Content.sections">{{Section}}</p>
-                      <p><Button class="marginTB_10" type="ghost">查看详情</Button></p>
+                    <h3 class="colorGray marginTB_10">原价：<span class="lineThrough">{{Content.oldPrice}}元</span> 现价：<b>{{Content.newPrice}}元</b></h3>
+                    <p class="marginTB_10" v-for="(Section,SectionIdx) in Content.sections">{{Section}}</p>
+                    <p><Button class="marginTB_10" type="ghost" @click="GoModule(ContentIdx)">查看详情</Button></p>
                 </div>
               </Card>
             </Col>
@@ -51,16 +51,30 @@ export default {
   watch:{
   },
   methods: {
+    GoModule(KIND){
+      switch(KIND){
+        case 0:
+        this.$router.push({name:'个人保'})
+        break
+        case 1:
+        this.$router.push({name:'企业保'})
+        break
+
+      }
+    }
   }
 };
 </script>
 <style lang="scss" scoped>
 #ImgBar{
-  width: 100%;
+  width: 80%;
   margin: 0 auto;
   .lineThrough{
     text-decoration: line-through;
     text-decoration-color: #ff150e;
+  }
+  img{
+    width: 100%;
   }
 }
 </style>

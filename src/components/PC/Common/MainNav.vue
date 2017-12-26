@@ -1,11 +1,8 @@
 <template>
  <div class="layout">
-    <MainNav v-if="activeRoute!='个人注册' && activeRoute!='企业注册' && activeRoute!='HR管理后台(企业)'  && activeRoute!='HR管理后台(个人)' && activeRoute!='提交订单'"></MainNav>
-    <SignNav v-if="activeRoute=='个人注册' || activeRoute=='企业注册'"></SignNav>
-    <div v-else></div>
-        <!-- <Menu mode="horizontal" :active-name="activeRoute" @on-select="tabChange">
+        <Menu mode="horizontal" :active-name="activeRoute" @on-select="tabChange">
             <div class="layout-logo" @click="ToIndex"></div>
-            <div class="layout-nav" v-if="activeRoute!='个人注册' && activeRoute!='企业注册' && activeRoute!='HR管理后台(企业)'  && activeRoute!='HR管理后台(个人)' && activeRoute!='提交订单'">
+            <div class="layout-nav">
                 <MenuItem name="首页">
                     首页
                 </MenuItem>
@@ -22,36 +19,18 @@
                     关于我们
                 </MenuItem>
             </div>
-            <div class="layout-nav" v-if="activeRoute=='个人注册' || activeRoute=='企业注册'">
-                <MenuItem name="个人注册">
-                    个人注册
-                </MenuItem>
-                <MenuItem name="企业注册">
-                    企业注册
-                </MenuItem>
-            </div>
-            <div v-else></div>
-        </Menu> -->
+        </Menu>
     </div>
 </template>
 <script>
 import Vue from 'vue'
 import axios from 'axios'
-import MainNav from './MainNav'
-import SignNav from './SignNav'
 export default {
   data() {
   return {
   }
   },
   mounted: function(){
-    //获取导航菜单
-    // axios.get(PRE_URL+'static/json/Navbar.json'
-    //     ).then((res)=> {
-    //       this.navbarInfo = res.data.navbar
-    //   }).catch((error)=> {
-    //     console.log(error)
-    //   })
     
   
   },
@@ -63,26 +42,9 @@ export default {
   },
   watch:{
   },
-  components: {
-    MainNav,
-    SignNav
-
-  },
   methods: {
     tabChange(event){
         this.$router.push({name:event});
-        // switch(event){
-        //     case '个人注册':
-        //     this.$router.push({name:event,params: {type:0}});
-        //     break;
-        //     case '企业注册':
-        //     this.$router.push({name:event,params: {type:1}});
-        //     break;
-        //     default:
-        //     this.$router.push({name:event});
-        
-        // }
-      
     }, 
     ToIndex(){
         this.$router.push({name:'首页'})

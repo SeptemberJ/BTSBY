@@ -25,7 +25,7 @@
                   <Col  span="12">
                     <Card :bordered="false" dis-hover>
                         <div style="text-align:center">
-                            <img src="http://sbyun.com/skins2/images/code02-new.png" style="width: 120px; height: 120px;">
+                            <img src="http://www.ztnet-info.com/images/weixin-icon.jpg" style="width: 120px; height: 120px;">
                             <p>扫我关注官方微信号</p>
                         </div>
                     </Card>
@@ -33,7 +33,7 @@
                   <Col span="12">
                     <Card :bordered="false" dis-hover>
                         <div style="text-align:center">
-                            <h3 class="colorRed"><b>400-0135-200</b></h3>
+                            <h3 class="colorRed"><b>400-880-4428</b></h3>
                             <p>周一至周五9:00-18:00</p>
                             <Button type="error" class="marginTB_10">在线咨询客服</Button>
                             <p>意见反馈: service@sbyun.com</p>
