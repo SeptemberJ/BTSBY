@@ -3,7 +3,7 @@
        <Form ref="formBasicInfo" :model="formBasicInfo" :rules="ruleInline" :inline="false" :label-width="150">
            <FormItem prop="NAME" label="真实姓名">
             <Row>
-              <Col span="18">
+              <Col span="8">
                   <Input v-model="formBasicInfo.NAME" placeholder="请输入真实姓名"></Input>
               </Col>
             </Row>
@@ -11,11 +11,11 @@
 
           <FormItem prop="TEL" label="手机号码">
             <Row>
-              <Col span="14">
+              <Col span="8">
                   <Input v-model="formBasicInfo.TEL" placeholder="请输入手机号码"></Input>
               </Col>
-              <Col span="4" offset="1">
-                  <Button type="text" disabled>手机号码为你的登录账号，请牢记</Button>
+              <Col span="8" offset="1">
+                  <span class="colorRed">手机号码为你的登录账号，请牢记</span>
               </Col>
             </Row>
           </FormItem>
@@ -107,7 +107,7 @@ export default {
 <style lang="scss" scoped>
 #BasicInfoI{
   form{
-    width: 500px;
+    width: 100%;
     margin-left: 40px;
   }
 }

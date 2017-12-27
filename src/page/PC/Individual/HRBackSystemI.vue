@@ -1,5 +1,5 @@
 <template>
-<div id="HRBackSystemI" class="layout">\
+<div id="HRBackSystemI" class="layout">
         <div class="layout-content">
             <Row>
                 <Col span="4">
@@ -45,8 +45,7 @@ import AccountSafe from '../../../components/PC/Individual/AccountSafe.vue'
 export default {
   data() {
   return {
-    curMneu:'我的订单'
-    
+    //curMneu:''
   }
   },
   mounted: function(){
@@ -58,7 +57,14 @@ export default {
     }
   },
   computed: {
-    
+    curMneu: {
+        get: function () {
+          return this.$store.state.HRMenuCur
+        },
+        set: function (newValue) {
+          this.$store.state.HRMenuCur = newValue
+        }
+    },
   },
   watch:{
   },

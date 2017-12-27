@@ -4,18 +4,18 @@
       <TopBlock v-if="!isMobile"></TopBlock>
       <NavBar v-if="!isMobile"></NavBar>
       <!-- <Carousel></Carousel> -->
-        <div>
+        <div class="ChildsBlock">
           <transition>
             <router-view class="child-view"></router-view>
           </transition>
         </div>
-        <div class="layout-copy"  v-if="!isMobile">
-            <FooterPart></FooterPart>
-        </div>
+        <!-- <div class="layout-copy marginT_10"> -->
+            <FooterPart   v-if="!isMobile"></FooterPart>
+        <!-- </div> -->
         <FooterPartM v-if="isMobile"></FooterPartM>
     </div>
 
-    <Affix v-if="!isMobile"></Affix>
+    <Affix v-if="!isMobile && activeRoute!='HR管理后台(个人)' && activeRoute!='HR管理后台(企业)' && activeRoute!='登录' && activeRoute!='个人注册' && activeRoute!='企业注册'"></Affix>
   </div>
 </template>
 <script>
@@ -44,6 +44,9 @@ import FooterPartM from 'components/Mobile/FooterPartM'
     computed: {
       isMobile(){
         return this.$store.state.isMobile
+      },
+      activeRoute(){
+        return this.$store.state.activeRoute
        }
       
     },
@@ -68,6 +71,10 @@ import FooterPartM from 'components/Mobile/FooterPartM'
 </script>
 <style lang="scss">
 .com-app{
+  .ChildsBlock{
+    width: 100%;
+    height: 100%;
+  }
 
   .layout{
         border: 0px solid #d7dde4;

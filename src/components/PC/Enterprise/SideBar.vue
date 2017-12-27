@@ -1,12 +1,21 @@
 <template>
     <div>
-       <Menu active-name="1-1" width="auto" :open-names="[1]">
+      <!--  <Menu active-name="1-1" width="auto" :open-names="[1]">
             <Submenu v-for="(Menu,MenuIdx) in SideMenu" :name="MenuIdx+1">
                 <template slot="title">
                     <Icon type="ios-navigate"></Icon>
                      {{Menu.Fmenu}}
                 </template>
                 <MenuItem  v-for="(Smenu,SmenuIdx) in Menu.Smenu" :name="(MenuIdx+1)+'-'+(SmenuIdx+1)"><span @click="OnSideMenu(Smenu)">{{Smenu}}</span></MenuItem>
+            </Submenu>
+        </Menu>  -->
+        <Menu :active-name="ActiveName" width="auto" :open-names="['社保服务']" @on-select="SideMenuChange">
+            <Submenu v-for="(Menu,MenuIdx) in SideMenu" :name="Menu.Fmenu">
+                <template slot="title">
+                    <Icon type="ios-navigate"></Icon>
+                     {{Menu.Fmenu}}
+                </template>
+                <MenuItem  v-for="(Smenu,SmenuIdx) in Menu.Smenu" :name="Smenu"><span>{{Smenu}}</span></MenuItem>
             </Submenu>
         </Menu> 
     </div>
@@ -29,14 +38,17 @@ export default {
   
   },
   computed: {
+    ActiveName(){
+      return this.$store.state.HRMenuCur
+    }
     
   },
   watch:{
   },
   methods: {
-    OnSideMenu(Smenu){
+    SideMenuChange(Smenu){
       this.$emit('SideMenu-click',Smenu)
-    }
+    },
    
   },
 };

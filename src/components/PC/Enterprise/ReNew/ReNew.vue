@@ -3,7 +3,9 @@
     <!-- top -->
     <h2>参保资料</h2>
     <p class="securityInfo">参保城市:上海  <a href="http://sbyun.com/SicOrderMain.mc?method=exportAreaMeal&areaId=10&areaName=%E4%B8%8A%E6%B5%B7" class="marginL_20"><Icon type="ios-download"></Icon>下载上海社保缴费明细</a></p>
+
     <Table :columns="columnsHead" :loading="ifLoading" :data="dataOrder"></Table>
+    
     <p class="marginT_20"><span class="marginL_20 fixedWidth">社保代缴</span><span class="marginL_20">社保参保人数：0人 </span><a @click="chooseMemberS(0)"><Icon type="ios-compose" size="18"></Icon>社保参保名单</a></p>
     <p class="marginT_20"><span class="marginL_20 fixedWidth">公积金代缴</span><span class="marginL_20">公积金参保人数：0人 </span><a @click="chooseMemberG(1)"><Icon type="ios-compose" size="18"></Icon>公积金参保名单</a></p>
 
@@ -14,19 +16,19 @@
     </CheckboxGroup>
     <div class="tipBlock">
       <p>提示：每个月的15号为上海的社保增员截止日期，投保类型为当月缴当月</p>
-      <pre>      每个月的11号为上海的社保减员截止日期</pre>
+      <p style="text-indent: 36px">每个月的11号为上海的社保减员截止日期</p>
       <p>提示：每个月的15号为上海的社保增员截止日期，投保类型为当月缴当月</p>
-      <pre>      每个月的11号为上海的社保减员截止日期</pre>
+      <p style="text-indent: 36px">每个月的11号为上海的社保减员截止日期</p>
     </div>
 
-    <h2 class="marginT_20">订单费用详情</h2>
+    <h3 class="marginT_20">订单费用详情</h3>
     <div class="sumBlock marginT_10">
       <div>
-        <h3>代收社保费用小计：<span>1740.8 元（ 1740.8元/月[1人] × 1月</span></h3>
-        <h3>代收公积金费用小计：<span>306 元（ 306元/月 [1人] × 1月 ）</span></h3>
-        <h3>其他费用小计：<span>9元（材料费:9元/人 x 1人）</span></h3>
-        <h3>代理缴纳费用小计：<span> 39.8元（双买：39.8元（39.8元/月×1月×1人次）</span></h3>
-        <h3>合计：<h2 class="colorRed" style="display:inline">¥ 2095.6</h2></h3>
+        <p>代收社保费用小计：<span>1740.8 元（ 1740.8元/月[1人] × 1月</span></p>
+        <p>代收公积金费用小计：<span>306 元（ 306元/月 [1人] × 1月 ）</span></p>
+        <p>其他费用小计：<span>9元（材料费:9元/人 x 1人）</span></p>
+        <p>代理缴纳费用小计：<span> 39.8元（双买：39.8元（39.8元/月×1月×1人次）</span></p>
+        <p>合计：<span class="colorRed" style="font-size: 18px; font-weight: bold;">¥ 2095.6</span></p>
          
       </div>
       
@@ -50,7 +52,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import ChoosePayMember from "./ChoosePayMember.vue"
-import {getOneYearMonth,removeByValue} from "../../../util/utils"
+import {getOneYearMonth,removeByValue} from "../../../../util/utils"
 export default {
   data() {
   return {
@@ -365,6 +367,12 @@ export default {
   }
   .monthList ,.tipBlock, .monthBlock{
     margin-top: 20px;
+  }
+
+  .tipBlock{
+    p{
+      font-size: 12px;
+    }
   }
 
 }

@@ -15,7 +15,7 @@
               <h3 class="marginTB_10"><Icon type="ios-location" size="18"></Icon> {{Infor.contents.address}}</h3>
               <h3 class="marginTB_10"><Icon type="ios-telephone" size="18"></Icon> {{Infor.contents.tel}}</h3>
               <h3 class="marginTB_10"><Icon type="email" size="18"></Icon> {{Infor.contents.email}}</h3>
-              <h3 class="marginTB_10"><Icon type="folder" size="18"></Icon> {{Infor.contents.resume}}</h3>
+              <h3 class="marginTB_10"><Icon type="folder" size="18"></Icon><a :href="Infor.contents.resume.link" target=_blank> {{Infor.contents.resume.text}}</a></h3>
               <h3 class="marginTB_10"><Icon type="android-subway" size="18"></Icon> {{Infor.contents.subway}}</h3>
             </Col>
           </Row>
@@ -59,5 +59,11 @@ export default {
 #Contact{
   width: 80%;
   margin: 0 auto;
+  a{
+    color: #6d7380;
+    &:hover{
+      color: #39f;
+    }
+  }
 }
 </style>

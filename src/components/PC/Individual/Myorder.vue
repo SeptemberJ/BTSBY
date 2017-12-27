@@ -36,9 +36,9 @@
       <!-- table -->
       <Table class="marginT_10" border highlight-row :columns="myOrderList" :loading="ifLoading" :data="dataOrder"></Table>
 
-      <Page class="marginT_20" :total="Total" show-total style="float: right;" :current="page_num" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer></Page>
+      <Page v-if="dataOrder.length>0" class="marginT_20" :total="Total" show-total style="float: right;" :current="page_num" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer></Page>
       
-            <!-- Modal -->
+      <!-- Modal -->
       <Modal v-model="ifShowModal">
         <p slot="header" style="text-align:left">
             <Icon type="ios-pricetags"></Icon>
@@ -56,7 +56,11 @@
           </Row>
           <Row>
               <Col span="12"><span>服务内容 ：</span><span>{{ModalInfo.pay_type_T}}</span></Col>
-              <Col span="12"><span>代缴月份：</span><span>{{}}</span></Col>
+              <Col span="12">
+                <span>代缴月份：</span>
+                <Tag checkable color="blue" v-for="(Month,MonthIdx) in ModalInfo.Months">{{Month}}</Tag>
+                <!-- <span class="MonthSpan"  style="margin-left: 5px;">{{Month}}</span> -->
+              </Col>
           </Row>
           <!-- <Row class="marginTB_10" style="border-top: 1px solid #ddd;">
               <Col span="24" class="marginTB_10"><span><b>客户本人需提供资料 ：</b></span><span>{{ModalInfo.personal_info}}</span></Col>
@@ -65,8 +69,21 @@
           </Row> -->
         </div>
         <div slot="footer" style="text-align: center;">
-            <Button type="primary" size="large" :loading="modal_loading" @click=""><Icon type="printer"></Icon><a href="http://192.168.10.177:8082/exportExcel?order_id=ea225728-e8ce-4b3c-8853-fb971ef9e66b&pay_type=0" download="http://192.168.10.177:8082/exportExcel?order_id=ea225728-e8ce-4b3c-8853-fb971ef9e66b&pay_type=0">导出订单数据</a></Button>
+            <Button type="primary" size="large" :loading="modal_loading" @click=""><Icon type="printer"></Icon><a style="color: #fff;" href="http://192.168.10.177:8082/exportExcel?order_id=ea225728-e8ce-4b3c-8853-fb971ef9e66b&pay_type=0" download="http://192.168.10.177:8082/exportExcel?order_id=ea225728-e8ce-4b3c-8853-fb971ef9e66b&pay_type=0">导出订单数据</a></Button>
         </div>
+      </Modal>
+
+      <!-- 订单跟踪 -->
+      <Modal v-model="ifShowTimeline">
+        <p slot="header" style="text-align:left">
+            <Icon type="ios-pricetags"></Icon>
+            <span>订单跟踪记录</span>
+        </p>
+        <Timeline>
+            <TimelineItem color="green">2017-12-25 15:02:14 —— 提交订单</TimelineItem>
+            <TimelineItem color="red">2017-12-25 15:02:14 —— 付款成功</TimelineItem>
+        </Timeline>
+        <div slot="footer"></div>
       </Modal>
 
     </div>
@@ -79,6 +96,7 @@ export default {
   data() {
   return {
     ifShowModal:false,
+    ifShowTimeline:false,
     modal_loading: false,
     ifLoading:false,
     Total:0,
@@ -158,6 +176,28 @@ export default {
             {
                 title: '订单名称',
                 key: 'order_name',
+                render: (h, params) => {
+                            const row = params.row;
+                            // const color = row.status === 1 ? 'blue' : row.status === 2 ? 'green' : 'red';
+                            // const text = row.status === 1 ? 'Working' : row.status === 2 ? 'Success' : 'Fail';
+
+                            return h('p', {
+                                props: {
+                                },
+                                style: {
+                                  color:'#39f',
+                                  overflow: 'hidden',
+                                  textOverflow:'ellipsis',
+                                  whiteSpace: 'nowrap',
+                                  cursor:'pointer'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.seeDetail(params)
+                                    }
+                                }
+                            }, row.order_name);
+                        }
                 
             },
             {
@@ -175,7 +215,7 @@ export default {
             },
             {
                 title: '最新进度',
-                key: 'progress'
+                key: 'progress',
             },
             {
                 title: '下单时间',
@@ -185,7 +225,7 @@ export default {
             {
                 title: '操作',
                 key: 'action',
-                width: 150,
+                width: 170,
                         align: 'center',
                         render: (h, params) => {
                             return h('div', [
@@ -196,7 +236,8 @@ export default {
                                     // },
                                     props: {
                                         type: 'primary',
-                                        size: 'small'
+                                        size: 'small',
+                                        icon:'social-yen'
                                     },
                                     style: {
                                         marginRight: '5px',
@@ -204,21 +245,22 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.show(params.index)
+                                            this.ToPay(params.index)
                                         }
                                     }
                                 }, '支付'),
                                 h('Button', {
                                     props: {
                                         type: 'error',
-                                        size: 'small'
+                                        size: 'small',
+                                        icon:'eye'
                                     },
                                     on: {
                                         click: () => {
-                                            this.seeDetail(params)
+                                            this.trackOrder(params)
                                         }
                                     }
-                                }, '查看')
+                                }, '跟踪')
                             ]);
                         }
                           
@@ -243,14 +285,23 @@ export default {
   watch:{
   },
   methods: {
-    show (index) {
-        this.$Modal.info({
-            title: 'User Info',
-            content: `content`//Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}
-        })
+    ToPay (index) {
+        this.$router.push({name:'提交订单'})
+    },
+    trackOrder(){
+      this.ifShowTimeline = true
     },
     seeDetail (Info) {
         console.log(Info)
+        let MonthStr = Info.row.order_name.replace(/[^0-9]+/g, '')
+        let MonthArray = []
+        let i=0
+        do {
+            MonthArray.push(MonthStr.slice(0+i*6,6+i*6))
+            i++
+        }
+        while (i<(MonthStr.length/6))
+        this.ModalInfo.Months = MonthArray
         this.ifShowModal = true
         this.ModalInfo.id = Info.row.id
         this.ModalInfo.order_no = Info.row.order_no
@@ -258,7 +309,8 @@ export default {
         this.ModalInfo.amount = Info.row.amount
         this.ModalInfo.status = Info.row.status
         this.ModalInfo.pay_type = Info.row.pay_type
-        this.ModalInfo.pay_type_T = Info.row.pay_type == '0'?'代缴社保和公积金':(Info.row.pay_type == '1'?'代缴社保':'代缴公积金')
+        this.ModalInfo.pay_type_T = Info.row.pay_type == '0'?'代缴社保+公积金':(Info.row.pay_type == '1'?'代缴社保':'代缴公积金')
+        
         
     },
     //导出excel
@@ -368,6 +420,10 @@ export default {
 #MyorderI{
   .InlineBlock{
     display: inline-block;
+  }
+  .MonthSpan{
+    margin-left: 5px;
+    color: red;
   }
 }
 </style>

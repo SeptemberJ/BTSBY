@@ -15,6 +15,7 @@ const store = new Vuex.Store({
         register_type:localStorage.getItem("register_type"),
         // useravatar:localStorage.getItem("user_avatar"),
     },
+    HRMenuCur:'我的订单',
     ifLogined:getCookie('btsby_cookie')?true : false,
     // ifLogined:(localStorage.getItem("member_id"))?true : false,
     loading:false,

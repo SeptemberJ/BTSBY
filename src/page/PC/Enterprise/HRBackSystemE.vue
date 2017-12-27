@@ -11,12 +11,12 @@
                       <Register v-if="curMneu == '花名册'"></Register>
                       <Myorder v-if="curMneu == '我的订单'"></Myorder>
                       <ToPay v-if="curMneu == '购买社保'"></ToPay>
-                      <!--
-                      <SecurityRecord v-if="curMneu == '投保记录'"></SecurityRecord>
-                      <TradeOrder v-if="curMneu == '交易账单'"></TradeOrder>
+                      <ReNew v-if="curMneu == '社保续费'"></ReNew>
+                      <!-- <SecurityRecord v-if="curMneu == '投保记录'"></SecurityRecord>
+                      <TradeOrder v-if="curMneu == '交易账单'"></TradeOrder> -->
                       <Message v-if="curMneu == '消息通知'"></Message>
-                      <Vas v-if="curMneu == '增值服务'"></Vas>
-                      <VasOrder v-if="curMneu == '增值服务订单'"></VasOrder> -->
+                      <!-- <Vas v-if="curMneu == '增值服务'"></Vas>
+                      <VasOrder v-if="curMneu == '增值服务订单'"></VasOrder>  -->
                       <MyAccount v-if="curMneu == '我的账户'"></MyAccount>
                       <!-- <BasicInfo v-if="curMneu == '基本资料'"></BasicInfo>
                       <InsuredInfo v-if="curMneu == '参保资料'"></InsuredInfo> -->
@@ -35,23 +35,23 @@ import axios from 'axios'
 import SideBar from '../../../components/PC/Enterprise/SideBar.vue'
 import Register from '../../../components/PC/Enterprise/Register.vue'
 import Myorder from '../../../components/PC/Enterprise/Myorder.vue'
-import ToPay from '../../../components/PC/Enterprise/ToPay.vue'
-// import ToPay from '../../../components/PC/Individual/ToPay.vue'
+import ToPay from '../../../components/PC/Enterprise/ToBuy/ToPay.vue'
+import ReNew from '../../../components/PC/Enterprise/ReNew/ReNew.vue'
 // import SecurityRecord from '../../../components/PC/Individual/SecurityRecord.vue'
 // import TradeOrder from '../../../components/PC/Individual/TradeOrder.vue'
-// import Message from '../../../components/PC/Individual/Message.vue'
+import Message from '../../../components/PC/Enterprise/Message.vue'
 // import Vas from '../../../components/PC/Individual/Vas.vue'
 // import VasOrder from '../../../components/PC/Individual/VasOrder.vue'
- import MyAccount from '../../../components/PC/Individual/MyAccount.vue'
+import MyAccount from '../../../components/PC/Enterprise/MyAccount.vue'
 import BasicInfo from '../../../components/PC/Enterprise/BasicInfo.vue'
 // import InsuredInfo from '../../../components/PC/Individual/InsuredInfo.vue'
- import AccountSafe from '../../../components/PC/Individual/AccountSafe.vue'
+ import AccountSafe from '../../../components/PC/Enterprise/AccountSafe.vue'
 
 
 export default {
   data() {
   return {
-    curMneu:'花名册'
+    //curMneu:'花名册'
     
   }
   },
@@ -65,6 +65,14 @@ export default {
     }
   },
   computed: {
+    curMneu: {
+        get: function () {
+          return this.$store.state.HRMenuCur
+        },
+        set: function (newValue) {
+          this.$store.state.HRMenuCur = newValue
+        }
+    },
     
   },
   watch:{
@@ -74,9 +82,10 @@ export default {
        Register,
        Myorder,
        ToPay,
+       ReNew,
       // SecurityRecord,
       // TradeOrder,
-      // Message,
+       Message,
       // Vas,
       // VasOrder,
        MyAccount,

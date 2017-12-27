@@ -1,9 +1,9 @@
 <template>
     <div id="AccountSafeI">
-       <Form ref="formAccountInfo" :model="formAccountInfo" :rules="ruleInline" :inline="false">
+       <Form ref="formAccountInfo" :model="formAccountInfo" :rules="ruleInline" :inline="false" :label-width='150'>
            <FormItem prop="Old_PSD" label="原密码">
             <Row>
-              <Col span="18">
+              <Col span="8">
                   <Input type="password" v-model="formAccountInfo.Old_PSD" placeholder="请输入原密码"></Input>
               </Col>
             </Row>
@@ -11,7 +11,7 @@
 
           <FormItem prop="New_PSD" label="新密码">
             <Row>
-              <Col span="18">
+              <Col span="8">
                   <Input  type="password" v-model="formAccountInfo.New_PSD" placeholder="请输入新密码"></Input>
               </Col>
             </Row>
@@ -19,7 +19,7 @@
 
           <FormItem prop="New_PSDAGAIN" label="确认新密码">
             <Row>
-              <Col span="18">
+              <Col span="8">
                   <Input  type="password" v-model="formAccountInfo.New_PSDAGAIN" placeholder="请确认新密码"></Input>
               </Col>
             </Row>
@@ -109,7 +109,7 @@ export default {
 <style lang="scss" scoped>
 #AccountSafeI{
   form{
-    width: 500px;
+    width: 100%;
     margin-left: 40px;
   }
 }

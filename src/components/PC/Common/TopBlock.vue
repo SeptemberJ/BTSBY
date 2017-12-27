@@ -3,15 +3,22 @@
       <div class="layout-ceiling-main">
           <Row type="flex" justify="space-around">
               <Col span="11">
-                <Button type="text" v-if="ifLogined?false:true" @click="ToLogin">登录</Button>
-                <Button type="text" v-if="ifLogined?false:true" @click="ToSign">注册</Button>
-                <Button type="text" v-if="ifLogined?true:false" @click="ToLogin">{{UserName}}</Button>
-                <Button type="text" v-if="ifLogined?true:false" @click="Logout"><Icon type="power"></Icon> 退出</Button>
+                <Button type="text" v-if="!ifLogined" @click="ToLogin">登录</Button>
+                <Button type="text" v-if="!ifLogined" @click="ToSign">注册</Button>
+                <Button type="text" v-if="ifLogined" @click="ToLogin">{{UserName}}</Button>
+                <Button type="text" v-if="ifLogined" @click="GoMessage" style="cursor:pointer;">
+                  <Badge count="15">
+                      <Icon type="ios-bell-outline" size="22"></Icon>
+                  </Badge>
+                </Button>
+                <Button type="text" v-if="ifLogined" @click="Logout"><Icon type="power" size="18"></Icon> 退出</Button>
               </Col>
               <Col span="11" class="ContRight">
-                <Button type="text" v-if="ifLogined?true:false" @click="GoHR">HR管理后台</Button>
-                <Button type="text" @click="GoNews">社保资讯</Button>
-                <Icon type="ios-telephone"></Icon> 021-3100-7227
+                <Button type="text" v-if="ifLogined && activeRoute!='HR管理后台(个人)'  && activeRoute!='HR管理后台(企业)' " @click="GoHR">HR管理后台</Button>
+                <Button type="text" v-if="activeRoute=='HR管理后台(个人)'  || activeRoute=='HR管理后台(企业)' " @click="GoIndex"><Icon type="home" size="18"></Icon></Button>
+                <!-- <Button type="text"  @click="GoNews">社保资讯</Button> -->
+                <Button type="text" v-if="activeRoute!='HR管理后台(个人)'  && activeRoute!='HR管理后台(企业)'" ><Icon type="ios-telephone"></Icon> 021-3100-7227</Button>
+                
               </Col>
           </Row>
       </div>
@@ -55,6 +62,13 @@ export default {
   watch:{
   },
   methods: {
+    GoMessage(){
+      this.GoHR()
+      this.$store.state.HRMenuCur = '消息通知'
+    },
+    GoIndex(){
+      this.$router.push({name:'首页'});
+    },
     GoHR(){
       if(this.$store.state.userInfo.register_type == '0'){
         this.$router.push({name:'HR管理后台(个人)'});
@@ -88,5 +102,7 @@ export default {
   .ContRight{
     text-align: right;
   }
+
 }
+
 </style>

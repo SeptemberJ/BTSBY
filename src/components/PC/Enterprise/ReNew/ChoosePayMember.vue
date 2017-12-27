@@ -5,26 +5,26 @@
             <p slot="header" style="text-align:left">
                 <span>编辑社保参保名单</span><span class="colorRed tips">注:勾选的人员表示加入参保,如需不参保请取消勾选</span>
             </p>
-            <div style="text-align:center;">
+            <div style="text-align:left;" class="marginTB_40">
                 <Table border ref="selection" :columns="columnsS" :data="dataS" @on-selection-change="MemberchangedS"></Table>
-                <Page class="marginT_20" :total="Total" show-total style="float: right;" :current="page_num" @on-change="" @on-page-size-change="" show-sizer></Page>
+                <Page class="marginT_10" :total="Total" show-total style="float: right;" :current="page_num" @on-change="" @on-page-size-change="" show-sizer></Page>
             </div>
-            <div slot="footer">
+           <!--  <div slot="footer">
                 <Button type="error" size="large" long :loading="modal_loading" @click="submitMemberS">确定</Button>
-            </div>
+            </div> -->
         </Modal>
         <!-- Modal 公积金-->
-          <Modal v-else v-model="ifChooseMember" @on-visible-change="changeVisible" width="800">
+          <Modal v-else v-model="ifChooseMember" @on-visible-change="changeVisible" width="800"  :mask-closable="false">
             <p slot="header" style="text-align:left">
                 <span>编辑公积金参保名单</span><span class="colorRed tips">注:勾选的人员表示加入参保,如需不参保请取消勾选</span>
             </p>
-            <div style="text-align:center;">
+            <div style="text-align:center;" class="marginTB_40">
                 <Table border ref="selection" :columns="columnsG" :data="dataG" @on-selection-change="MemberchangedG"></Table>
-                <Page class="marginT_20" :total="Total" show-total style="float: right;" :current="page_num" @on-change="" @on-page-size-change="" show-sizer></Page>
+                <Page class="marginT_10" :total="Total" show-total style="float: right;" :current="page_num" @on-change="" @on-page-size-change="" show-sizer></Page>
             </div>
-            <div slot="footer">
+            <!-- <div slot="footer">
                 <Button type="error" size="large" long :loading="modal_loading" @click="submitMemberG">确定</Button>
-            </div>
+            </div> -->
         </Modal>
     </div>
 </template>
@@ -32,7 +32,7 @@
 <script>
 import Vue from 'vue'
 import axios from 'axios'
-import {timestampToFormatTime} from '../../../util/utils'
+import {timestampToFormatTime} from '../../../../util/utils'
 export default {
   props:['type'],
   data() {
@@ -48,11 +48,11 @@ export default {
             width: 60,
             align: 'center'
         },
-        {
-            type: 'index',
-            width: 60,
-            align: 'center'
-        },
+        // {
+        //     type: 'index',
+        //     width: 60,
+        //     align: 'center'
+        // },
         {
             title: '姓名',
             key: 'name',
@@ -72,7 +72,7 @@ export default {
         {
           title: 'Action',
           key: 'action',
-          width: 150,
+          width: 100,
           align: 'center',
           render: (h, params) => {
               return h('div', [
@@ -99,7 +99,7 @@ export default {
         },
         {
             title: '姓名',
-            key: 'name'
+            key: 'name',
         },
         {
             title: '身份证号',
@@ -132,7 +132,7 @@ export default {
         {
           title: 'Action',
           key: 'action',
-          width: 150,
+          width: 100,
           align: 'center',
           render: (h, params) => {
               return h('div', [
@@ -282,6 +282,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 #ChooseMember{
+  table{
+    margin-bottom: 20px;
+  }
 
 }
 .tips{

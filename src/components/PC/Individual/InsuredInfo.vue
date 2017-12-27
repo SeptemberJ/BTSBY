@@ -163,6 +163,9 @@
               <Button type="primary" @click="saveSecurityInfo('formInsuredInfo')">保存</Button>
           </FormItem>
       </Form>
+      <Alert type="warning" show-icon>
+          注：请仔细核对相关信息,关系到以后办理退休享受待遇，非常重要。若因提供的资料出错而产生问题本公司概不负责。
+      </Alert>
 
 
     </div>

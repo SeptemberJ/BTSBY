@@ -2,7 +2,7 @@
   <div id="TopayI">
     <!-- top -->
     <h2>参保资料</h2>
-    <p class="securityInfo">参保人: {{NAME}}  参保城市：{{INSURED_AREA}}  户口性质：{{RESIDENCE}}<Icon type="edit"/></p>
+    <p class="securityInfo">参保人: {{NAME}}  参保城市：{{INSURED_AREA}}  户口性质：{{RESIDENCE}}<span @click="ToModifySecurityInfo"><Icon type="edit"></Icon></span></p>
     <Table :columns="columnsHead" :loading="ifLoading" :data="dataOrder"></Table>
     <Form>
         <FormItem label="">
@@ -48,9 +48,9 @@
     </CheckboxGroup>
     <div class="tipBlock">
       <p>提示：每个月的15号为上海的社保增员截止日期，投保类型为当月缴当月</p>
-      <pre>      每个月的11号为上海的社保减员截止日期</pre>
+      <p style="text-indent: 36px">每个月的11号为上海的社保减员截止日期</p>
       <p>提示：每个月的15号为上海的社保增员截止日期，投保类型为当月缴当月</p>
-      <pre>      每个月的11号为上海的社保减员截止日期</pre>
+      <p style="text-indent: 36px">每个月的11号为上海的社保减员截止日期</p>
     </div>
     <div class="sumBlock">
       <!-- 社保及公积金 -->
@@ -267,6 +267,11 @@ export default {
   watch:{
   },
   methods: {
+    //修改参保资料
+    ToModifySecurityInfo(){
+      this.$store.state.HRMenuCur = '参保资料'
+      alert(this.$store.state.HRMenuCur)
+    },
     //选择月份获取服务费用、其他费用
     changeBuyMonth(){
       axios.get(R_PRE_URL+'/searchSbyFee.do?month_count='+this.buyMonthList.length
@@ -364,6 +369,11 @@ export default {
   }
   .monthList ,.tipBlock, .monthBlock{
     margin-top: 20px;
+  }
+  .tipBlock{
+    p{
+      font-size: 12px;
+    }
   }
 
 }

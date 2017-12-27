@@ -6,7 +6,7 @@
   			{"kind":"联系","childs":["联系我们","商务合同","诚聘精英"]}],
 	  "weichat":{"img":"http://www.ztnet-info.com/images/weixin-icon.jpg","text":"官方微信号"},
 	  "contacts":{"tel":"400-880-4428","workDay":"周一至周五9:00-18:00","link":"","email":"意见反馈: service@sbyun.com"},
-	  "friendLinks":[{"name":"红海人力集团","link":""},{"name":"广州市社会保障局","link":""},{"name":"12333社保查询网","link":""},{"name":"社保查询","link":""},{"name":"公积金查询","link":""},{"name":"阿里云","link":""},{"name":"社保资讯","link":""},{"name":"上海市人力资源社保保障网","link":""},{"name":"红海科技","link":""}],
+	  "friendLinks":[{"name":"12333社保查询网","link":"http://www.12333sb.com/"},{"name":"阿里云","link":"https://www.aliyun.com/"},{"name":"上海市人力资源社保保障网","link":"http://www.12333sh.gov.cn/"},{"name":"柏田科技","link":"http://www.ztnet-info.com/"}],
 	  "address":"上海市普陀区中江路879弄12号楼402室",
 	  "copyRight":"Copyright © 2016-2018 上海柏田信息科技有限公司 沪ICP备16036901号"
   }  																														
