@@ -27,7 +27,7 @@
 <!-- PC -->
  <div v-else id="LoginP" style="min-width: 1150px;min-height: 600px;padding: 20px;">
    <div class="LoginBox">
-        <Card :bordered="false" :dis-hover="false">
+        <Card :bordered="false" dis-hover>
             <p slot="title">用户登录</p>
              <p>
                <Form ref="formLogin" :model="formLogin" :rules="ruleInline" :inline="false">

@@ -153,26 +153,26 @@ export default {
     ],
     dataS: [],
     dataG: [
-        {
-            name: '张三',
-            id_card: 320684198212123663,
-            postStatus: '在职',
-            city:'上海',
-            basicG:'1399',
-            perU:'7%',
-            perI:'7%',
-            time: '2016-10-03'
-        },
-        {
-            name: '张三',
-            id_card: 320684198212123663,
-            postStatus: '在职',
-            city:'上海',
-            basicG:'1399',
-            perU:'7%',
-            perI:'7%',
-            time: '2016-10-03'
-        },
+        // {
+        //     name: '张三',
+        //     id_card: 320684198212123663,
+        //     postStatus: '在职',
+        //     city:'上海',
+        //     basicG:'1399',
+        //     perU:'7%',
+        //     perI:'7%',
+        //     time: '2016-10-03'
+        // },
+        // {
+        //     name: '张三',
+        //     id_card: 320684198212123663,
+        //     postStatus: '在职',
+        //     city:'上海',
+        //     basicG:'1399',
+        //     perU:'7%',
+        //     perI:'7%',
+        //     time: '2016-10-03'
+        // },
     ]
 
 
@@ -211,12 +211,13 @@ export default {
   methods: {
     changeVisible(event){
       this.$emit('changeVisible',event)
-        
     },
     MemberchangedS(selection){
+      this.$emit('MemberAmountSChange',selection)
       console.log(selection)  //所有选择的人员信息list   @on-select 单个改变状态触发
     },
     MemberchangedG(selection){
+      this.$emit('MemberAmountGChange',selection)
       console.log(selection)  //所有选择的人员信息list   @on-select 单个改变状态触发
     },
     //提交社保人员名单
@@ -268,6 +269,7 @@ export default {
             
           })
           this.dataS = temp
+          this.dataG = temp
           this.Total = res.data.count
           this.ifLoading = false
           

@@ -167,7 +167,7 @@ export default {
         s_status = this.orderStatus ==  '-1'?'':this.orderStatus
     axios.get(R_PRE_URL+'/searchSbyAddedOrderList.do?member_id='+this.$store.state.userInfo.member_id+'&number='+number+'&page_num='+page_num+'&insurance_name='+insurance_name+'&s_status='+s_status
       ).then((res)=> {
-        this.Total = res.data.orderCount
+        this.Total = res.data.addedOrderCount
         let temp = res.data.arr
         temp.map((item,idx)=>{
           item.order_subtime = timestampToFormatTime(item.order_subtime.time)

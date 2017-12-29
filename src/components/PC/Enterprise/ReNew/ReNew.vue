@@ -2,15 +2,15 @@
   <div id="TopayE">
     <!-- top -->
     <h2>参保资料</h2>
-    <p class="securityInfo">参保城市:上海  <a href="http://sbyun.com/SicOrderMain.mc?method=exportAreaMeal&areaId=10&areaName=%E4%B8%8A%E6%B5%B7" class="marginL_20"><Icon type="ios-download"></Icon>下载上海社保缴费明细</a></p>
+    <p class="securityInfo">参保城市:上海</p>
 
     <Table :columns="columnsHead" :loading="ifLoading" :data="dataOrder"></Table>
     
-    <p class="marginT_20"><span class="marginL_20 fixedWidth">社保代缴</span><span class="marginL_20">社保参保人数：0人 </span><a @click="chooseMemberS(0)"><Icon type="ios-compose" size="18"></Icon>社保参保名单</a></p>
-    <p class="marginT_20"><span class="marginL_20 fixedWidth">公积金代缴</span><span class="marginL_20">公积金参保人数：0人 </span><a @click="chooseMemberG(1)"><Icon type="ios-compose" size="18"></Icon>公积金参保名单</a></p>
+    <p class="marginT_20"><span class="marginL_20 fixedWidth">社保代缴</span><span class="marginL_20">社保参保人数：0人 </span><a @click="chooseMemberS(0)"><Icon type="ios-paper-outline" size="18"></Icon> 社保参保名单</a></p>
+    <p class="marginT_20"><span class="marginL_20 fixedWidth">公积金代缴</span><span class="marginL_20">公积金参保人数：0人 </span><a @click="chooseMemberG(1)"><Icon type="ios-paper-outline" size="18"></Icon> 公积金参保名单</a></p>
 
     <!-- Bottom -->
-    <h2 class="marginT_20">选择购买月份</h2>
+    <h2 class="marginT_20">选择续费月份</h2>
     <CheckboxGroup v-model="buyMonthList" class="monthList" @on-change="changeBuyMonth">
         <Checkbox v-for="(Month,MonthIdx) in MonthList" :label="Month"></Checkbox>
     </CheckboxGroup>
@@ -39,7 +39,7 @@
       <p class="colorRed">3、本服务可开具增值税普通发票，若需开具请与客服进行联系。</p>
     </div>
 
-    <Button type="error" class="marginT_20" @click="toSubmitOrder">立即购买</Button>
+    <Button type="error" class="marginT_20" @click="toSubmitOrder">确认续费</Button>
 
     <ChoosePayMember v-if="ifShowModal" :type="type" v-on:changeVisible="changeVisible"></ChoosePayMember>
     

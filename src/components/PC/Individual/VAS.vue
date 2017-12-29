@@ -180,15 +180,25 @@ export default {
   }
   },
   created(){
+    //城市列表
     axios.get(R_PRE_URL+'/searchCityList.do'
     ).then((res)=> { 
       this.cityList = res.data.arr
     }).catch((error)=> {
       console.log(error)
     })
+    //服务险种
     axios.get(R_PRE_URL+'/searchAddNameList.do'
     ).then((res)=> { 
       this.serviceKindList = res.data.arr
+    }).catch((error)=> {
+      console.log(error)
+    })
+
+    axios.get(R_PRE_URL+'/searchMemberDetail.do?member_id='+this.$store.state.userInfo.member_id
+    ).then((res)=> {
+        this.City = res.data.memberDetail.city
+        this.searchVasDetail()
     }).catch((error)=> {
       console.log(error)
     })

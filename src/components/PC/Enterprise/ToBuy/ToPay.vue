@@ -6,8 +6,8 @@
 
     <Table :columns="columnsHead" :loading="ifLoading" :data="dataOrder"></Table>
     
-    <p class="marginT_20"><span class="marginL_20 fixedWidth">社保代缴</span><span class="marginL_20">社保参保人数：0人 </span><a @click="chooseMemberS(0)"><Icon type="ios-compose" size="18"></Icon>社保参保名单</a></p>
-    <p class="marginT_20"><span class="marginL_20 fixedWidth">公积金代缴</span><span class="marginL_20">公积金参保人数：0人 </span><a @click="chooseMemberG(1)"><Icon type="ios-compose" size="18"></Icon>公积金参保名单</a></p>
+    <p class="marginT_20"><span class="marginL_20 fixedWidth">社保代缴</span><span class="marginL_20">社保参保人数：{{MemberAmountS}}人 </span><a @click="chooseMemberS(0)"><Icon type="compose" size="18"></Icon>社保参保名单</a></p>
+    <p class="marginT_20"><span class="marginL_20 fixedWidth">公积金代缴</span><span class="marginL_20">公积金参保人数：{{MemberAmountG}}人 </span><a @click="chooseMemberG(1)"><Icon type="compose" size="18"></Icon></Icon>公积金参保名单</a></p>
 
     <!-- Bottom -->
     <h2 class="marginT_20">选择购买月份</h2>
@@ -24,10 +24,11 @@
     <h3 class="marginT_20">订单费用详情</h3>
     <div class="sumBlock marginT_10">
       <div>
-        <p>代收社保费用小计：<span>1740.8 元（ 1740.8元/月[1人] × 1月</span></p>
-        <p>代收公积金费用小计：<span>306 元（ 306元/月 [1人] × 1月 ）</span></p>
-        <p>其他费用小计：<span>9元（材料费:9元/人 x 1人）</span></p>
-        <p>代理缴纳费用小计：<span> 39.8元（双买：39.8元（39.8元/月×1月×1人次）</span></p>
+        <p>代收社保费用小计：<span>{{(total_securityI + total_securityU)*MemberAmountS*buyMonthList.length}} 元（ {{total_securityI + total_securityU}}元/月[{{MemberAmountS}}人] × {{buyMonthList.length}}月</span></p>
+        <p>代收公积金费用小计：<span>{{306*MemberAmountG*buyMonthList.length}} 元（ 306元/月 [{{MemberAmountG}}人] × {{buyMonthList.length}}月 ）</span></p>
+        <p>其他费用小计：<span>{{material_fee*MemberAmountS}}元（材料费:{{material_fee}}元/人 x {{MemberAmountS + MemberAmountG}}人）</span></p>
+        <p>代理缴纳费用小计：<span> {{service_fee*(MemberAmountG+MemberAmountS)*buyMonthList.length}}元（（{{service_fee}}元/月×{{buyMonthList.length}}月×{{MemberAmountS + MemberAmountG}}人次）</span></p>
+        <!-- <p>代理缴纳费用小计：<span> 39.8元（双买：39.8元（39.8元/月×1月×{{MemberAmountS + MemberAmountG}}人次）</span></p> -->
         <p>合计：<span class="colorRed" style="font-size: 18px; font-weight: bold;">¥ 2095.6</span></p>
          
       </div>
@@ -41,7 +42,7 @@
 
     <Button type="error" class="marginT_20" @click="toSubmitOrder">立即购买</Button>
 
-    <ChoosePayMember v-if="ifShowModal" :type="type" v-on:changeVisible="changeVisible"></ChoosePayMember>
+    <ChoosePayMember v-if="ifShowModal" :type="type" v-on:changeVisible="changeVisible" v-on:MemberAmountSChange="MemberAmountSChange" v-on:MemberAmountGChange="MemberAmountGChange"></ChoosePayMember>
     
 
     
@@ -52,12 +53,17 @@
 import Vue from 'vue'
 import axios from 'axios'
 import ChoosePayMember from "./ChoosePayMember.vue"
-import {getOneYearMonth,removeByValue} from "../../../../util/utils"
+import {getOneYearMonth,removeByValue,Intersect} from "../../../../util/utils"
 export default {
   data() {
   return {
     ifShowModal:false,
     ifLoading: false,
+    MemberAmountS:0,//社保参保人数
+    MemberListS:[], //社保参保人员信息
+    MemberAmountG:0,//公积金参保人数
+    MemberListG:[], //公积金参保人员信息
+    AmountArray:[0,0,0,0], //社保参保人数分类数组
     type:0,  //0社保 1公积金
     NAME:'',
     INSURED_AREA:'',
@@ -67,8 +73,8 @@ export default {
     ifJoined:'新参保',
     OldEnterprise:'',       //原公司名称
     FundsAccount:'',  //公积金代缴基数
-    total_securityI:'',     //社保个人总计
-    total_securityU:'',     //社保公司总计
+    total_securityI:'',     //每人社保个人总计
+    total_securityU:'',     //每人社保公司总计
     FundsBasic:'',
     FundsU:'',
     FundsI:'',
@@ -94,40 +100,7 @@ export default {
             key: 'amount'
         }
     ],
-    dataOrder: [
-        {
-            kind: '上海本地城镇（五险）',
-            priceU: '¥1330.9',
-            priceI: '¥1330.9',
-            amount:1
-        },
-        {
-            kind: '上海外地城镇（五险）',
-            priceU: '¥1330.9',
-            priceI: '¥1330.9',
-            amount:1
-        },
-        {
-            kind: '上海本地地农村（五险）',
-            priceU: '¥1330.9',
-            priceI: '¥1330.9',
-            amount:1
-        },
-        {
-            kind: '上海外地农村（五险）',
-            priceU: '¥1330.9',
-            priceI: '¥1330.9',
-            amount:1
-        },
-        {
-            kind: '费用明细',
-            priceU: '¥1330.9',
-            priceI: '¥409.9',
-            amount: '总计：¥1740.8',
-        }
-
-
-    ]
+    dataOrder: []
     
     
   }
@@ -160,81 +133,52 @@ export default {
     //     default:
     //     this.RESIDENCE = ''
     //   }
-    //   axios.get(R_PRE_URL+'/searchInsurance.do?city='+CityCode
-    //   ).then((RES)=> {
-    //     let InsuranceDetail = RES.data.insuranceDetail
-    //     let BASIC = InsuranceDetail.base
-    //     this.FundsBasic = InsuranceDetail.providen_base
-    //     this.FundsU = InsuranceDetail.providentunit
-    //     this.FundsI = InsuranceDetail.providentinductrial
-    //     this.securityID = InsuranceDetail.id
-    //     // this.FundsU = Number(InsuranceDetail.providentunit*100).toFixed(2)
-    //     // this.FundsI = Number(InsuranceDetail.providentinductrial*100).toFixed(2)
-    //     this.total_securityI = InsuranceDetail.person_total,
-    //     this.total_securityU= InsuranceDetail.company_total,
-    //     this.dataOrder = [
-    //                   {
-    //                       kind: '养老',
-    //                       basic: BASIC,
-    //                       proportionI: InsuranceDetail.oldinductrial,
-    //                       priceI: BASIC*InsuranceDetail.oldinductrial,
-    //                       proportionU: InsuranceDetail.oldunit,
-    //                       priceU: BASIC*InsuranceDetail.oldunit,
-    //                   },
-    //                   {
-    //                       kind: '失业',
-    //                       basic: BASIC,
-    //                       proportionI: InsuranceDetail.workinductrial,
-    //                       priceI: BASIC*InsuranceDetail.workinductrial,
-    //                       proportionU: InsuranceDetail.workunit,
-    //                       priceU: BASIC*InsuranceDetail.workunit,
-    //                   },
-    //                   {
-    //                       kind: '工伤',
-    //                       basic: BASIC,
-    //                       proportionI: InsuranceDetail.injuryinductrial,
-    //                       priceI: BASIC*InsuranceDetail.injuryinductrial,
-    //                       proportionU: InsuranceDetail.injuryunit,
-    //                       priceU: BASIC*InsuranceDetail.injuryunit,
-    //                   },
-    //                   {
-    //                       kind: '生育',
-    //                       basic: 3902,
-    //                       proportionI: InsuranceDetail.procreationinductrial,
-    //                       priceI: BASIC*InsuranceDetail.procreationinductrial,
-    //                       proportionU: InsuranceDetail.procreationunit,
-    //                       priceU: BASIC*InsuranceDetail.procreationunit,
-    //                   },
-    //                   {
-    //                       kind: '基本医疗',
-    //                       basic: BASIC,
-    //                       proportionI: InsuranceDetail.medicalinductrial,
-    //                       priceI: BASIC*InsuranceDetail.medicalinductrial,
-    //                       proportionU: InsuranceDetail.medicalunit,
-    //                       priceU: BASIC*InsuranceDetail.medicalunit,
-    //                   },
-    //                   {
-    //                       kind: '费用合计',
-    //                       basic: '-',
-    //                       proportionI: '-',
-    //                       priceI: InsuranceDetail.person_total,
-    //                       proportionU: '-',
-    //                       priceU: InsuranceDetail.company_total,
-    //                   }
-                      
-    //               ] 
-                  
-    //               this.ifLoading = false
+      axios.get(R_PRE_URL+'/searchInsurance.do?city=1'
+      ).then((RES)=> {
+        let InsuranceDetail = RES.data.insuranceDetail
+        this.FundsBasic = Number(InsuranceDetail.providen_base).toFixed(2)
+        this.FundsU = InsuranceDetail.providentunit
+        this.FundsI = InsuranceDetail.providentinductrial
+        this.total_securityU = InsuranceDetail.company_total
+        this.total_securityI = InsuranceDetail.person_total
 
-    //   }).catch((error)=> {
-    //     console.log(error)
-    //   })
+        this.dataOrder = [
 
-    //   }
-
-    // }).catch((error)=> {
-    //   console.log(error)
-    // })
+        {
+            kind: '本地城镇（五险）',
+            priceU: '¥'+InsuranceDetail.person_total,
+            priceI: '¥'+InsuranceDetail.company_total,
+            amount:0
+        },
+        {
+            kind: '本地农村（五险）',
+            priceU: '¥'+InsuranceDetail.person_total,
+            priceI: '¥'+InsuranceDetail.company_total,
+            amount:0
+        },
+        {
+            kind: '外地城镇（五险）',
+            priceU: '¥'+InsuranceDetail.person_total,
+            priceI: '¥'+InsuranceDetail.company_total,
+            amount:0
+        },
+        {
+            kind: '外地农村（五险）',
+            priceU: '¥'+InsuranceDetail.person_total,
+            priceI: '¥'+InsuranceDetail.company_total,
+            amount:0
+        },
+        {
+            kind: '费用明细',
+            priceU: '¥'+InsuranceDetail.company_total*this.MemberAmountS,
+            priceI: '¥'+InsuranceDetail.person_total*this.MemberAmountS,
+            amount: '总计：¥'+(InsuranceDetail.company_total + InsuranceDetail.person_total)*this.MemberAmountS,
+        }
+        ]
+        
+      }).catch((error)=> {
+        console.log(error)
+      })
     
    },
   mounted: function(){
@@ -337,6 +281,40 @@ export default {
     //监听子组件返回
     changeVisible(Info){
       this.ifShowModal = Info
+    },
+    MemberAmountSChange(selection){
+      this.AmountArray = [0,0,0,0]
+      this.MemberListS = selection
+      this.MemberAmountS = selection.length
+      selection.map((item,idx)=>{
+        switch(item.registered_residence){
+          case '0':
+          this.AmountArray[0]+=1
+          break
+          case '1':
+          this.AmountArray[1]+=1
+          break
+          case '2':
+          this.AmountArray[2]+=1
+          break
+          case '3':
+          this.AmountArray[3]+=1
+          break
+        }
+      })
+      this.dataOrder[0].amount = this.AmountArray[0]
+      this.dataOrder[1].amount = this.AmountArray[1]
+      this.dataOrder[2].amount = this.AmountArray[2]
+      this.dataOrder[3].amount = this.AmountArray[3]
+      this.dataOrder[4].priceU = this.total_securityU*this.MemberAmountS
+      this.dataOrder[4].priceI = this.total_securityI*this.MemberAmountS
+      this.dataOrder[4].amount = (this.total_securityU + this.total_securityI)*this.MemberAmountS
+      console.log(this.AmountArray)
+    },
+    MemberAmountGChange(selection){
+      this.MemberListG = selection
+      this.MemberAmountG = selection.length
+      console.log(Intersect(this.MemberListS,this.MemberListG))
     }
 
    

@@ -2,7 +2,7 @@
   <div id="TopayI">
     <!-- top -->
     <h2>参保资料</h2>
-    <p class="securityInfo">参保人: {{NAME}}  参保城市：{{INSURED_AREA}}  户口性质：{{RESIDENCE}}<span @click="ToModifySecurityInfo"><Icon type="edit"></Icon></span></p>
+    <p class="securityInfo">参保人: {{NAME}}  参保城市：{{INSURED_AREA}}  户口性质：{{RESIDENCE}}<span @click="ToModifySecurityInfo"><Icon type="compose" size="18"></Icon></span></p>
     <Table :columns="columnsHead" :loading="ifLoading" :data="dataOrder"></Table>
     <Form>
         <FormItem label="">
@@ -68,7 +68,7 @@
         <h3>代收费用小计：<h2 class="colorRed" style="display: inline;">¥{{((FundsBasic*(FundsI+FundsU)+service_fee)*buyMonthList.length+material_fee).toFixed(2)}}</h2></h3>
         <p>公积金：{{FundsBasic*(FundsI+FundsU)}}元/月 × {{buyMonthList.length}}月 + 服务费用：{{service_fee}}元/月/人 x {{buyMonthList.length}}月 + 其他费用：{{material_fee}}元</p>
       </div>
-      <div v-else>
+      <div v-if="!ifFundsChoosed && !ifSecurityChoosed">
         <p>请选择要代缴的种类！</p>
       </div>
 
@@ -172,9 +172,9 @@ export default {
       ).then((RES)=> {
         let InsuranceDetail = RES.data.insuranceDetail
         let BASIC = InsuranceDetail.base
-        this.FundsBasic = InsuranceDetail.providen_base
-        this.FundsU = InsuranceDetail.providentunit
-        this.FundsI = InsuranceDetail.providentinductrial
+        this.FundsBasic = InsuranceDetail.providen_base  //公积金基数
+        this.FundsU = InsuranceDetail.providentunit      //公积金单位比例
+        this.FundsI = InsuranceDetail.providentinductrial//公积金个人比例
         this.securityID = InsuranceDetail.id
         // this.FundsU = Number(InsuranceDetail.providentunit*100).toFixed(2)
         // this.FundsI = Number(InsuranceDetail.providentinductrial*100).toFixed(2)

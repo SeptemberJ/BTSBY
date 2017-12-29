@@ -49,42 +49,42 @@ export default {
                 title: '公积金',
                 key: 'gjj_status'
             },
-            {
-                title: '操作',
-                key: 'action',
-                width: 150,
-                        align: 'center',
-                        render: (h, params) => {
-                            return h('div', [
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        marginRight: '5px'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.show(params.index)
-                                        }
-                                    }
-                                }, 'View'),
-                                h('Button', {
-                                    props: {
-                                        type: 'error',
-                                        size: 'small'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.remove(params.index)
-                                        }
-                                    }
-                                }, 'Delete')
-                            ]);
-                        }
+            // {
+            //     title: '操作',
+            //     key: 'action',
+            //     width: 150,
+            //             align: 'center',
+            //             render: (h, params) => {
+            //                 return h('div', [
+            //                     h('Button', {
+            //                         props: {
+            //                             type: 'primary',
+            //                             size: 'small'
+            //                         },
+            //                         style: {
+            //                             marginRight: '5px'
+            //                         },
+            //                         on: {
+            //                             click: () => {
+            //                                 this.show(params.index)
+            //                             }
+            //                         }
+            //                     }, 'View'),
+            //                     h('Button', {
+            //                         props: {
+            //                             type: 'error',
+            //                             size: 'small'
+            //                         },
+            //                         on: {
+            //                             click: () => {
+            //                                 this.remove(params.index)
+            //                             }
+            //                         }
+            //                     }, 'Delete')
+            //                 ]);
+            //             }
                           
-            }
+            // }
         ],
         dataOrder: []
 

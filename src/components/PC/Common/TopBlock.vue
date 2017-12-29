@@ -5,7 +5,7 @@
               <Col span="11">
                 <Button type="text" v-if="!ifLogined" @click="ToLogin">登录</Button>
                 <Button type="text" v-if="!ifLogined" @click="ToSign">注册</Button>
-                <Button type="text" v-if="ifLogined" @click="ToLogin">{{UserName}}</Button>
+                <Button type="text" v-if="ifLogined" @click="">{{UserName}}</Button>
                 <Button type="text" v-if="ifLogined" @click="GoMessage" style="cursor:pointer;">
                   <Badge count="15">
                       <Icon type="ios-bell-outline" size="22"></Icon>
