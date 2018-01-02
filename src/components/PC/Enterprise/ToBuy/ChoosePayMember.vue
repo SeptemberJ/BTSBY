@@ -5,9 +5,9 @@
             <p slot="header" style="text-align:left">
                 <span>编辑社保参保名单</span><span class="colorRed tips">注:勾选的人员表示加入参保,如需不参保请取消勾选</span>
             </p>
-            <div style="text-align:left;" class="marginTB_40">
+            <div style="text-align:left;" class="marginB_110">
                 <Table border ref="selection" :columns="columnsS" :data="dataS" @on-selection-change="MemberchangedS"></Table>
-                <Page class="marginT_10" :total="Total" show-total style="float: right;" :current="page_num" @on-change="" @on-page-size-change="" show-sizer></Page>
+                <Page class="marginT_10" :total="Total" show-total style="float: right;" :current="page_num" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer></Page>
             </div>
            <!--  <div slot="footer">
                 <Button type="error" size="large" long :loading="modal_loading" @click="submitMemberS">确定</Button>
@@ -18,9 +18,9 @@
             <p slot="header" style="text-align:left">
                 <span>编辑公积金参保名单</span><span class="colorRed tips">注:勾选的人员表示加入参保,如需不参保请取消勾选</span>
             </p>
-            <div style="text-align:center;" class="marginTB_40">
-                <Table border ref="selection" :columns="columnsG" :data="dataG" @on-selection-change="MemberchangedG"></Table>
-                <Page class="marginT_10" :total="Total" show-total style="float: right;" :current="page_num" @on-change="" @on-page-size-change="" show-sizer></Page>
+            <div style="text-align:center;" class="marginB_110">
+                <Table border ref="selection2" :columns="columnsG" :data="dataG" @on-selection-change="MemberchangedG"></Table>
+                <Page class="marginT_10" :total="Total" show-total style="float: right;" :current="page_num" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer></Page>
             </div>
             <!-- <div slot="footer">
                 <Button type="error" size="large" long :loading="modal_loading" @click="submitMemberG">确定</Button>
@@ -32,9 +32,9 @@
 <script>
 import Vue from 'vue'
 import axios from 'axios'
-import {timestampToFormatTime} from '../../../../util/utils'
+import {timestampToFormatTimeS,removeSame} from '../../../../util/utils'
 export default {
-  props:['type'],
+  props:['type','FundsBasic'],
   data() {
   return {
     ifChooseMember:false,
@@ -42,6 +42,7 @@ export default {
     Total:0,
     page_num:1,  //页数
     number:10,   //每页条数
+    choosedMemberG:[],
     columnsS: [
         {
             type: 'selection',
@@ -62,6 +63,17 @@ export default {
             key: 'id_number',
         },
         {
+            title: '状态',
+            key: 'status',
+            render: (h, params) => {
+                            return h('span',{
+                                style: {
+                                  //color:params.row.status==0?'#39f':'#FF3174',
+                                },
+                            }, params.row.status=='0'?'在职':'离职')
+                        }
+        },
+        {
             title: '参保城市',
             key: 'city'
         },
@@ -69,27 +81,27 @@ export default {
             title: '户口性质',
             key: 'registered_residenceTxt'
         },
-        {
-          title: 'Action',
-          key: 'action',
-          width: 100,
-          align: 'center',
-          render: (h, params) => {
-              return h('div', [
-                  h('Button', {
-                      props: {
-                          type: 'error',
-                          size: 'small'
-                      },
-                      on: {
-                          click: () => {
-                              this.remove(params.index)
-                          }
-                      }
-                  }, '修改信息')
-              ]);
-          }
-        }
+        // {
+        //   title: 'Action',
+        //   key: 'action',
+        //   width: 100,
+        //   align: 'center',
+        //   render: (h, params) => {
+        //       return h('div', [
+        //           h('Button', {
+        //               props: {
+        //                   type: 'error',
+        //                   size: 'small'
+        //               },
+        //               on: {
+        //                   click: () => {
+        //                       this.remove(params.index)
+        //                   }
+        //               }
+        //           }, '修改信息')
+        //       ]);
+        //   }
+        // }
     ],
     columnsG: [
         {
@@ -103,11 +115,18 @@ export default {
         },
         {
             title: '身份证号',
-            key: 'id_card'
+            key: 'id_number'
         },
         {
-            title: '是否在职',
-            key: 'postStatus'
+            title: '状态',
+            key: 'status',
+            render: (h, params) => {
+                            return h('span',{
+                                style: {
+                                  //color:params.row.status==0?'#39f':'#FF3174',
+                                },
+                            }, params.row.status=='0'?'在职':'离职')
+                        }
         },
         {
             title: '参保城市',
@@ -127,29 +146,29 @@ export default {
         },
         {
             title: '入职时间',
-            key: 'time'
+            key: 'entry_time'
         },
-        {
-          title: 'Action',
-          key: 'action',
-          width: 100,
-          align: 'center',
-          render: (h, params) => {
-              return h('div', [
-                  h('Button', {
-                      props: {
-                          type: 'error',
-                          size: 'small'
-                      },
-                      on: {
-                          click: () => {
-                              this.remove(params.index)
-                          }
-                      }
-                  }, '修改信息')
-              ]);
-          }
-        }
+        // {
+        //   title: 'Action',
+        //   key: 'action',
+        //   width: 100,
+        //   align: 'center',
+        //   render: (h, params) => {
+        //       return h('div', [
+        //           h('Button', {
+        //               props: {
+        //                   type: 'error',
+        //                   size: 'small'
+        //               },
+        //               on: {
+        //                   click: () => {
+        //                       this.remove(params.index)
+        //                   }
+        //               }
+        //           }, '修改信息')
+        //       ]);
+        //   }
+        // }
     ],
     dataS: [],
     dataG: [
@@ -212,13 +231,28 @@ export default {
     changeVisible(event){
       this.$emit('changeVisible',event)
     },
+    //分页
+    changePage(event){//当前页数
+      this.page_num = event
+      this.getDataMember()
+    },
+    //切换每页条数
+    changePageSize(event){
+      this.number = event
+      this.getDataMember()
+    },
     MemberchangedS(selection){
       this.$emit('MemberAmountSChange',selection)
-      console.log(selection)  //所有选择的人员信息list   @on-select 单个改变状态触发
+      //console.log(selection)  //所有选择的人员信息list   @on-select 单个改变状态触发
     },
     MemberchangedG(selection){
-      this.$emit('MemberAmountGChange',selection)
-      console.log(selection)  //所有选择的人员信息list   @on-select 单个改变状态触发
+      this.$emit('MemberAmountGChange',selection)//所有选择的人员信息list   @on-select 单个改变状态触发
+      if(selection[selection.length-1]){
+        this.choosedMemberG = this.choosedMemberG.concat(selection[selection.length-1])
+      }
+      //this.choosedMemberG = removeSame(this.choosedMemberG)
+      console.log(this.choosedMemberG.length)
+      console.log((removeSame(this.choosedMemberG)))
     },
     //提交社保人员名单
     submitMemberS(){
@@ -240,7 +274,13 @@ export default {
         ).then((res)=> {
           let temp = res.data.employeeList
           temp.map((Item,Idx)=>{
-            Item.entry_time = timestampToFormatTime(Item.entry_time.time)
+            Item.entry_time = timestampToFormatTimeS(Item.entry_time.time)
+            Item.basicG = this.FundsBasic
+            this.choosedMemberG.map((item,idx)=>{
+              if(Item.id_number == item.id_number){
+                Item._checked = true
+              }
+            })
             switch(Item.registered_residence){
               case '0':
               Item.registered_residenceTxt = '本地城镇'
@@ -255,16 +295,24 @@ export default {
               Item.registered_residenceTxt = '外地农村'
               break
             }
-             switch(Item.sex){
-              case '0':
-              Item.sexTxt = '男'
-              break
-              case '1':
-              Item.sexTxt = '女'
-              break
-              default:
-              Item.sexTxt = ''
-            }
+            // switch(Item.status){
+            //   case '0':
+            //   Item.status = '在职'
+            //   break
+            //   case '1':
+            //   Item.status = '离职'
+            //   break
+            // }
+          //  switch(Item.sex){
+          //   case '0':
+          //   Item.sexTxt = '男'
+          //   break
+          //   case '1':
+          //   Item.sexTxt = '女'
+          //   break
+          //   default:
+          //   Item.sexTxt = ''
+          // }
             
             
           })

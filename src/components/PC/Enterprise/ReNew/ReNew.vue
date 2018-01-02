@@ -1,5 +1,5 @@
 <template>
-  <div id="TopayE">
+  <div id="ReNew">
     <!-- top -->
     <h2>参保资料</h2>
     <p class="securityInfo">参保城市:上海</p>
@@ -344,7 +344,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-#TopayE{
+#ReNew{
   .securityInfo{
     font-size: 14px;
     line-height: 60px;

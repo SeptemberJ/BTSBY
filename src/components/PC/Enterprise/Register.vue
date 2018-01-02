@@ -115,7 +115,7 @@ import axios from 'axios'
 import AddMember from './MemberOperation/AddMember.vue'
 import AddOrMin from './MemberOperation/AddOrMin.vue'
 import DisMission from './MemberOperation/DisMission.vue'
-import {timestampToFormatTime} from '../../../util/utils'
+import {timestampToFormatTimeS} from '../../../util/utils'
 import * as Moment from 'moment'
 export default {
   data() {
@@ -130,7 +130,7 @@ export default {
     cityList:[],
     city:'',     //参保城市
     post_name:'',     //岗位
-    status:'',   //状态
+    status:'0',   //状态
     postList:[],
     memberInfo:{},//查看的员工的信息
     statusList:[
@@ -169,7 +169,8 @@ export default {
                                 size: 'small'
                             },
                             style: {
-                                marginRight: '5px'
+                                marginRight: '5px',
+                                color:'#39f'
                             },
                             on: {
                                 click: () => {
@@ -186,7 +187,8 @@ export default {
             },
             {
                 title: '参保城市',
-                key: 'city'
+                key: 'city',
+                align: 'center',
             },
             {
                 title: '户口性质',
@@ -241,7 +243,19 @@ export default {
             {
                 title: '性别',
                 key: 'sexTxt',
-                width:70
+                align: 'center',
+                width:70,
+                render: (h, params) => {
+                            return h('div', [
+                                h('Icon', {
+                                    props: {
+                                        type: params.row.sex==0?'man':'woman',
+                                        size:'22',
+                                        color:params.row.sex==0?'#39f':'#FF3174',
+                                    }
+                                }),
+                            ]);
+                        }
             },
             {
                 title: '岗位',
@@ -462,8 +476,8 @@ export default {
         ).then((res)=> {
           let temp = res.data.employeeList
           temp.map((Item,Idx)=>{
-            Item.birthdate = timestampToFormatTime(Item.birthdate.time)
-            Item.entry_time = timestampToFormatTime(Item.entry_time.time)
+            Item.birthdate = timestampToFormatTimeS(Item.birthdate.time)
+            Item.entry_time = timestampToFormatTimeS(Item.entry_time.time)
             // Item.joining_date = timestampToFormatTime(Item.joining_date.time)
             // Item.work_time = timestampToFormatTime(Item.work_time.time)
             // Item.graduation_time = timestampToFormatTime(Item.graduation_time.time)
@@ -481,16 +495,16 @@ export default {
               Item.registered_residenceTxt = '外地农村'
               break
             }
-             switch(Item.sex){
-              case '0':
-              Item.sexTxt = '男'
-              break
-              case '1':
-              Item.sexTxt = '女'
-              break
-              default:
-              Item.sexTxt = ''
-            }
+            //  switch(Item.sex){
+            //   case '0':
+            //   Item.sexTxt = '男'
+            //   break
+            //   case '1':
+            //   Item.sexTxt = '女'
+            //   break
+            //   default:
+            //   Item.sexTxt = ''
+            // }
             
             
           })

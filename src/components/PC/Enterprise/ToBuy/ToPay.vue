@@ -2,7 +2,7 @@
   <div id="TopayE">
     <!-- top -->
     <h2>参保资料</h2>
-    <p class="securityInfo">参保城市:上海  <a href="http://sbyun.com/SicOrderMain.mc?method=exportAreaMeal&areaId=10&areaName=%E4%B8%8A%E6%B5%B7" class="marginL_20"><Icon type="ios-download"></Icon>下载上海社保缴费明细</a></p>
+    <p class="securityInfo">参保城市:{{City}}  <a href="http://sbyun.com/SicOrderMain.mc?method=exportAreaMeal&areaId=10&areaName=%E4%B8%8A%E6%B5%B7" class="marginL_20"><Icon type="ios-download"></Icon>下载上海社保缴费明细</a></p>
 
     <Table :columns="columnsHead" :loading="ifLoading" :data="dataOrder"></Table>
     
@@ -42,7 +42,7 @@
 
     <Button type="error" class="marginT_20" @click="toSubmitOrder">立即购买</Button>
 
-    <ChoosePayMember v-if="ifShowModal" :type="type" v-on:changeVisible="changeVisible" v-on:MemberAmountSChange="MemberAmountSChange" v-on:MemberAmountGChange="MemberAmountGChange"></ChoosePayMember>
+    <ChoosePayMember v-if="ifShowModal" :type="type"  :FundsBasic='FundsBasic' v-on:changeVisible="changeVisible" v-on:MemberAmountSChange="MemberAmountSChange" v-on:MemberAmountGChange="MemberAmountGChange"></ChoosePayMember>
     
 
     
@@ -59,6 +59,7 @@ export default {
   return {
     ifShowModal:false,
     ifLoading: false,
+    City:'', //公司参保城市
     MemberAmountS:0,//社保参保人数
     MemberListS:[], //社保参保人员信息
     MemberAmountG:0,//公积金参保人数
@@ -106,6 +107,12 @@ export default {
   }
   },
   created() {
+    axios.get(R_PRE_URL+'/searchCompanyDetail.do?member_id='+this.$store.state.userInfo.member_id
+    ).then((res)=> {
+      this.City = res.data.companyDetail.fcity 
+    }).catch((error)=> {
+      console.log(error)
+    })
     // axios.get(R_PRE_URL+'/searchMemberDetail.do?member_id='+this.$store.state.userInfo.member_id
     // ).then((res)=> { 
     //   let MemberDetail = res.data.memberDetail
@@ -173,6 +180,11 @@ export default {
             priceU: '¥'+InsuranceDetail.company_total*this.MemberAmountS,
             priceI: '¥'+InsuranceDetail.person_total*this.MemberAmountS,
             amount: '总计：¥'+(InsuranceDetail.company_total + InsuranceDetail.person_total)*this.MemberAmountS,
+             cellClassName: {
+                            amount: 'demo-table-info-cell-amount',
+                            priceU: 'demo-table-info-cell-priceU',
+                            priceI: 'demo-table-info-cell-priceI',
+                        }
         }
         ]
         
@@ -309,12 +321,12 @@ export default {
       this.dataOrder[4].priceU = this.total_securityU*this.MemberAmountS
       this.dataOrder[4].priceI = this.total_securityI*this.MemberAmountS
       this.dataOrder[4].amount = (this.total_securityU + this.total_securityI)*this.MemberAmountS
-      console.log(this.AmountArray)
+      //console.log(this.AmountArray)
     },
     MemberAmountGChange(selection){
       this.MemberListG = selection
       this.MemberAmountG = selection.length
-      console.log(Intersect(this.MemberListS,this.MemberListG))
+      //console.log(Intersect(this.MemberListS,this.MemberListG))
     }
 
    
@@ -353,5 +365,7 @@ export default {
     }
   }
 
+
 }
+
 </style>

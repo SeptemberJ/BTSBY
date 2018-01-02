@@ -93,6 +93,12 @@
   return arr;
 }
 
+ export function removeSame(arr) {
+  var unique = {};
+  arr.forEach(function(gpa){ unique[ JSON.stringify(gpa) ] = gpa });
+  return unique
+}
+
 export function formatTime(date) {
   var year = date.getFullYear()
   var month = date.getMonth() + 1
@@ -123,6 +129,22 @@ export function timestampToFormatTime(str){
   oMin = oDate.getMinutes(),  
   oSen = oDate.getSeconds(),  
   oTime = oYear +'-'+ formatNumber(oMonth) +'-'+ formatNumber(oDay) +' '+ formatNumber(oHour) +':'+ formatNumber(oMin) +':'+formatNumber(oSen)//最后拼接时间  
+  return oTime
+}
+
+export function timestampToFormatTimeS(str){  
+  function formatNumber(n) {
+    n = n.toString()
+    return n[1] ? n : '0' + n
+  }
+  var oDate = new Date(str),  
+  oYear = oDate.getFullYear(),  
+  oMonth = oDate.getMonth()+1,  
+  oDay = oDate.getDate(),  
+  oHour = oDate.getHours(),  
+  oMin = oDate.getMinutes(),  
+  oSen = oDate.getSeconds(),  
+  oTime = oYear +'-'+ formatNumber(oMonth) +'-'+ formatNumber(oDay)//最后拼接时间  
   return oTime
 }
 
