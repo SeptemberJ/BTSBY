@@ -1,26 +1,26 @@
 <template>
     <div id="ChooseMember">
           <!-- Modal 社保-->
-          <Modal v-if="type==0" v-model="ifChooseMember" :mask-closable="false"  @on-visible-change="changeVisible" width="800">
+          <Modal v-if="type==0" v-model="ifChooseMember" :mask-closable="false"  @on-visible-change="changeVisible" width="900">
             <p slot="header" style="text-align:left">
                 <span>编辑社保参保名单</span><span class="colorRed tips">注:勾选的人员表示加入参保,如需不参保请取消勾选</span>
             </p>
             <div style="text-align:left;" class="marginB_110">
-                <Table border ref="selection" :columns="columnsS" :data="dataS" @on-selection-change="MemberchangedS"></Table>
-                <Page class="marginT_10" :total="Total" show-total style="float: right;" :current="page_num" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer></Page>
+                <Table border ref="selection" :loading="ifLoading" :columns="columnsS" :data="dataS" @on-selection-change="MemberchangedS"></Table>
+                <Page class="marginT_10" :total="Total" show-total style="float: right;" :current="page_num" @on-change="changePage" @on-page-size-change="changePageSize" :show-sizer="false"></Page>
             </div>
            <!--  <div slot="footer">
                 <Button type="error" size="large" long :loading="modal_loading" @click="submitMemberS">确定</Button>
             </div> -->
         </Modal>
         <!-- Modal 公积金-->
-          <Modal v-else v-model="ifChooseMember" @on-visible-change="changeVisible" width="800"  :mask-closable="false">
+          <Modal v-else v-model="ifChooseMember" @on-visible-change="changeVisible" width="900"  :mask-closable="false">
             <p slot="header" style="text-align:left">
                 <span>编辑公积金参保名单</span><span class="colorRed tips">注:勾选的人员表示加入参保,如需不参保请取消勾选</span>
             </p>
             <div style="text-align:center;" class="marginB_110">
-                <Table border ref="selection2" :columns="columnsG" :data="dataG" @on-selection-change="MemberchangedG"></Table>
-                <Page class="marginT_10" :total="Total" show-total style="float: right;" :current="page_num" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer></Page>
+                <Table border ref="selection2" :loading="ifLoading" :columns="columnsG" :data="dataG" @on-selection-change="MemberchangedG" @on-select="MemberchangedGSingle"></Table>
+                <Page class="marginT_10" :total="Total" show-total style="float: right;" :current="page_num" @on-change="changePage" @on-page-size-change="changePageSize" :show-sizer="false"></Page>
             </div>
             <!-- <div slot="footer">
                 <Button type="error" size="large" long :loading="modal_loading" @click="submitMemberG">确定</Button>
@@ -32,28 +32,29 @@
 <script>
 import Vue from 'vue'
 import axios from 'axios'
-import {timestampToFormatTimeS,removeSame} from '../../../../util/utils'
+import {timestampToFormatTimeS} from '../../../../util/utils'
 export default {
-  props:['type','FundsBasic'],
+  props:['type','FundsBasic','FundsU','FundsI','choosedMemberList'],
   data() {
   return {
+    ifLoading:false,
     ifChooseMember:false,
     modal_loading:false,
     Total:0,
     page_num:1,  //页数
     number:10,   //每页条数
-    choosedMemberG:[],
+    //choosedMemberList:[],
     columnsS: [
         {
             type: 'selection',
             width: 60,
             align: 'center'
         },
-        // {
-        //     type: 'index',
-        //     width: 60,
-        //     align: 'center'
-        // },
+        {
+            type: 'index',
+            width: 60,
+            align: 'center'
+        },
         {
             title: '姓名',
             key: 'name',
@@ -64,6 +65,7 @@ export default {
         },
         {
             title: '状态',
+            width: 80,
             key: 'status',
             render: (h, params) => {
                             return h('span',{
@@ -79,7 +81,7 @@ export default {
         },
         {
             title: '户口性质',
-            key: 'registered_residenceTxt'
+            key: 'registered_residenceTxt',
         },
         // {
         //   title: 'Action',
@@ -110,6 +112,11 @@ export default {
             align: 'center'
         },
         {
+            type: 'index',
+            width: 60,
+            align: 'center'
+        },
+        {
             title: '姓名',
             key: 'name',
         },
@@ -119,6 +126,7 @@ export default {
         },
         {
             title: '状态',
+            width: 80,
             key: 'status',
             render: (h, params) => {
                             return h('span',{
@@ -144,10 +152,10 @@ export default {
             title: '个人比例',
             key: 'perI'
         },
-        {
-            title: '入职时间',
-            key: 'entry_time'
-        },
+        // {
+        //     title: '入职时间',
+        //     key: 'entry_time'
+        // },
         // {
         //   title: 'Action',
         //   key: 'action',
@@ -242,17 +250,18 @@ export default {
       this.getDataMember()
     },
     MemberchangedS(selection){
-      this.$emit('MemberAmountSChange',selection)
-      //console.log(selection)  //所有选择的人员信息list   @on-select 单个改变状态触发
+      this.choosedMemberList[this.page_num] = selection
+      this.$emit('MemberAmountSChange',this.choosedMemberList)
     },
     MemberchangedG(selection){
-      this.$emit('MemberAmountGChange',selection)//所有选择的人员信息list   @on-select 单个改变状态触发
-      if(selection[selection.length-1]){
-        this.choosedMemberG = this.choosedMemberG.concat(selection[selection.length-1])
-      }
+      this.choosedMemberList[this.page_num] = selection
+      this.$emit('MemberAmountGChange',this.choosedMemberList)
+      
+      //this.choosedMemberG = ifHasObj(this.choosedMemberG,selection.pop(),'id_number')
       //this.choosedMemberG = removeSame(this.choosedMemberG)
-      console.log(this.choosedMemberG.length)
-      console.log((removeSame(this.choosedMemberG)))
+      
+    },
+    MemberchangedGSingle(selection,row){
     },
     //提交社保人员名单
     submitMemberS(){
@@ -276,11 +285,16 @@ export default {
           temp.map((Item,Idx)=>{
             Item.entry_time = timestampToFormatTimeS(Item.entry_time.time)
             Item.basicG = this.FundsBasic
-            this.choosedMemberG.map((item,idx)=>{
-              if(Item.id_number == item.id_number){
-                Item._checked = true
-              }
-            })
+            Item.perU = this.FundsU
+            Item.perI = this.FundsU
+            if(this.choosedMemberList[this.page_num]){
+              this.choosedMemberList[this.page_num].map((item,idx)=>{
+                if(Item.id_number == item.id_number){
+                  Item._checked = true
+                }
+              })
+            }
+            
             switch(Item.registered_residence){
               case '0':
               Item.registered_residenceTxt = '本地城镇'

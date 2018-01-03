@@ -20,14 +20,14 @@
               <Row>
                 <Col class="marginT_10" span="12" v-for="(NewsKind,NewsKindIdx) in Infor.contents.newsList">
                  <!--  <Card style="width:350px"> -->
-                 <Card style="width:auto">
+                 <Card style="width:auto" dis-hover>
                     <p slot="title">
                         <Icon type="ios-film-outline"></Icon>
                         {{NewsKind.kind}}
                     </p>
-                    <a href="#" slot="extra" @click.prevent="changeLimit">
-                        <Icon type="ios-loop-strong"></Icon>
-                        更多
+                    <a href="#" slot="extra" @click.prevent="LoadMore(NewsKindIdx+1)">
+                        更多 <Icon type="chevron-right"></Icon><Icon type="chevron-right"></Icon>
+                        
                     </a>
                     <ul>
                         <li v-for="(Article,ArticleIdx) in NewsKind.articles">
@@ -53,6 +53,7 @@ export default {
   }
   },
   created() {
+
   },
   mounted: function(){
     
@@ -65,6 +66,23 @@ export default {
   watch:{
   },
   methods: {
+    LoadMore(Menu){
+      this.$router.push({name:'社保资讯'})
+      this.$store.state.newsKind = Menu.toString()
+    },
+    //获取对应页数新闻
+    getNewsData(s_type,page_num){
+      axios.get(R_PRE_URL+'/searchArticleList.do?s_type='+s_type+'&page_num=1'
+      ).then((res)=> { 
+        this.Total = res.data.article_count
+        res.data.arr.map(function(item,idx){
+          item.sub_time.time = timestampToFormatTime(item.sub_time.time)
+        })
+        this.newsListInfo = res.data.arr
+      }).catch((error)=> {
+        console.log(error)
+      })
+     },
   }
 };
 </script>

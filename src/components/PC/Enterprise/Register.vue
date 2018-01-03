@@ -51,6 +51,9 @@
       <!-- 新增员工 -->
       <AddMember v-on:refreshData="getDataMember" :writeType="writeType" :memberInfo="memberInfo"></AddMember>
 
+      <!-- 导入 -->
+      <ReadExcel></ReadExcel>
+
       <!-- 离职 -->
       <DisMission v-on:refreshData="getDataMember" :memberInfo="memberInfo"></DisMission>
 
@@ -113,6 +116,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import AddMember from './MemberOperation/AddMember.vue'
+import ReadExcel from './MemberOperation/ReadExcel.vue'
 import AddOrMin from './MemberOperation/AddOrMin.vue'
 import DisMission from './MemberOperation/DisMission.vue'
 import {timestampToFormatTimeS} from '../../../util/utils'
@@ -373,6 +377,7 @@ export default {
   },
   components: {
     AddMember,
+    ReadExcel,
     AddOrMin,
     DisMission
   },
@@ -408,6 +413,7 @@ export default {
         this.$store.state.toAddMember = true
         break;
         case '导入':
+        this.$store.state.ifReadExcel = true
         break;
         case '离职':
         if(this.selectArray.length<=0){

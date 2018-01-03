@@ -24,12 +24,18 @@
     <h3 class="marginT_20">订单费用详情</h3>
     <div class="sumBlock marginT_10">
       <div>
-        <p>代收社保费用小计：<span>{{(total_securityI + total_securityU)*MemberAmountS*buyMonthList.length}} 元（ {{total_securityI + total_securityU}}元/月[{{MemberAmountS}}人] × {{buyMonthList.length}}月</span></p>
-        <p>代收公积金费用小计：<span>{{306*MemberAmountG*buyMonthList.length}} 元（ 306元/月 [{{MemberAmountG}}人] × {{buyMonthList.length}}月 ）</span></p>
-        <p>其他费用小计：<span>{{material_fee*MemberAmountS}}元（材料费:{{material_fee}}元/人 x {{MemberAmountS + MemberAmountG}}人）</span></p>
-        <p>代理缴纳费用小计：<span> {{service_fee*(MemberAmountG+MemberAmountS)*buyMonthList.length}}元（（{{service_fee}}元/月×{{buyMonthList.length}}月×{{MemberAmountS + MemberAmountG}}人次）</span></p>
+        <p>代收社保费用小计：<span>{{(total_securityI + total_securityU)*MemberAmountS*buyMonthList.length}} 元（ {{total_securityI + total_securityU}}元/月 × {{MemberAmountS}}人次 × {{buyMonthList.length}}月</span></p>
+        <p>代收公积金费用小计：<span>{{FundsBasic*MemberAmountG*buyMonthList.length}} 元（ 306元/月 × {{MemberAmountG}}人次 × {{buyMonthList.length}}月 ）</span></p>
+        <p>其他费用小计：<span>{{material_fee*MemberAmountS}}元（材料费:{{material_fee}}元/人 x {{MemberAmountS}}人）</span></p>
+        <p>代理缴纳费用小计：<span> {{service_fee*(MemberAmountG+MemberAmountS)*buyMonthList.length}}元（（双买：{{service_fee*IntersectList.length*buyMonthList.length}} 元（{{service_fee}}元/月 × {{buyMonthList.length}} 月 × {{IntersectList.length}} 人次） + 社保单买：{{service_fee*(MemberAmountS - IntersectList.length)}} 元（{{service_fee}}元/月 × {{buyMonthList.length}} 月 × {{MemberAmountS - IntersectList.length}} 人次）+ 公积金单买：{{service_fee*(MemberAmountG - IntersectList.length)*buyMonthList.length}} 元（{{service_fee}}元/月 × {{buyMonthList.length}} 月 × {{MemberAmountG - IntersectList.length}} 人次））</span></p>
+        <!-- <p>代理缴纳费用小计：<span> {{service_fee*(MemberAmountG+MemberAmountS)*buyMonthList.length}}元（（双买：{{service_fee}}元/月×{{buyMonthList.length}}月×{{IntersectList.length}}人次
+        {{service_fee}}元/月×{{buyMonthList.length}}月×{{MemberAmountS + MemberAmountG}}人次）</span></p> -->
         <!-- <p>代理缴纳费用小计：<span> 39.8元（双买：39.8元（39.8元/月×1月×{{MemberAmountS + MemberAmountG}}人次）</span></p> -->
-        <p>合计：<span class="colorRed" style="font-size: 18px; font-weight: bold;">¥ 2095.6</span></p>
+        <p>合计：
+          <span class="colorRed" style="font-size: 18px; font-weight: bold;">
+            ¥{{((total_securityI + total_securityU)*MemberAmountS*buyMonthList.length)+(FundsBasic*MemberAmountG*buyMonthList.length)+(material_fee*MemberAmountS)+(service_fee*(MemberAmountG+MemberAmountS)*buyMonthList.length)}}
+          </span>
+        </p>
          
       </div>
       
@@ -42,7 +48,7 @@
 
     <Button type="error" class="marginT_20" @click="toSubmitOrder">立即购买</Button>
 
-    <ChoosePayMember v-if="ifShowModal" :type="type"  :FundsBasic='FundsBasic' v-on:changeVisible="changeVisible" v-on:MemberAmountSChange="MemberAmountSChange" v-on:MemberAmountGChange="MemberAmountGChange"></ChoosePayMember>
+    <ChoosePayMember v-if="ifShowModal" :type="type"  :FundsBasic='FundsBasic' :FundsU='FundsU' :FundsI='FundsI' :choosedMemberList='type==0?MemberListS:MemberListG' v-on:changeVisible="changeVisible" v-on:MemberAmountSChange="MemberAmountSChange" v-on:MemberAmountGChange="MemberAmountGChange"></ChoosePayMember>
     
 
     
@@ -53,7 +59,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import ChoosePayMember from "./ChoosePayMember.vue"
-import {getOneYearMonth,removeByValue,Intersect} from "../../../../util/utils"
+import {getOneYearMonth,Intersect} from "../../../../util/utils"
 export default {
   data() {
   return {
@@ -62,8 +68,11 @@ export default {
     City:'', //公司参保城市
     MemberAmountS:0,//社保参保人数
     MemberListS:[], //社保参保人员信息
+    MemberListSTemp:[],
     MemberAmountG:0,//公积金参保人数
     MemberListG:[], //公积金参保人员信息
+    MemberListGTemp:[],
+    IntersectList:[],//社保公积金双交的人员信息
     AmountArray:[0,0,0,0], //社保参保人数分类数组
     type:0,  //0社保 1公积金
     NAME:'',
@@ -76,7 +85,7 @@ export default {
     FundsAccount:'',  //公积金代缴基数
     total_securityI:'',     //每人社保个人总计
     total_securityU:'',     //每人社保公司总计
-    FundsBasic:'',
+    FundsBasic:306,
     FundsU:'',
     FundsI:'',
     buyMonthList:[],
@@ -148,6 +157,7 @@ export default {
         this.FundsI = InsuranceDetail.providentinductrial
         this.total_securityU = InsuranceDetail.company_total
         this.total_securityI = InsuranceDetail.person_total
+        this.securityID = InsuranceDetail.id
 
         this.dataOrder = [
 
@@ -222,62 +232,62 @@ export default {
     },
     //提交订单
     toSubmitOrder(){
-      if(!this.ifFundsChoosed && !this.ifSecurityChoosed){
-        this.$Message.error('请选择代缴种类！')
+      let monthListStr=''
+      if(this.MemberAmountS == 0 && this.MemberAmountG == 0){
+        this.$Message.error('请选择参保员工！')
         return
       }
-      let Amount =0
-      let monthListStr=''
+      if(this.buyMonthList.length<=0){
+        this.$Message.error('请选择参保月份！')
+        return
+      }
       this.buyMonthList.map(function(item,idx){
         monthListStr = monthListStr + item.replace("-","") +'-'
       })
-      let Pay_type = this.ifFundsChoosed && this.ifSecurityChoosed ?'0':this.ifFundsChoosed?'2':'1'
-      switch(Pay_type){
-        case '0':
-        Amount = ((this.total_securityI+this.total_securityU+this.FundsBasic*(this.FundsI+this.FundsU)+this.service_fee)*this.buyMonthList.length+this.material_fee).toFixed(2)
-        break;
-        case '1':
-        Amount = ((this.total_securityI+this.total_securityU+this.service_fee)*this.buyMonthList.length+this.material_fee).toFixed(2)
-        break;
-        case '2':
-        Amount = ((this.service_fee)*this.buyMonthList.length+this.material_fee).toFixed(2)
-        break;
-      }
-      let monthObjList =[]
-      this.buyMonthList.map(function(item,idx){
-        let obj = {'pay_month':item.replace("-","")}
-        monthObjList.push(obj)
-      })
+      let Pay_type = this.MemberAmountS!=0 && this.MemberAmountG!=0 ?'0':this.MemberAmountG!=0?'2':'1'
 
-      let orderInfo = {
-        'order_name':'代缴'+ this.INSURED_AREA + monthListStr + (Pay_type==0?'社保公积金':Pay_type==1?'社保':'公积金'),
-        'amount':Amount,
-        'pay_time':new Date(),
-        'service_charge':this.service_fee,
-        'member_id':this.$store.state.userInfo.member_id,
-        'insurance_detail_id':this.securityID,
-        'city':this.INSURED_AREA,
-        'order_month':'',//monthListStr
-        'pay_type':Pay_type,
-        'sbEntryList':monthObjList,
-        'gjjEntryList':monthObjList
-      }
-      console.log(orderInfo)
+      console.log('社保--')
+      console.log(this.MemberListS)
+      console.log('公积金--')
+      console.log(this.MemberListG)
+      
+      
+      
+      // let monthObjList =[]
+      // this.buyMonthList.map(function(item,idx){
+      //   let obj = {'pay_month':item.replace("-","")}
+      //   monthObjList.push(obj)
+      // })
 
-      axios.post(R_PRE_URL+'/insertOrder.do',orderInfo
-      ).then((res)=> {
-        switch(res.data.result){
-          case '2':
-          this.$Message.success('下单成功!')
-          break;
-          case '0':
-          this.$Message.error(res.data.message+':'+res.data.detail)
-          break;
-        }
-        console.log(res)
-      }).catch((error)=> {
-        console.log(error)
-      })
+      // let orderInfo = {
+      //   'order_name':'代缴'+ this.INSURED_AREA + monthListStr + (Pay_type==0?'社保公积金':Pay_type==1?'社保':'公积金'),
+      //'amount':this.service_fee*(this.MemberAmountG+this.MemberAmountS)*this.buyMonthList.length,
+      //   'pay_time':new Date(),
+      //   'service_charge':this.service_fee,
+      //   'member_id':this.$store.state.userInfo.member_id,
+      //   'insurance_detail_id':this.securityID,
+      //   'city':this.INSURED_AREA,
+      //   'order_month':'',//monthListStr
+      //   'pay_type':Pay_type,
+      //   'sbEntryList':monthObjList,
+      //   'gjjEntryList':monthObjList
+      // }
+      // console.log(orderInfo)
+
+      // axios.post(R_PRE_URL+'/insertOrder.do',orderInfo
+      // ).then((res)=> {
+      //   switch(res.data.result){
+      //     case '2':
+      //     this.$Message.success('下单成功!')
+      //     break;
+      //     case '0':
+      //     this.$Message.error(res.data.message+':'+res.data.detail)
+      //     break;
+      //   }
+      //   console.log(res)
+      // }).catch((error)=> {
+      //   console.log(error)
+      // })
       
 
     },
@@ -294,26 +304,33 @@ export default {
     changeVisible(Info){
       this.ifShowModal = Info
     },
-    MemberAmountSChange(selection){
+    MemberAmountSChange(selectionList){
       this.AmountArray = [0,0,0,0]
-      this.MemberListS = selection
-      this.MemberAmountS = selection.length
-      selection.map((item,idx)=>{
-        switch(item.registered_residence){
-          case '0':
-          this.AmountArray[0]+=1
-          break
-          case '1':
-          this.AmountArray[1]+=1
-          break
-          case '2':
-          this.AmountArray[2]+=1
-          break
-          case '3':
-          this.AmountArray[3]+=1
-          break
-        }
+      this.MemberListS = selectionList
+      let MemberListSTemp = []
+      let accountTemp =0
+      selectionList.map((itemArray,idxArray)=>{
+        accountTemp+=itemArray.length
+        itemArray.map((item,idx)=>{
+          MemberListSTemp.push(item.id)
+          switch(item.registered_residence){
+            case '0':
+            this.AmountArray[0]+=1
+            break
+            case '1':
+            this.AmountArray[1]+=1
+            break
+            case '2':
+            this.AmountArray[2]+=1
+            break
+            case '3':
+            this.AmountArray[3]+=1
+            break
+          }
+        })
       })
+
+      this.MemberAmountS = accountTemp
       this.dataOrder[0].amount = this.AmountArray[0]
       this.dataOrder[1].amount = this.AmountArray[1]
       this.dataOrder[2].amount = this.AmountArray[2]
@@ -321,12 +338,22 @@ export default {
       this.dataOrder[4].priceU = this.total_securityU*this.MemberAmountS
       this.dataOrder[4].priceI = this.total_securityI*this.MemberAmountS
       this.dataOrder[4].amount = (this.total_securityU + this.total_securityI)*this.MemberAmountS
-      //console.log(this.AmountArray)
+      this.MemberListSTemp = MemberListSTemp
+      this.IntersectList = Intersect(this.MemberListSTemp,this.MemberListGTemp)
     },
-    MemberAmountGChange(selection){
-      this.MemberListG = selection
-      this.MemberAmountG = selection.length
-      //console.log(Intersect(this.MemberListS,this.MemberListG))
+    MemberAmountGChange(selectionList){
+      this.MemberListG = selectionList
+      let MemberListGTemp = []
+      let accountTemp =0
+      selectionList.map((itemArray,idxArray)=>{
+        accountTemp+=itemArray.length
+        itemArray.map((item,idx)=>{
+          MemberListGTemp.push(item.id)
+        })
+      })
+      this.MemberAmountG = accountTemp
+      this.MemberListGTemp = MemberListGTemp
+      this.IntersectList = Intersect(this.MemberListSTemp,this.MemberListGTemp)
     }
 
    

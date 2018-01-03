@@ -21,7 +21,7 @@
                   </MenuItem>
                   <MenuItem name="4">
                       <Icon type="chatbubbles"></Icon>
-                      社保资讯
+                      社保快讯
                   </MenuItem>
               </MenuGroup>
           </Menu>
@@ -29,11 +29,11 @@
         <Col span="20">
           <Card :bordered="false" dis-hover style="width: 100%">
               <p slot="title">
-                  {{newsKind==1?'社保知识':(newsKind==2?'案例分析':(newsKind==3?'常见问题':'社保资讯'))}}
+                  {{newsKind==1?'社保知识':(newsKind==2?'案例分析':(newsKind==3?'常见问题':'社保快讯'))}}
               </p>
               <ul v-if="newsListInfo.length>0">
-                  <li v-for="(News,NewsIdx) in newsListInfo" style="margin-top: 10px;">
-                      <p @click='newsDetail(News.id)'>{{ News.s_title }}</p>
+                  <li v-for="(News,NewsIdx) in newsListInfo" @click='newsDetail(News.id)' style="margin-top: 10px;cursor: pointer;">
+                      <span >{{ News.s_title }}</span>
                       <span style="float: right;">
                           {{ News.sub_time.time }}
                       </span>
@@ -43,7 +43,7 @@
                 <Icon type="social-tux" :size="36"></Icon> 暂无数据
               </div>
           </Card>
-          <Page class="marginT_20" :total="Total" show-total style="float: right;" :current="newsPage" @on-change="changePage" v-if="newsListInfo.length>0"></Page>
+          <Page class="marginT_20" :total="Total" show-total style="float: right;" :current="newsPage"  @on-change="changePage" @on-page-size-change="" v-if="newsListInfo.length>0"></Page>
         </Col>
       </Row>
     </div>
@@ -101,6 +101,10 @@ export default {
     },
     changePage(event){//当前页数
       this.$store.state.newsPage = event
+      this.getNewsData(this.$store.state.newsKind,event)
+    },
+    changePageSize(event){
+      this.number = event
       this.getNewsData(this.$store.state.newsKind,event)
     },
     //获取对应页数新闻
