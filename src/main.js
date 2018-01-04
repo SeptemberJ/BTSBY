@@ -6,6 +6,7 @@ import store from './store/store'
 import VueResource from 'vue-resource'
 import VueDND from 'awe-dnd'
 import 'babel-polyfill'
+import XLSX from 'xlsx'
 import iView from 'iview';
 import '../my-theme/dist/iview.css';
 
@@ -17,7 +18,7 @@ Vue.use(VueDND)
 Vue.use(VueResource)
 Vue.use(Vuex)
 Vue.use(iView)
-
+Vue.use(XLSX)
 //开启debug模式
 Vue.config.debug = true
 window.log = console.log
@@ -55,7 +56,7 @@ Vue.http.options.emulateJSON = true;
 // });
 
 global.PRE_URL = ''
-global.R_PRE_URL = 'http://192.168.10.123:8080/sby'
+global.R_PRE_URL = 'http://192.168.10.123:8082'
 
  global.API_PROXY = 'https://bird.ioliu.cn/v1/?url='                    // 线上代理地址
  global.LOCAL_API_PROXY = 'http://192.168.10.18/proxy.php?apiProxy='    // 本地代理地址，注意更改为你的主机ip

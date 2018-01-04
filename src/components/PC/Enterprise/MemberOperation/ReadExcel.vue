@@ -1,3 +1,4 @@
+
 <template>
 <Modal v-model="ifReadExcel" :mask-closable="false">
         <p slot="header" style="text-align:left">
@@ -10,6 +11,8 @@
             >
                 <Button type="ghost" icon="ios-cloud-upload-outline">Upload files</Button>
             </Upload>
+            <!-- <input id="upfile" type="file" name="file">
+            <button @click="read">读取</button> -->
             
         </div>
         <div slot="footer">
@@ -22,7 +25,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import {ReadExcel} from '../../../../util/utils'
-
+import XLSX from 'xlsx'
 
 export default {
   props:[],
@@ -60,12 +63,16 @@ export default {
   methods: {
     handleBeforeUpload(event){
         var file = event
+        
         var reader = new FileReader() 
       reader.readAsDataURL(file)   
       reader.onload = function(e){
         console.log(e)
       }
 
+    },
+    read(){
+      ReadExcel()
     }
    
   },

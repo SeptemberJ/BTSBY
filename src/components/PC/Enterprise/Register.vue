@@ -14,7 +14,7 @@
                 </Button>
                 <DropdownMenu slot="list">
                     <DropdownItem name="新增入职" >新增入职</DropdownItem>
-                    <DropdownItem name="导入">导入</DropdownItem>
+                    <!-- <DropdownItem name="导入">导入</DropdownItem> -->
                     <DropdownItem name="离职" divided>离职</DropdownItem>
                     <DropdownItem name="增减员">增减员</DropdownItem>
                 </DropdownMenu>

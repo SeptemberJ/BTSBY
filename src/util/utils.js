@@ -1,8 +1,30 @@
+//连续月份
+export function ReadExcel() {
+var arr = ['2016-9', '2016-10', '2016-11', '2016-12', '2017-1', '2017-2'];
+var tmpday = null;
+//是否连续的标志
+var lianxu = true;
+for(var i=arr.length-1; i>=0; i--){
+  var dateStr = arr[i].split('-');
+  var date = new Date(parseInt(dateStr[0]), parseInt(dateStr[1], 10) - 1, 1, 0, 0, 0);
+  if(tmpday == null) {
+    tmpday = date;
+  }else {
+    tmpday.setMonth(tmpday.getMonth() - 1);//比较是否相差一个月
+    if(date.getTime() != tmpday.getTime()) {
+    //月份没有连续
+    lianxu = false;
+    break;
+    }
+  }
+}
+}
 //导入excel
 export function ReadExcel() {
       var tempStr = "";  
       //得到文件路径的值  
-      var filePath = document.getElementById("upfile").value;  
+      var filePath = document.getElementById("upfile").value;
+      console.log(filePath)  
       //创建操作EXCEL应用程序的实例  
       var oXL = new ActiveXObject("Excel.application");  
       //打开指定路径的excel文件  

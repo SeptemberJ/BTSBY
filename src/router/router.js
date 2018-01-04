@@ -3,6 +3,9 @@ import VueRouter from 'vue-router'
 import Store from '../store/store'
 import App from '../app'
 import Index from '../page/Index/Index'
+
+import test from '../page/test'
+
 import Login from '../page/PC/Common/Login'
 import SignI from '../page/PC/Individual/Sign'
 import SignE from '../page/PC/Enterprise/Sign'
@@ -50,6 +53,7 @@ const routes = [
     component: App,
     children: [
     {path: '/Index', name: '首页', component: Index},
+    {path: '/test', name: 'test', component: test},
     {path: '/Login', name: '登录', component: Login},
     {path: '/SignI/', name: '个人注册', component: SignI},
     {path: '/SignE/', name: '企业注册', component: SignE},

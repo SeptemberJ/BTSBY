@@ -2,7 +2,7 @@
   <div id="TopayE">
     <!-- top -->
     <h2>参保资料</h2>
-    <p class="securityInfo">参保城市:{{City}}  <a href="http://sbyun.com/SicOrderMain.mc?method=exportAreaMeal&areaId=10&areaName=%E4%B8%8A%E6%B5%B7" class="marginL_20"><Icon type="ios-download"></Icon>下载上海社保缴费明细</a></p>
+    <p class="securityInfo">参保城市:{{City}}<a href="http://sbyun.com/SicOrderMain.mc?method=exportAreaMeal&areaId=10&areaName=%E4%B8%8A%E6%B5%B7" class="marginL_20"><Icon type="ios-download"></Icon>下载上海社保缴费明细</a></p>
 
     <Table :columns="columnsHead" :loading="ifLoading" :data="dataOrder"></Table>
     
@@ -25,7 +25,7 @@
     <div class="sumBlock marginT_10">
       <div>
         <p>代收社保费用小计：<span>{{(total_securityI + total_securityU)*MemberAmountS*buyMonthList.length}} 元（ {{total_securityI + total_securityU}}元/月 × {{MemberAmountS}}人次 × {{buyMonthList.length}}月</span></p>
-        <p>代收公积金费用小计：<span>{{FundsBasic*MemberAmountG*buyMonthList.length}} 元（ 306元/月 × {{MemberAmountG}}人次 × {{buyMonthList.length}}月 ）</span></p>
+        <p>代收公积金费用小计：<span>{{FundsBasic*MemberAmountG*buyMonthList.length}} 元（ {{FundsBasic}}元/月 × {{MemberAmountG}}人次 × {{buyMonthList.length}}月 ）</span></p>
         <p>其他费用小计：<span>{{material_fee*MemberAmountS}}元（材料费:{{material_fee}}元/人 x {{MemberAmountS}}人）</span></p>
         <p>代理缴纳费用小计：<span> {{service_fee*(MemberAmountG+MemberAmountS)*buyMonthList.length}}元（（双买：{{service_fee*IntersectList.length*buyMonthList.length}} 元（{{service_fee}}元/月 × {{buyMonthList.length}} 月 × {{IntersectList.length}} 人次） + 社保单买：{{service_fee*(MemberAmountS - IntersectList.length)}} 元（{{service_fee}}元/月 × {{buyMonthList.length}} 月 × {{MemberAmountS - IntersectList.length}} 人次）+ 公积金单买：{{service_fee*(MemberAmountG - IntersectList.length)*buyMonthList.length}} 元（{{service_fee}}元/月 × {{buyMonthList.length}} 月 × {{MemberAmountG - IntersectList.length}} 人次））</span></p>
         <!-- <p>代理缴纳费用小计：<span> {{service_fee*(MemberAmountG+MemberAmountS)*buyMonthList.length}}元（（双买：{{service_fee}}元/月×{{buyMonthList.length}}月×{{IntersectList.length}}人次
@@ -66,6 +66,7 @@ export default {
     ifShowModal:false,
     ifLoading: false,
     City:'', //公司参保城市
+    City_code:'', //公司参保城市代码
     MemberAmountS:0,//社保参保人数
     MemberListS:[], //社保参保人员信息
     MemberListSTemp:[],
@@ -85,7 +86,7 @@ export default {
     FundsAccount:'',  //公积金代缴基数
     total_securityI:'',     //每人社保个人总计
     total_securityU:'',     //每人社保公司总计
-    FundsBasic:306,
+    FundsBasic:'',
     FundsU:'',
     FundsI:'',
     buyMonthList:[],
@@ -119,40 +120,11 @@ export default {
     axios.get(R_PRE_URL+'/searchCompanyDetail.do?member_id='+this.$store.state.userInfo.member_id
     ).then((res)=> {
       this.City = res.data.companyDetail.fcity 
-    }).catch((error)=> {
-      console.log(error)
-    })
-    // axios.get(R_PRE_URL+'/searchMemberDetail.do?member_id='+this.$store.state.userInfo.member_id
-    // ).then((res)=> { 
-    //   let MemberDetail = res.data.memberDetail
-    //   if(!MemberDetail){
-    //     this.$Message.error('请先填写参保资料!')
-    //     console.log(this)
-    //     return false
-    //   }else{
-    //   let CityCode = MemberDetail.city
-    //   this.NAME = MemberDetail.real_name || ''
-    //   this.INSURED_AREA = MemberDetail.city_name|| ''
-    //   switch(MemberDetail.type){
-    //     case '0':
-    //     this.RESIDENCE = '本地城镇（五险）'
-    //     break;
-    //     case '1':
-    //     this.RESIDENCE = '外地城镇（五险）'
-    //     break;
-    //     case '2':
-    //     this.RESIDENCE = '外地城市（五险）'
-    //     break;
-    //     case '3':
-    //     this.RESIDENCE = '外地农村（五险）'
-    //     break;
-    //     default:
-    //     this.RESIDENCE = ''
-    //   }
-      axios.get(R_PRE_URL+'/searchInsurance.do?city=1'
+      this.City_code = res.data.companyDetail.city_code
+      axios.get(R_PRE_URL+'/searchInsurance.do?city='+res.data.companyDetail.city_code
       ).then((RES)=> {
         let InsuranceDetail = RES.data.insuranceDetail
-        this.FundsBasic = Number(InsuranceDetail.providen_base).toFixed(2)
+        this.FundsBasic = InsuranceDetail.providen_base//Number(InsuranceDetail.providen_base).toFixed(2)
         this.FundsU = InsuranceDetail.providentunit
         this.FundsI = InsuranceDetail.providentinductrial
         this.total_securityU = InsuranceDetail.company_total
@@ -201,6 +173,37 @@ export default {
       }).catch((error)=> {
         console.log(error)
       })
+    }).catch((error)=> {
+      console.log(error)
+    })
+    // axios.get(R_PRE_URL+'/searchMemberDetail.do?member_id='+this.$store.state.userInfo.member_id
+    // ).then((res)=> { 
+    //   let MemberDetail = res.data.memberDetail
+    //   if(!MemberDetail){
+    //     this.$Message.error('请先填写参保资料!')
+    //     console.log(this)
+    //     return false
+    //   }else{
+    //   let CityCode = MemberDetail.city
+    //   this.NAME = MemberDetail.real_name || ''
+    //   this.INSURED_AREA = MemberDetail.city_name|| ''
+    //   switch(MemberDetail.type){
+    //     case '0':
+    //     this.RESIDENCE = '本地城镇（五险）'
+    //     break;
+    //     case '1':
+    //     this.RESIDENCE = '外地城镇（五险）'
+    //     break;
+    //     case '2':
+    //     this.RESIDENCE = '外地城市（五险）'
+    //     break;
+    //     case '3':
+    //     this.RESIDENCE = '外地农村（五险）'
+    //     break;
+    //     default:
+    //     this.RESIDENCE = ''
+    //   }
+      
     
    },
   mounted: function(){
@@ -220,15 +223,16 @@ export default {
   },
   methods: {
     //选择月份获取服务费用、其他费用
-    changeBuyMonth(){
-      axios.get(R_PRE_URL+'/searchSbyFee.do?month_count='+this.buyMonthList.length
-      ).then((res)=> { 
-        let FeeInfo = res.data.feeInfo
-        this.service_fee = FeeInfo.service_fee
-        this.material_fee =  FeeInfo.material_fee
-      }).catch((error)=> {
-        console.log(error)
-      })
+    changeBuyMonth(e){
+      console.log(e)
+      // axios.get(R_PRE_URL+'/searchSbyFee.do?month_count='+this.buyMonthList.length
+      // ).then((res)=> { 
+      //   let FeeInfo = res.data.feeInfo
+      //   this.service_fee = FeeInfo.service_fee
+      //   this.material_fee =  FeeInfo.material_fee
+      // }).catch((error)=> {
+      //   console.log(error)
+      // })
     },
     //提交订单
     toSubmitOrder(){
@@ -244,50 +248,64 @@ export default {
       this.buyMonthList.map(function(item,idx){
         monthListStr = monthListStr + item.replace("-","") +'-'
       })
+
       let Pay_type = this.MemberAmountS!=0 && this.MemberAmountG!=0 ?'0':this.MemberAmountG!=0?'2':'1'
 
-      console.log('社保--')
-      console.log(this.MemberListS)
-      console.log('公积金--')
-      console.log(this.MemberListG)
       
-      
-      
-      // let monthObjList =[]
-      // this.buyMonthList.map(function(item,idx){
-      //   let obj = {'pay_month':item.replace("-","")}
-      //   monthObjList.push(obj)
-      // })
+      let monthObjList =[]
+      this.buyMonthList.map(function(item,idx){
+        let obj = {'pay_month':item.replace("-","")}
+        monthObjList.push(obj)
+      })
 
-      // let orderInfo = {
-      //   'order_name':'代缴'+ this.INSURED_AREA + monthListStr + (Pay_type==0?'社保公积金':Pay_type==1?'社保':'公积金'),
-      //'amount':this.service_fee*(this.MemberAmountG+this.MemberAmountS)*this.buyMonthList.length,
-      //   'pay_time':new Date(),
-      //   'service_charge':this.service_fee,
-      //   'member_id':this.$store.state.userInfo.member_id,
-      //   'insurance_detail_id':this.securityID,
-      //   'city':this.INSURED_AREA,
-      //   'order_month':'',//monthListStr
-      //   'pay_type':Pay_type,
-      //   'sbEntryList':monthObjList,
-      //   'gjjEntryList':monthObjList
-      // }
-      // console.log(orderInfo)
+      let sbEmployeeList = []
+      this.MemberListS.map((ItemArray,IdxArray)=>{
+        ItemArray.map((Item,Idx)=>{
+          sbEmployeeList.push({'employee_id':Item.id})
+        })
+      })
 
-      // axios.post(R_PRE_URL+'/insertOrder.do',orderInfo
-      // ).then((res)=> {
-      //   switch(res.data.result){
-      //     case '2':
-      //     this.$Message.success('下单成功!')
-      //     break;
-      //     case '0':
-      //     this.$Message.error(res.data.message+':'+res.data.detail)
-      //     break;
-      //   }
-      //   console.log(res)
-      // }).catch((error)=> {
-      //   console.log(error)
-      // })
+      let gjjEmployeeList = []
+      this.MemberListG.map((ItemArray,IdxArray)=>{
+        ItemArray.map((Item,Idx)=>{
+          gjjEmployeeList.push({'employee_id':Item.id})
+        })
+      })
+
+
+      let orderInfo = {
+        'order_name':'代缴'+ this.City + monthListStr + (Pay_type==0?'社保公积金':Pay_type==1?'社保':'公积金'),
+      'amount':((this.total_securityI + this.total_securityU)*this.MemberAmountS*this.buyMonthList.length)+(this.FundsBasic*this.MemberAmountG*this.buyMonthList.length)+(this.material_fee*this.MemberAmountS)+(this.service_fee*(this.MemberAmountG+this.MemberAmountS)*this.buyMonthList.length),
+        'pay_time':new Date(),
+        'service_charge':this.service_fee*(this.MemberAmountG+this.MemberAmountS)*this.buyMonthList.length,
+        'member_id':this.$store.state.userInfo.member_id,
+        'insurance_detail_id':this.securityID,
+        //'city':this.INSURED_AREA,
+        //'order_month':'',//monthListStr
+        //'pay_type':Pay_type,
+        'sbyMonthList':monthObjList,
+        'sbEmployeeList':sbEmployeeList,
+        'gjjEmployeeList':gjjEmployeeList
+      }
+       console.log(orderInfo)
+
+      axios.post(R_PRE_URL+'/insertCompanyOrder.do',orderInfo
+      ).then((res)=> {
+        switch(res.data.result){
+          case '2':
+          this.$Message.success('下单成功!')
+          break;
+          case '0':
+          this.$Notice.warning({
+              title: res.data.message,
+              desc: '员工：'+res.data.姓名+' <br> '+'重复月份：'+res.data.月份,
+          });
+          break;
+        }
+        console.log(res)
+      }).catch((error)=> {
+        console.log(error)
+      })
       
 
     },
