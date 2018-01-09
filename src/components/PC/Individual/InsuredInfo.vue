@@ -21,7 +21,7 @@
             <Row>
               <Col span="18">
                    <Select v-model="formInsuredInfo.INSURED_AREA" style="width:200px;">
-                      <Option v-for="(City,CityIdx) in cityList"  :value="City.city_name" :key="CityIdx">{{City.city_name}}</Option>
+                      <Option v-for="(City,CityIdx) in cityList"  :value="City.city_code" :key="CityIdx">{{City.city_name}}</Option>
                    </Select>
               </Col>
             </Row>
@@ -226,7 +226,7 @@ export default {
       let MemberDetail = res.data.memberDetail
       this.formInsuredInfo.NAME = MemberDetail.real_name || ''
       this.formInsuredInfo.IDNUMBER = MemberDetail.sfz_no || ''
-      this.formInsuredInfo.INSURED_AREA = MemberDetail.city_name|| ''
+      this.formInsuredInfo.INSURED_AREA = MemberDetail.city|| ''
       this.formInsuredInfo.RESIDENCE = MemberDetail.type || ''
       this.formInsuredInfo.AvatarSource = {  
             sfz_front:MemberDetail.sfz_front || '',

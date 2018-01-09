@@ -57,7 +57,7 @@
               <Col span="12">
                 <span>代缴人数 ：</span>
                 <span class="cursorPointer" @click="seeMember(ModalInfo.MemberS)">社保：<b class="colorBlue">{{ModalInfo.MemberAmountS}}</b> 人</span> 
-                <span class="cursorPointer" @click="seeMember(ModalInfo.MemberSG)">公积金：<b class="colorBlue">{{ModalInfo.MemberAmountG}}</b> 人</span>
+                <span class="cursorPointer" @click="seeMember(ModalInfo.MemberG)">公积金：<b class="colorBlue">{{ModalInfo.MemberAmountG}}</b> 人</span>
               </Col>
           </Row>
           <Row>
@@ -190,12 +190,7 @@ export default {
               key: 'id_number'
           }
     ],
-    dataMember: [
-          {
-              name: '张三',
-              id_number: '320684199912121234',
-          },
-    ],
+    dataMember: [],
     myOrderList: [
             {
                 title: '订单名称',
@@ -293,7 +288,17 @@ export default {
     },
     //查看参保人员详细名单
     seeMember(MemberList){
+      this.dataMember = []
       this.ifShowMember = true
+      MemberList.map((Item,Idx)=>{
+        axios.get(R_PRE_URL+'/searchCompanyEmployee.do?id='+Item.employee_id
+        ).then((res)=> {
+          this.dataMember.push(res.data.employee)
+        }).catch((error)=> {
+          console.log(error)
+        })
+      })
+      
     },
     CloseMember(){
       this.ifShowMember = false

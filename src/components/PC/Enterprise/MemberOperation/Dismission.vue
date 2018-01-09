@@ -36,6 +36,18 @@
                   <Input v-model="formDisMission.disMission_reason" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入该员工的离职原因"></Input>
                 </FormItem>
             </Col>
+            <Col span="24" class="marginB_20" style="border-top: 2px solid #eee;">
+            </Col>
+            <Col span="24">
+              <p class="colorRed">请勾选以下离职需要办理的业务：</p>
+            </Col>
+            <Col span="24" class="marginT_10">
+              <Checkbox v-model="stopS">停缴社保 此员工的所购买的社保将在下个月(2018-02)开始停缴</Checkbox>
+            </Col>
+            <Col span="24" class="marginT_10">
+              <Checkbox v-model="stopG">停缴公积金 此员工的所购买的公积金将在下个月(2018-02)开始停缴</Checkbox>
+            </Col>
+            
             </Form>
         </Row>
         </div>
@@ -45,12 +57,15 @@
 import Vue from 'vue'
 import axios from 'axios'
 import * as Moment from 'moment'
+import qs from 'qs'
 
 export default {
   props:['memberInfo'],
   data() {
   return {
-    TypeList:[{'typecode':0,'typename':'类型一'},{'typecode':1,'typename':'类型二'}],
+    stopS:false,
+    stopG:false,
+    TypeList:[],
     formDisMission:{
       disMission_type:0,
       disMission_time:'',
@@ -64,6 +79,12 @@ export default {
   }
   },
   created(){
+    axios.get(R_PRE_URL+'/searchTypeList.do?typeGroupCode=leave'
+    ).then((res)=> {
+      this.TypeList = res.data.typeList
+     }).catch((error)=> {
+      console.log(error)
+    })
   },
   mounted: function(){
     
@@ -87,14 +108,24 @@ export default {
       this.formDisMission.disMission_time = event
     },
     Dismission() {
-          this.$Message.success('离职操作成功!')
-          let DATA = this.formDisMission
+          let DATA = qs.stringify({
+            leave_type:this.formDisMission.disMission_type,
+            leave_time:this.formDisMission.disMission_time,
+            leave_reason:this.formDisMission.disMission_reason,
+            service:this.stopS && this.stopG?'2':(!this.stopS && !this.stopG?'':(this.stopS?'0':'1')),
+            companyEmployeeid:this.memberInfo.id
+          })
           console.log(DATA)
-          // axios.post(R_PRE_URL+'/insertCompanyEmployee2.do',DATA
-          // ).then((res)=> {
-          //  }).catch((error)=> {
-          //   console.log(error)
-          // })
+          axios.post(R_PRE_URL+'/updateCompanyEmployeeLeaveStatus.do',DATA
+          ).then((res)=> {
+            if(res.data.result=='2'){
+              this.$Message.success('离职操作成功!')
+            }else{
+              this.$Message.error('离职操作失败!')
+            }
+           }).catch((error)=> {
+            console.log(error)
+          })
 
           //this.$emit('refreshData')  //返回刷新
     },

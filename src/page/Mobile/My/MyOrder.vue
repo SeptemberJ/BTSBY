@@ -8,9 +8,11 @@
         <Col span="8" class="TextCenter" v-bind:class="{tab_active:OrderTab_cur==2}"><span @click="ChangeTab(2)">支付失败</span></Col>
       </Row>
 
-      <Row class="ListBlock TextCenter" v-if="MyOrderList.length<=0">
-        <Col span="24"><img src="static/img/NoData.png"></Col>
-        <Col span="24" class="marginT_10">暂无数据</Col>
+
+      <Row class="marginT_40 TextCenter" v-if="MyOrderList.length<=0">
+        <Col span="24" class="TextCenter">
+          <Icon type="social-tux" :size="36"></Icon> 暂无数据
+        </Col>
       </Row>
       <Row class="ListBlock" v-else>
         <Col span="24" v-for="(Order,OrderIdx) in MyOrderList" class="marginT_20">
@@ -45,6 +47,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import BackBar from '../../../components/Mobile/BackBar'
+import BlankBar from '../../../components/Mobile/BlankBar'
 import Spin from '../../../components/PC/Common/Spin'
 import {timestampToFormatTime} from '../../../util/utils'
   export default{
@@ -173,7 +176,7 @@ import {timestampToFormatTime} from '../../../util/utils'
     }
     .ListBlock{
       width: 95%;
-      margin: 10px auto;
+      margin: 40rpx auto 0 auto;
      img{
         width: 80px;
         height: 80px;

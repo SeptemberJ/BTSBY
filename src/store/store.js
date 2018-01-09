@@ -27,7 +27,7 @@ const store = new Vuex.Store({
     ifReadExcel:false,  //是否显示导入Modal框
     ifDisMission:false, //是否显示离职人员Modal框
     toAddMember:false,  //是否显示新增人员Modal框
-    PeripheryTab_cur:0, //手机端tab索引值
+    PeripheryTab_cur:1, //手机端tab索引值
     toast:{
         ifShow:false, //显示
         text:'', //提示文字

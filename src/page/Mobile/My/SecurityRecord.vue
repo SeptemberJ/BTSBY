@@ -20,7 +20,7 @@
         <Col span="8"><b>社保</b></Col>
         <Col span="8"><b>公积金</b></Col>
     </Row>
-    <Row v-for="(Item,Idx) in dataOrder" class="marginT_20 TextCenter item">
+    <Row v-for="(Item,Idx) in dataOrder" class="marginT_10 TextCenter item">
         <Col span="8">{{Item.pay_month}}</Col>
         <Col span="8">{{Item.sb_status}}</Col>
         <Col span="8">{{Item.gjj_status}}</Col>

@@ -10,7 +10,7 @@
           </transition>
         </div>
         <!-- <div class="layout-copy marginT_10"> -->
-            <FooterPart   v-if="!isMobile"></FooterPart>
+        <FooterPart   v-if="!isMobile"></FooterPart>
         <!-- </div> -->
         <FooterPartM v-if="isMobile"></FooterPartM>
     </div>
@@ -36,7 +36,7 @@ import FooterPartM from 'components/Mobile/FooterPartM'
     },
     created: function () {
       this.$Message.config({
-          top: 42,
+          top: 82,
           duration: 1.5
       });
       
@@ -71,9 +71,10 @@ import FooterPartM from 'components/Mobile/FooterPartM'
 </script>
 <style lang="scss">
 .com-app{
+  width: 100%;
+  height: auto;
   .ChildsBlock{
     width: 100%;
-    height: 100%;
   }
 
   .layout{

@@ -19,9 +19,9 @@
                       <Checkbox label="公积金"></Checkbox>
                   </CheckboxGroup>
               </FormItem>
-              <FormItem label="起始月份：" prop="startMonth">
+              <!-- <FormItem label="起始月份：" prop="startMonth">
                   <DatePicker v-model="formAddOrMin.startMonth" type="month" placeholder="" style="width: 200px"></DatePicker>
-              </FormItem>
+              </FormItem> -->
             </Form>
             
         </div>
@@ -34,6 +34,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import * as Moment from 'moment'
+import qs from 'qs'
 
 export default {
   props:['selectArray'],
@@ -82,6 +83,22 @@ export default {
   methods: {
     //提交增减员名单
     submitAddOrMin(){
+      let CompanyEmployeeList = []
+      this.selectArray.map((item,idx)=>{
+        CompanyEmployeeList.push({'companyEmployeeid':item.id})
+      })
+      let DATA = qs.stringify({
+        op:this.formAddOrMin.AddOrMin=='增员'?'ad':'de',
+        service:this.formAddOrMin.business.length==2?'2':(this.formAddOrMin.business[0]=='社保'?'0':'1'),
+        CompanyEmployeeList:JSON.stringify(CompanyEmployeeList)
+      })
+      axios.post(R_PRE_URL+'/updateCompanyEmployeeSbGjjStatus.do',DATA
+      ).then((res)=> {
+       }).catch((error)=> {
+        console.log(error)
+      })
+      console.log(DATA)
+      
       // selectArray_  formAddOrMin
     },
    

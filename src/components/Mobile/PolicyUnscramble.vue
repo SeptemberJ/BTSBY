@@ -11,9 +11,9 @@
         </a>
         <ul>
             <li v-for="item in policyList">
-                <a @click="GoArticleDetail(item.id)" class="ellipsis" style="color: #333;">{{ item.title }}</a>
+                <a @click="GoArticleDetail(item.id)" class="ellipsis" style="color: #333;">{{ item.s_title }}</a>
                 <span style="float: right;">
-                    {{item.date}}
+                    {{item.sub_time.time}}
                 </span>
             </li>
         </ul>
@@ -27,27 +27,26 @@
 import Vue from 'vue'
 import axios from 'axios'
 import BlankBar from './BlankBar'
+import {timestampToFormatTime} from "../../util/utils"
   export default{
     data: function () {
       return {
-        policyList: [
-            {
-                title: '关于深圳重特大疾病补充保险续保通知',
-                date:'2017-09-09',
-                id: 0
-            },
-            {
-                title: '中小微企业经营管理平台和社保云正式上线',
-                date:'2017-09-09',
-                id: 1
-            },
-        ]
+        policyList: []
       }
     },
     mounted: function () {
       
     },
     created() {
+      axios.get(R_PRE_URL+'/searchArticleList.do?s_type=4&page_num=1'
+      ).then((res)=> {
+        res.data.arr.map(function(item,idx){
+          item.sub_time.time = timestampToFormatTime(item.sub_time.time)
+        })
+        this.policyList = res.data.arr
+      }).catch((error)=> {
+        console.log(error)
+      })
       
     },
     computed: {
@@ -63,7 +62,7 @@ import BlankBar from './BlankBar'
     },
     methods: {
         LoadMore(){
-            this.$store.state.PeripheryTab_cur = 3
+            this.$store.state.PeripheryTab_cur = 4
             this.$router.push({name:'社保周边'})
         },
         GoArticleDetail(ID){
@@ -78,7 +77,7 @@ import BlankBar from './BlankBar'
 }
 .ellipsis{
     white-space:nowrap; 
-    width:200px; 
+    width:50%; 
     overflow:hidden; 
     text-overflow:ellipsis;
     display: inline-block;

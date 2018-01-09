@@ -96,6 +96,7 @@ export default {
     tabChange(event){
       //tab的name值
       this.$store.state.newsKind = event
+      this.$store.state.newsPage = 1
       this.getNewsData(event,1)
 
     },
