@@ -1,26 +1,26 @@
 <template>
     <div id="ChooseMember">
           <!-- Modal 社保-->
-          <Modal v-if="type==0" v-model="ifChooseMember" :mask-closable="false"  @on-visible-change="changeVisible" width="800">
+          <Modal v-if="type==0" v-model="ifChooseMember" :mask-closable="false"  @on-visible-change="changeVisible" width="900">
             <p slot="header" style="text-align:left">
                 <span>编辑社保参保名单</span><span class="colorRed tips">注:勾选的人员表示加入参保,如需不参保请取消勾选</span>
             </p>
-            <div style="text-align:left;" class="marginTB_40">
-                <Table border ref="selection" :columns="columnsS" :data="dataS" @on-selection-change="MemberchangedS"></Table>
-                <Page class="marginT_10" :total="Total" show-total style="float: right;" :current="page_num" @on-change="" @on-page-size-change="" show-sizer></Page>
+            <div style="text-align:left;" class="marginB_110">
+                <Table border ref="selection" :loading="ifLoading" :columns="columnsS" :data="dataS" @on-selection-change="MemberchangedS"></Table>
+                <Page class="marginT_10" :total="Total" show-total style="float: right;" :current="page_num" @on-change="changePage" @on-page-size-change="changePageSize" :show-sizer="false"></Page>
             </div>
            <!--  <div slot="footer">
                 <Button type="error" size="large" long :loading="modal_loading" @click="submitMemberS">确定</Button>
             </div> -->
         </Modal>
         <!-- Modal 公积金-->
-          <Modal v-else v-model="ifChooseMember" @on-visible-change="changeVisible" width="800"  :mask-closable="false">
+          <Modal v-else v-model="ifChooseMember" @on-visible-change="changeVisible" width="900"  :mask-closable="false">
             <p slot="header" style="text-align:left">
                 <span>编辑公积金参保名单</span><span class="colorRed tips">注:勾选的人员表示加入参保,如需不参保请取消勾选</span>
             </p>
-            <div style="text-align:center;" class="marginTB_40">
-                <Table border ref="selection" :columns="columnsG" :data="dataG" @on-selection-change="MemberchangedG"></Table>
-                <Page class="marginT_10" :total="Total" show-total style="float: right;" :current="page_num" @on-change="" @on-page-size-change="" show-sizer></Page>
+            <div style="text-align:center;" class="marginB_110">
+                <Table border ref="selection2" :loading="ifLoading" :columns="columnsG" :data="dataG" @on-selection-change="MemberchangedG" @on-select="MemberchangedGSingle"></Table>
+                <Page class="marginT_10" :total="Total" show-total style="float: right;" :current="page_num" @on-change="changePage" @on-page-size-change="changePageSize" :show-sizer="false"></Page>
             </div>
             <!-- <div slot="footer">
                 <Button type="error" size="large" long :loading="modal_loading" @click="submitMemberG">确定</Button>
@@ -32,27 +32,29 @@
 <script>
 import Vue from 'vue'
 import axios from 'axios'
-import {timestampToFormatTime} from '../../../../util/utils'
+import {timestampToFormatTimeS} from '../../../../util/utils'
 export default {
-  props:['type'],
+  props:['type','FundsBasic','FundsU','FundsI','choosedMemberList'],
   data() {
   return {
+    ifLoading:false,
     ifChooseMember:false,
     modal_loading:false,
     Total:0,
     page_num:1,  //页数
     number:10,   //每页条数
+    //choosedMemberList:[],
     columnsS: [
         {
             type: 'selection',
             width: 60,
             align: 'center'
         },
-        // {
-        //     type: 'index',
-        //     width: 60,
-        //     align: 'center'
-        // },
+        {
+            type: 'index',
+            width: 60,
+            align: 'center'
+        },
         {
             title: '姓名',
             key: 'name',
@@ -62,38 +64,55 @@ export default {
             key: 'id_number',
         },
         {
+            title: '状态',
+            width: 80,
+            key: 'status',
+            render: (h, params) => {
+                            return h('span',{
+                                style: {
+                                  //color:params.row.status==0?'#39f':'#FF3174',
+                                },
+                            }, params.row.status=='0'?'在职':'离职')
+                        }
+        },
+        {
             title: '参保城市',
-            key: 'city'
+            key: 'city_name'
         },
         {
             title: '户口性质',
-            key: 'registered_residenceTxt'
+            key: 'registered_residenceTxt',
         },
-        {
-          title: 'Action',
-          key: 'action',
-          width: 100,
-          align: 'center',
-          render: (h, params) => {
-              return h('div', [
-                  h('Button', {
-                      props: {
-                          type: 'error',
-                          size: 'small'
-                      },
-                      on: {
-                          click: () => {
-                              this.remove(params.index)
-                          }
-                      }
-                  }, '修改信息')
-              ]);
-          }
-        }
+        // {
+        //   title: 'Action',
+        //   key: 'action',
+        //   width: 100,
+        //   align: 'center',
+        //   render: (h, params) => {
+        //       return h('div', [
+        //           h('Button', {
+        //               props: {
+        //                   type: 'error',
+        //                   size: 'small'
+        //               },
+        //               on: {
+        //                   click: () => {
+        //                       this.remove(params.index)
+        //                   }
+        //               }
+        //           }, '修改信息')
+        //       ]);
+        //   }
+        // }
     ],
     columnsG: [
         {
             type: 'selection',
+            width: 60,
+            align: 'center'
+        },
+        {
+            type: 'index',
             width: 60,
             align: 'center'
         },
@@ -103,15 +122,23 @@ export default {
         },
         {
             title: '身份证号',
-            key: 'id_card'
+            key: 'id_number'
         },
         {
-            title: '是否在职',
-            key: 'postStatus'
+            title: '状态',
+            width: 80,
+            key: 'status',
+            render: (h, params) => {
+                            return h('span',{
+                                style: {
+                                  //color:params.row.status==0?'#39f':'#FF3174',
+                                },
+                            }, params.row.status=='0'?'在职':'离职')
+                        }
         },
         {
             title: '参保城市',
-            key: 'city'
+            key: 'city_name'
         },
         {
             title: '公积金基数',
@@ -125,54 +152,54 @@ export default {
             title: '个人比例',
             key: 'perI'
         },
-        {
-            title: '入职时间',
-            key: 'time'
-        },
-        {
-          title: 'Action',
-          key: 'action',
-          width: 100,
-          align: 'center',
-          render: (h, params) => {
-              return h('div', [
-                  h('Button', {
-                      props: {
-                          type: 'error',
-                          size: 'small'
-                      },
-                      on: {
-                          click: () => {
-                              this.remove(params.index)
-                          }
-                      }
-                  }, '修改信息')
-              ]);
-          }
-        }
+        // {
+        //     title: '入职时间',
+        //     key: 'entry_time'
+        // },
+        // {
+        //   title: 'Action',
+        //   key: 'action',
+        //   width: 100,
+        //   align: 'center',
+        //   render: (h, params) => {
+        //       return h('div', [
+        //           h('Button', {
+        //               props: {
+        //                   type: 'error',
+        //                   size: 'small'
+        //               },
+        //               on: {
+        //                   click: () => {
+        //                       this.remove(params.index)
+        //                   }
+        //               }
+        //           }, '修改信息')
+        //       ]);
+        //   }
+        // }
     ],
     dataS: [],
     dataG: [
-        {
-            name: '张三',
-            id_card: 320684198212123663,
-            postStatus: '在职',
-            city:'上海',
-            basicG:'1399',
-            perU:'7%',
-            perI:'7%',
-            time: '2016-10-03'
-        },
-        {
-            name: '张三',
-            id_card: 320684198212123663,
-            postStatus: '在职',
-            city:'上海',
-            basicG:'1399',
-            perU:'7%',
-            perI:'7%',
-            time: '2016-10-03'
-        },
+        // {
+        //     name: '张三',
+        //     id_card: 320684198212123663,
+        //     postStatus: '在职',
+        //     city:'上海',
+        //     basicG:'1399',
+        //     perU:'7%',
+        //     perI:'7%',
+        //     time: '2016-10-03'
+        // },
+        // {
+        //     name: '张三',
+        //     id_card: 320684198212123663,
+        //     postStatus: '在职',
+        //     city:'上海',
+        //     basicG:'1399',
+        //     perU:'7%',
+        //     perI:'7%',
+        //     time: '2016-10-03'
+        // },
     ]
 
 
@@ -181,6 +208,7 @@ export default {
   },
   created(){
     this.ifChooseMember = true
+    //this.getDataMemberId()
     this.getDataMember()
     // axios.get(R_PRE_URL+'/searchCityList.do'
     // ).then((res)=> { 
@@ -211,13 +239,30 @@ export default {
   methods: {
     changeVisible(event){
       this.$emit('changeVisible',event)
-        
+    },
+    //分页
+    changePage(event){//当前页数
+      this.page_num = event
+      this.getDataMember()
+    },
+    //切换每页条数
+    changePageSize(event){
+      this.number = event
+      this.getDataMember()
     },
     MemberchangedS(selection){
-      console.log(selection)  //所有选择的人员信息list   @on-select 单个改变状态触发
+      this.choosedMemberList[this.page_num] = selection
+      this.$emit('MemberAmountSChange',this.choosedMemberList)
     },
     MemberchangedG(selection){
-      console.log(selection)  //所有选择的人员信息list   @on-select 单个改变状态触发
+      this.choosedMemberList[this.page_num] = selection
+      this.$emit('MemberAmountGChange',this.choosedMemberList)
+      
+      //this.choosedMemberG = ifHasObj(this.choosedMemberG,selection.pop(),'id_number')
+      //this.choosedMemberG = removeSame(this.choosedMemberG)
+      
+    },
+    MemberchangedGSingle(selection,row){
     },
     //提交社保人员名单
     submitMemberS(){
@@ -227,19 +272,34 @@ export default {
     submitMemberG(){
         // window.open(window.location.origin)
     },
-    getDataMember(){
+    getDataMemberId(){
       this.ifLoading = true
-      let member_id = this.$store.state.userInfo.member_id,
-          number = this.number,
-          page_num = this.page_num,
-          post_name = ''
-          status = 0
-   
-        axios.get(R_PRE_URL+'/searchCompanyEmployeeList.do?member_id='+member_id+'&number='+number+'&page_num='+page_num+'&post_name='+post_name+'&status='+status
-        ).then((res)=> {
-          let temp = res.data.employeeList
-          temp.map((Item,Idx)=>{
-            Item.entry_time = timestampToFormatTime(Item.entry_time.time)
+      axios.post(R_PRE_URL+'/xfSbGjjEmployeeList.do?member_id='+this.$store.state.userInfo.member_id
+      ).then((res)=> {
+        if(this.type == 0){
+          this.Total = res.data.sbEmployeeList.length
+          return res.data.sbEmployeeList
+        }else{
+          this.Total = res.data.gjjEmployeeList.length
+          return res.data.gjjEmployeeList
+        }
+      }).then((MemberIdList)=> {
+        let MemberListArray = []
+        MemberIdList.map((item,idx)=>{
+          axios.get(R_PRE_URL+'/searchCompanyEmployee.do?id='+item.id
+          ).then((res)=> {
+            let Item = res.data.employee
+            Item.entry_time = timestampToFormatTimeS(Item.entry_time.time)
+            Item.basicG = this.FundsBasic
+            Item.perU = this.FundsU
+            Item.perI = this.FundsU
+            if(this.choosedMemberList[this.page_num]){
+              this.choosedMemberList[this.page_num].map((item,idx)=>{
+                if(Item.id_number == item.id_number){
+                  Item._checked = true
+                }
+              })
+            }
             switch(Item.registered_residence){
               case '0':
               Item.registered_residenceTxt = '本地城镇'
@@ -254,27 +314,27 @@ export default {
               Item.registered_residenceTxt = '外地农村'
               break
             }
-             switch(Item.sex){
-              case '0':
-              Item.sexTxt = '男'
-              break
-              case '1':
-              Item.sexTxt = '女'
-              break
-              default:
-              Item.sexTxt = ''
-            }
-            
-            
+            MemberListArray.push(Item)
+          }).catch((error)=> {
+            console.log(error)
           })
-          this.dataS = temp
-          this.Total = res.data.count
-          this.ifLoading = false
-          
-        }).catch((error)=> {
-          console.log(error)
         })
-    
+        return MemberListArray
+      }).then((MemberListArray)=> {
+        if(this.type == 0){
+          this.dataS = MemberListArray
+        }else{
+          this.dataG = MemberListArray
+        }
+        this.ifLoading = false
+      }).catch((error)=> {
+        console.log(error)
+      })
+
+
+    },
+    getDataMember(){
+      this.getDataMemberId()
     }
    
   },

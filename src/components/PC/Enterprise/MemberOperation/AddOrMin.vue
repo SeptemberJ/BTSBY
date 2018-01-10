@@ -87,17 +87,21 @@ export default {
       this.selectArray.map((item,idx)=>{
         CompanyEmployeeList.push({'companyEmployeeid':item.id})
       })
-      let DATA = qs.stringify({
+      var DATA = {
         op:this.formAddOrMin.AddOrMin=='增员'?'ad':'de',
         service:this.formAddOrMin.business.length==2?'2':(this.formAddOrMin.business[0]=='社保'?'0':'1'),
-        CompanyEmployeeList:JSON.stringify(CompanyEmployeeList)
-      })
+        CompanyEmployeeList:CompanyEmployeeList
+      }
       axios.post(R_PRE_URL+'/updateCompanyEmployeeSbGjjStatus.do',DATA
       ).then((res)=> {
+        if(res.data.result=='2'){
+          this.$Message.success('增减员操作成功!')
+        }else{
+          this.$Message.error('增减员操作失败!')
+        }
        }).catch((error)=> {
         console.log(error)
       })
-      console.log(DATA)
       
       // selectArray_  formAddOrMin
     },

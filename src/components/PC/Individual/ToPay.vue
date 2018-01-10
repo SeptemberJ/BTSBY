@@ -57,7 +57,7 @@
         <!-- 社保及公积金 -->
         <div v-if="ifFundsChoosed && ifSecurityChoosed">
           <h3>代收费用小计：<h2 class="colorRed" style="display: inline;">¥{{((total_securityI+total_securityU+FundsBasic*(FundsI+FundsU)+service_fee)*buyMonthList.length+material_fee).toFixed(2)}}</h2></h3>
-          <p>(社保：{{total_securityI+total_securityU}}元/月 + 公积金: {{FundsBasic*(FundsI+FundsU)}}元/月 )× {{buyMonthList.length}}月 + 服务费用：{{service_fee}}元/月/人 x {{buyMonthList.length}}月 + 其他费用：{{material_fee}}元</p>
+          <p>(社保：{{total_securityI+total_securityU}}元/月 + 公积金: {{(FundsBasic*(FundsI+FundsU)).toFixed(2)}}元/月 )× {{buyMonthList.length}}月 + 服务费用：{{service_fee}}元/月/人 x {{buyMonthList.length}}月 + 其他费用：{{material_fee}}元</p>
         </div>
         <!-- 仅社保 -->
         <div v-if="ifSecurityChoosed &&  !ifFundsChoosed">
@@ -66,8 +66,8 @@
         </div>
         <!-- 仅公积金 -->
         <div v-if="!ifSecurityChoosed && ifFundsChoosed">
-          <h3>代收费用小计：<h2 class="colorRed" style="display: inline;">¥{{((FundsBasic*(FundsI+FundsU)+service_fee)*buyMonthList.length+material_fee).toFixed(2)}}</h2></h3>
-          <p>公积金：{{FundsBasic*(FundsI+FundsU)}}元/月 × {{buyMonthList.length}}月 + 服务费用：{{service_fee}}元/月/人 x {{buyMonthList.length}}月 + 其他费用：{{material_fee}}元</p>
+          <h3>代收费用小计：<h2 class="colorRed" style="display: inline;">¥{{((FundsBasic*(FundsI+FundsU)+service_fee)).toFixed(2)*buyMonthList.length+material_fee}}</h2></h3>
+          <p>公积金：{{(FundsBasic*(FundsI+FundsU)).toFixed(2)}}元/月 × {{buyMonthList.length}}月 + 服务费用：{{service_fee}}元/月/人 x {{buyMonthList.length}}月 + 其他费用：{{material_fee}}元</p>
         </div>
         <div v-if="!ifFundsChoosed && !ifSecurityChoosed">
           <p>请选择要代缴的种类！</p>
@@ -87,7 +87,7 @@
 <script>
 import Vue from 'vue'
 import axios from 'axios'
-import {getOneYearMonth,removeByValue} from "../../../util/utils"
+import {getOneYearMonth,DateSortASC,ifContinuity} from "../../../util/utils"
 export default {
   data() {
   return {
@@ -319,7 +319,7 @@ export default {
         Amount = ((this.total_securityI+this.total_securityU+this.service_fee)*this.buyMonthList.length+this.material_fee).toFixed(2)
         break;
         case '2':
-        Amount = ((this.service_fee)*this.buyMonthList.length+this.material_fee).toFixed(2)
+        Amount = ((this.FundsBasic*(this.FundsI+this.FundsU)+this.service_fee)*this.buyMonthList.length+this.material_fee).toFixed(2)
         break;
       }
       let monthObjList =[]
@@ -348,6 +348,7 @@ export default {
         switch(res.data.result){
           case '2':
           this.$Message.success('下单成功!')
+          this.$store.state.HRMenuCur = '我的订单'
           break;
           case '0':
           this.$Message.error(res.data.message+':'+res.data.detail)

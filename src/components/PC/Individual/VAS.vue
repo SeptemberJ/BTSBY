@@ -276,6 +276,7 @@ export default {
       ).then((res)=> {
         if(res.data.result==2){
           this.$Message.success('办理成功!')
+          this.ifShowModal = false
           this.modal_loading = false;
         }else{
           this.$Message.error(res.data.message+'!')

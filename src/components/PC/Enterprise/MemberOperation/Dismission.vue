@@ -67,7 +67,7 @@ export default {
     stopG:false,
     TypeList:[],
     formDisMission:{
-      disMission_type:0,
+      disMission_type:'0',
       disMission_time:'',
       disMission_reason:''
     },

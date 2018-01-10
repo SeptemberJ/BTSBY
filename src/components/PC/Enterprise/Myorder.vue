@@ -56,8 +56,8 @@
               <Col span="12"><span>服务内容 ：</span><span>{{ModalInfo.pay_type_T}}</span></Col>
               <Col span="12">
                 <span>代缴人数 ：</span>
-                <span class="cursorPointer" @click="seeMember(ModalInfo.MemberS)">社保：<b class="colorBlue">{{ModalInfo.MemberAmountS}}</b> 人</span> 
-                <span class="cursorPointer" @click="seeMember(ModalInfo.MemberG)">公积金：<b class="colorBlue">{{ModalInfo.MemberAmountG}}</b> 人</span>
+                <span class="cursorPointer" @click="seeMember(ModalInfo.MemberS)" v-if="ModalInfo.MemberAmountS>0">社保：<b class="colorBlue">{{ModalInfo.MemberAmountS}}</b> 人</span> 
+                <span class="cursorPointer" @click="seeMember(ModalInfo.MemberG)"  v-if="ModalInfo.MemberAmountG>0">公积金：<b class="colorBlue">{{ModalInfo.MemberAmountG}}</b> 人</span>
               </Col>
           </Row>
           <Row>
@@ -86,6 +86,19 @@
           </div>
       </Modal>
 
+      <!-- 订单跟踪 -->
+      <Modal v-model="ifShowTimeline">
+        <p slot="header" style="text-align:left">
+            <Icon type="ios-pricetags"></Icon>
+            <span>订单跟踪记录</span>
+        </p>
+        <Timeline>
+            <TimelineItem color="green">2017-12-25 15:02:14 —— 提交订单</TimelineItem>
+            <TimelineItem color="red">2017-12-25 15:02:14 —— 付款成功</TimelineItem>
+        </Timeline>
+        <div slot="footer"></div>
+      </Modal>
+
     </div>
 </template>
 <script>
@@ -97,6 +110,7 @@ export default {
   return {
     ifShowModal:false,
     ifShowMember:false,
+    ifShowTimeline:false,
     modal_loading: false,
     ifLoading:false,
     Total:0,
@@ -195,6 +209,28 @@ export default {
             {
                 title: '订单名称',
                 key: 'order_name',
+                render: (h, params) => {
+                            const row = params.row;
+                            // const color = row.status === 1 ? 'blue' : row.status === 2 ? 'green' : 'red';
+                            // const text = row.status === 1 ? 'Working' : row.status === 2 ? 'Success' : 'Fail';
+
+                            return h('p', {
+                                props: {
+                                },
+                                style: {
+                                  color:'#39f',
+                                  overflow: 'hidden',
+                                  textOverflow:'ellipsis',
+                                  whiteSpace: 'nowrap',
+                                  cursor:'pointer'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.seeDetail(params)
+                                    }
+                                }
+                            }, row.order_name);
+                        }
                 
             },
             {
@@ -248,14 +284,15 @@ export default {
                                 h('Button', {
                                     props: {
                                         type: 'error',
-                                        size: 'small'
+                                        size: 'small',
+                                        icon:'eye'
                                     },
                                     on: {
                                         click: () => {
-                                            this.seeDetail(params)
+                                            this.trackOrder(params)
                                         }
                                     }
-                                }, '查看')
+                                }, '跟踪')
                             ]);
                         }
                           
@@ -286,6 +323,10 @@ export default {
             content: `content`//Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}
         })
     },
+    //订单跟踪
+    trackOrder(){
+      this.ifShowTimeline = true
+    },
     //查看参保人员详细名单
     seeMember(MemberList){
       this.dataMember = []
@@ -304,6 +345,7 @@ export default {
       this.ifShowMember = false
     },
     seeDetail (Info) {
+      console.log(Info.row)
       //获取参保人员
       axios.get(R_PRE_URL+'/searchCompanyOrderInfo.do?id='+Info.row.id
       ).then((res)=> {

@@ -14,7 +14,7 @@
                 </Button>
                 <DropdownMenu slot="list">
                     <DropdownItem name="新增入职" >新增入职</DropdownItem>
-                    <!-- <DropdownItem name="导入">导入</DropdownItem> -->
+                    <DropdownItem name="导入">导入</DropdownItem>
                     <DropdownItem name="离职" divided>离职</DropdownItem>
                     <DropdownItem name="增减员">增减员</DropdownItem>
                 </DropdownMenu>
@@ -206,18 +206,19 @@ export default {
                     return h('div', [
                         h('Button', {
                             props: {
-                                type: 'primary',
+                                type: 'text',
                                 size: 'small'
                             },
                             style: {
-                                marginRight: '5px'
+                                marginRight: '5px',
+                                color:params.row.is_sb=='0'?'':'#5cb85c'
                             },
                             on: {
                                 click: () => {
                                     this.showRecord(0,params.index)
                                 }
                             }
-                        }, '查看'),
+                        }, params.row.is_sb=='0'?'未参保':'已参保'),
                     ]);
                 }
             },
@@ -229,18 +230,19 @@ export default {
                     return h('div', [
                         h('Button', {
                             props: {
-                                type: 'primary',
+                                type: 'text',
                                 size: 'small'
                             },
                             style: {
-                                marginRight: '5px'
+                                marginRight: '5px',
+                                color:params.row.is_gjj=='0'?'':'#5cb85c'
                             },
                             on: {
                                 click: () => {
                                     this.showRecord(1,params.index)
                                 }
                             }
-                        }, '查看'),
+                        }, params.row.is_gjj=='0'?'未参保':'已参保'),
                     ]);
                 }
             },

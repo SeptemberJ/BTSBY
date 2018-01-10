@@ -25,7 +25,7 @@
     <div class="sumBlock marginT_10">
       <div>
         <p>代收社保费用小计：<span>{{(total_securityI + total_securityU)*MemberAmountS*buyMonthList.length}} 元（ {{total_securityI + total_securityU}}元/月 × {{MemberAmountS}}人次 × {{buyMonthList.length}}月</span></p>
-        <p>代收公积金费用小计：<span>{{FundsBasic*MemberAmountG*buyMonthList.length}} 元（ {{FundsBasic}}元/月 × {{MemberAmountG}}人次 × {{buyMonthList.length}}月 ）</span></p>
+        <p>代收公积金费用小计：<span>{{(FundsBasic*(FundsI+FundsU)*MemberAmountG*buyMonthList.length).toFixed(2)}} 元（ {{(FundsBasic*(FundsI+FundsU)).toFixed(2)}}元/月 × {{MemberAmountG}}人次 × {{buyMonthList.length}}月 ）</span></p>
         <p>其他费用小计：<span>{{material_fee*MemberAmountS}}元（材料费:{{material_fee}}元/人 x {{MemberAmountS}}人）</span></p>
         <p>代理缴纳费用小计：<span> {{service_fee*(MemberAmountG+MemberAmountS)*buyMonthList.length}}元（（双买：{{service_fee*IntersectList.length*buyMonthList.length}} 元（{{service_fee}}元/月 × {{buyMonthList.length}} 月 × {{IntersectList.length}} 人次） + 社保单买：{{service_fee*(MemberAmountS - IntersectList.length)}} 元（{{service_fee}}元/月 × {{buyMonthList.length}} 月 × {{MemberAmountS - IntersectList.length}} 人次）+ 公积金单买：{{service_fee*(MemberAmountG - IntersectList.length)*buyMonthList.length}} 元（{{service_fee}}元/月 × {{buyMonthList.length}} 月 × {{MemberAmountG - IntersectList.length}} 人次））</span></p>
         <!-- <p>代理缴纳费用小计：<span> {{service_fee*(MemberAmountG+MemberAmountS)*buyMonthList.length}}元（（双买：{{service_fee}}元/月×{{buyMonthList.length}}月×{{IntersectList.length}}人次
@@ -33,7 +33,7 @@
         <!-- <p>代理缴纳费用小计：<span> 39.8元（双买：39.8元（39.8元/月×1月×{{MemberAmountS + MemberAmountG}}人次）</span></p> -->
         <p>合计：
           <span class="colorRed" style="font-size: 18px; font-weight: bold;">
-            ¥{{((total_securityI + total_securityU)*MemberAmountS*buyMonthList.length)+(FundsBasic*MemberAmountG*buyMonthList.length)+(material_fee*MemberAmountS)+(service_fee*(MemberAmountG+MemberAmountS)*buyMonthList.length)}}
+            ¥{{((total_securityI + total_securityU)*MemberAmountS*buyMonthList.length)+(FundsBasic*(FundsI+FundsU)*MemberAmountG*buyMonthList.length)+(material_fee*MemberAmountS)+(service_fee*(MemberAmountG+MemberAmountS)*buyMonthList.length)}}
           </span>
         </p>
          
@@ -277,7 +277,7 @@ export default {
 
       let orderInfo = {
         'order_name':'代缴'+ this.City + monthListStr + (Pay_type==0?'社保公积金':Pay_type==1?'社保':'公积金'),
-      'amount':((this.total_securityI + this.total_securityU)*this.MemberAmountS*this.buyMonthList.length)+(this.FundsBasic*this.MemberAmountG*this.buyMonthList.length)+(this.material_fee*this.MemberAmountS)+(this.service_fee*(this.MemberAmountG+this.MemberAmountS)*this.buyMonthList.length),
+      'amount':((this.total_securityI + this.total_securityU)*this.MemberAmountS*this.buyMonthList.length)+(this.FundsBasic*(this.FundsI+this.FundsU)*this.MemberAmountG*this.buyMonthList.length)+(this.material_fee*this.MemberAmountS)+(this.service_fee*(this.MemberAmountG+this.MemberAmountS)*this.buyMonthList.length),
         'pay_time':new Date(),
         'service_charge':this.service_fee*(this.MemberAmountG+this.MemberAmountS)*this.buyMonthList.length,
         'member_id':this.$store.state.userInfo.member_id,
@@ -296,6 +296,7 @@ export default {
         switch(res.data.result){
           case '2':
           this.$Message.success('下单成功!')
+          this.$store.state.HRMenuCur = '我的订单'
           break;
           case '0':
           this.$Notice.warning({
