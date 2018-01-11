@@ -9,6 +9,7 @@ import 'babel-polyfill'
 import XLSX from 'xlsx'
 import iView from 'iview';
 import '../my-theme/dist/iview.css';
+import CryptoJS from 'crypto-js'
 
 // import 'theme/theme.less';
 
@@ -19,6 +20,7 @@ Vue.use(VueResource)
 Vue.use(Vuex)
 Vue.use(iView)
 Vue.use(XLSX)
+Vue.use(CryptoJS)
 //开启debug模式
 Vue.config.debug = true
 window.log = console.log

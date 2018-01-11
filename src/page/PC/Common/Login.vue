@@ -42,7 +42,7 @@
                       </Input>
                   </FormItem>
                   <FormItem label="记住密码" prop="ifRemmberPsd">
-                    <Checkbox label="记住密码" v-model="ifRemmberPsd"></Checkbox>
+                    <Checkbox label="记住密码" v-model="ifRemmberPsd" @on-change="RemmberChange"></Checkbox>
                     <Button type="text" style="float: right;">忘记密码</Button>
                   </FormItem>
                   
@@ -58,16 +58,21 @@
 <script>
 import Vue from 'vue'
 import axios from 'axios'
-import {setCookie} from '../../../util/utils'
+import CryptoJS from 'crypto-js'
+import {setCookie,getCookie,getCryptoJsCookie,Encrypt,Decrypt} from '../../../util/utils'
 import BackBar from '../../../components/Mobile/BackBar'
 export default {
   data() {
   return {
-    ifRemmberPsd:localStorage.getItem("user_remember")?true : false,
+    ifRemmberPsd:true,//localStorage.getItem("user_remember")?true : false,
     formLogin: {
-        UserName:localStorage.getItem("user_remember")?localStorage.getItem("user_name") : '',
-        UserPsd:localStorage.getItem("user_remember")?localStorage.getItem("user_psd") : ''
+        UserName:getCookie('btsby_UserName')?Decrypt(getCookie('btsby_UserName')) : '',
+        UserPsd:getCookie('btsby_UserPsd')?Decrypt(getCookie('btsby_UserPsd')) : '',
     },
+    // formLogin: {
+    //     UserName:localStorage.getItem("user_remember")?localStorage.getItem("user_name") : '',
+    //     UserPsd:localStorage.getItem("user_remember")?localStorage.getItem("user_psd") : ''
+    // },
     ruleInline: {
         UserName: [
             { required: true, message: '请输入用户名', trigger: 'blur' }
@@ -99,6 +104,16 @@ export default {
       BackBar
     },
   methods: {
+    //记住密码
+    RemmberChange(event){
+      if(event){
+        //Decrypt(Encrypt('222'))
+         setCookie('btsby_UserName',Encrypt(this.formLogin.UserName),1)
+         setCookie('btsby_UserPsd',Encrypt(this.formLogin.UserPsd),1)
+      }
+
+      
+    },
     handleSubmit(name) {
         this.$refs[name].validate((valid) => {
             if (valid) {

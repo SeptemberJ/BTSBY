@@ -3,7 +3,7 @@
     <div id="TopayI" v-if="ifHasInfoAlready">
       <!-- top -->
       <h2>参保资料</h2>
-      <p class="securityInfo">参保人: {{NAME}}  参保城市：{{INSURED_AREA}}  户口性质：{{RESIDENCE}}<span @click="ToModifySecurityInfo"><Icon type="compose" size="18"></Icon></span></p>
+      <p class="securityInfo">参保人: {{NAME}}  参保城市：{{INSURED_AREA}}  户口性质：{{RESIDENCE}}<span class="cursorPointer" @click="ToModifySecurityInfo"><Icon type="compose" size="18"></Icon></span></p>
       <Table :columns="columnsHead" :loading="ifLoading" :data="dataOrder"></Table>
       <Form>
           <FormItem label="">

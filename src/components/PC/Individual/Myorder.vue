@@ -80,8 +80,8 @@
             <span>订单跟踪记录</span>
         </p>
         <Timeline>
-            <TimelineItem color="green">2017-12-25 15:02:14 —— 提交订单</TimelineItem>
-            <TimelineItem color="red">2017-12-25 15:02:14 —— 付款成功</TimelineItem>
+            <TimelineItem v-for="(trackInfo,trackInfoIdx) in trackOrderInfo " color="green">{{trackInfo.ftimeT}} —— {{trackInfo.fprocess}}——{{trackInfo.fcontent}}</TimelineItem>
+            <!-- <TimelineItem color="red">2017-12-25 15:02:14 —— 付款成功</TimelineItem> -->
         </Timeline>
         <div slot="footer"></div>
       </Modal>
@@ -107,6 +107,7 @@ export default {
     start_time:'',
     end_time:'',
     month_name:'',
+    trackOrderInfo:[],
     ModalInfo:{
       id:'',
       order_no:'',
@@ -288,8 +289,18 @@ export default {
     ToPay (index) {
         this.$router.push({name:'提交订单'})
     },
-    trackOrder(){
+    trackOrder(Info){
       this.ifShowTimeline = true
+      axios.get(R_PRE_URL+'/searchOrderProcess.do?order_no='+Info.row.order_no
+      ).then((res)=> {
+        let temp = res.data.processList
+        temp.map((item,idx)=>{
+          item.ftimeT= timestampToFormatTime(item.ftime.time)
+        })
+        this.trackOrderInfo = temp
+      }).catch((error)=> {
+        console.log(error)
+      })
     },
     seeDetail (Info) {
         console.log(Info)

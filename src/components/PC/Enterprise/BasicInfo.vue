@@ -25,7 +25,7 @@
           <FormItem prop="fcity" label="投保地">
             <Row>
               <Col span="18">
-                  <Select v-model="formBasicInfo.fcity">
+                  <Select v-model="formBasicInfo.city_code">
                       <Option v-for="(City,CityIdx) in cityList"  :value="City.city_code" :key="CityIdx">{{City.city_name}}</Option>
                    </Select>
               </Col>
@@ -79,6 +79,7 @@ export default {
         company_lincese:'',
         faddress:'',
         fcity:'',
+        city_code:'0',
         email:'',
         mobilephone:'',
         contact:'',
@@ -134,8 +135,9 @@ export default {
     handleSaveBasicInfo(name) {
         this.$refs[name].validate((valid) => {
             if (valid) {
-                console.log(this.formBasicInfo)
-                let DATA = this.formBasicInfo
+                let temp = this.formBasicInfo
+                temp.fcity = this.formBasicInfo.city_code
+                let DATA = temp
                 axios.post(R_PRE_URL+'/updateCompanyDetail.do',DATA
                 ).then((res)=> { 
                   if(res.data.code == 2){
@@ -147,7 +149,6 @@ export default {
                 }).catch((error)=> {
                   console.log(error)
                 })
-              this.$Message.success('保存成功!');
             } else {
                 this.$Message.error('带*号的为必填项!');
             }

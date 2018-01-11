@@ -1,3 +1,5 @@
+import CryptoJS from 'crypto-js'
+
 //日期升序
 export function DateSortASC(MontList) {  //2018-01
   var formatDate = []
@@ -105,7 +107,39 @@ export function ReadExcel() {
             return result;
 
   }
-
+//AES加密
+  export function Encrypt(plaintText) {
+        var keyStr = 'btsby123btsby123'
+        var key = CryptoJS.enc.Utf8.parse(keyStr);  
+        var encryptedData = CryptoJS.AES.encrypt(plaintText, key, {  
+                                mode: CryptoJS.mode.ECB,
+                                padding: CryptoJS.pad.Pkcs7
+                            });
+        var encryptedBase64Str = encryptedData.toString();
+        var encryptedStr = encryptedData.ciphertext.toString();
+        // var EncryptedResult = {
+        //   encryptedStr:encryptedStr,
+        //   encryptedBase64Str:encryptedBase64Str
+        // } 
+        
+        //setCookie('btsby_str',encryptedBase64Str,1)
+        //console.log(EncryptedResult)
+        return  encryptedStr
+}
+//AES解密
+  export function Decrypt(encryptedStr) {
+        var keyStr = 'btsby123btsby123'
+        var key = CryptoJS.enc.Utf8.parse(keyStr) 
+        var encryptedHexStr = CryptoJS.enc.Hex.parse(encryptedStr)
+        var encryptedBase64Str = CryptoJS.enc.Base64.stringify(encryptedHexStr)
+        var decryptedData = CryptoJS.AES.decrypt(encryptedBase64Str,key, {  
+                                mode: CryptoJS.mode.ECB,
+                                padding: CryptoJS.pad.Pkcs7
+                            });
+        var decryptedStr = decryptedData.toString(CryptoJS.enc.Utf8);  
+        console.log(decryptedStr)
+        return decryptedStr
+}
 //创建cookie
   export function setCookie(cname, cvalue, exdays) {
       var d = new Date();
@@ -127,6 +161,19 @@ export function ReadExcel() {
           if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
       }
       return "";
+  }
+//获取CryptoJS cookie
+  export function getCryptoJsCookie(cname,){
+
+      var name = cname + "=";
+      var ca = document.cookie.split(';');
+      console.log(ca)
+      // for (var i = 0; i < ca.length; i++) {
+      //     var c = ca[i];
+      //     while (c.charAt(0) == ' ') c = c.substring(1);
+      //     if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
+      // }
+      // return "";
   }
 
 //删除cookie

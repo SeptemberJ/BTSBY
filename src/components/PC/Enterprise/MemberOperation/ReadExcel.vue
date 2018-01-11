@@ -1,6 +1,6 @@
 
 <template>
-<Modal v-model="ifReadExcel" :mask-closable="false" width="900">
+<Modal v-model="ifReadExcel" :mask-closable="false" width="500">
         <p slot="header" style="text-align:left">
             <span>导入员工</span>
         </p>
@@ -14,33 +14,20 @@
                 <span>{{formBasicInfo.fcity}}</span>
             </FormItem>
             <FormItem label="导入的excel：" prop="xlsFile">
-              <!-- <Upload
-                  :before-upload="handleUpload"
-                  action="https://jsonplaceholder.typicode.com/posts/">
-                  <Button type="ghost" icon="ios-cloud-upload-outline">选择要导入的文件</Button>
-              </Upload>
-              <span>{{formImport.xlsFile.name}}</span> -->
-              <Upload
-                :before-upload="handleUpload"
-               action="">
+              <Upload 
+              :format="['xlsx','xls']"
+              :on-format-error="handleFormatError"
+              :before-upload="handleBeforeUpload"
+               action="//jsonplaceholder.typicode.com/posts/">
                   <Button type="ghost" icon="ios-cloud-upload-outline">选择文件</Button>
               </Upload>
-              <span v-if="file !== null">Upload file: {{ file.name }}</span>
+              <span v-if="file !== null">文件名: {{ file.name }}</span>
                 
             </FormItem>
             <FormItem label="导入模板下载：" prop="xlsMoban">
                 <a href="static/hrRecruitBaseTemplate.xls">员工导入模板</a>
             </FormItem>
           </Form>
-            <!-- <Upload
-            action=""
-            :before-upload="handleBeforeUpload"
-            >
-                <Button type="ghost" icon="ios-cloud-upload-outline">Upload files</Button>
-            </Upload> -->
-            <!-- <input id="upfile" type="file" name="file">
-            <button @click="read">读取</button> -->
-            
         </div>
         <div slot="footer">
             <Button type="error" size="large"  :loading="modal_loading" @click="upload">导入</Button>
@@ -53,6 +40,7 @@ import Vue from 'vue'
 import axios from 'axios'
 import {ReadExcel} from '../../../../util/utils'
 import XLSX from 'xlsx'
+import qs from 'qs'
 
 export default {
   props:[],
@@ -61,6 +49,7 @@ export default {
     modal_loading:false,
     formBasicInfo:'',
     file:null,
+    attachData:{'id':123},
     loadingStatus: false,
     formImport: {
         company_name: '',
@@ -108,29 +97,37 @@ export default {
     
   },
   methods: {
-    handleUpload (file) {
+    handleFormatError(file) {
+        this.file = null;
+        this.$Notice.warning({
+            title: '文件格式错误',
+            desc: '文件 ' + file.name + ' 格式不对.'
+        });
+    },
+    handleBeforeUpload (file) {
         this.file = file;
-        return false;
+        //return false;
     },
     upload () {
       if(!this.file){
         this.$Message.error('请选择要导入的文件!')
         return false
       }
-        let formData = new FormData();
-        formData.append('filename', this.file);
-        let config = {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
+
+      let formData = new FormData();
+      formData.append('filename', this.file);
+      let config = {
+        headers: {
+          'Content-Type': 'multipart/form-data'
         }
-      axios.post(R_PRE_URL+'/importXls',formData,config
+      }
+      axios.post(R_PRE_URL+'/importXls?fcity='+this.formBasicInfo.city_code+'&member_id='+this.$store.state.userInfo.member_id ,formData,config
       ).then((res)=> {
-        if(res.data == 1){
+        if(res.data == 2){
           this.$Message.success('导入成功!')
           this.ifReadExcel = false
         }else{
-          this.$Message.error('导入失败!')
+          this.$Message.error(res.data.message)
         }
         
       }).catch((error)=> {
@@ -138,19 +135,6 @@ export default {
       })
 
       }
-    // handleBeforeUpload(event){
-    //     var file = event
-        
-    //     var reader = new FileReader() 
-    //   reader.readAsDataURL(file)   
-    //   reader.onload = function(e){
-    //     console.log(e)
-    //   }
-
-    // },
-    // read(){
-    //   ReadExcel()
-    // }
    
   },
 };
