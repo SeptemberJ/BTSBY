@@ -220,7 +220,7 @@ export default {
             // 图形码校验
             if(this.formStepOne.IMGCODE!=this.formStepOne.RIMGCODE.toUpperCase()){
               this.$Message.error('图形验证码不正确!')
-              return false
+              this.changeIMGCODE()
               return false
             }
             //手机验证码校验

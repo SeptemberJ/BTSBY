@@ -1,6 +1,6 @@
 <template>
   <div class="MyOrderDetail">
-    <BackBar></BackBar>
+  	<BackBar></BackBar>
     <div class="MainContent">
       <Row class="ItemBlock">
         <Col span="20">订单号{{OrderNo}}</Col>
@@ -137,7 +137,7 @@ import {timestampToFormatTime} from '../../../util/utils'
       this.OrderAmount = localStorage.getItem("OrderAmount")
       let OrderNo = this.$router.history.current.params.OrderNo
       this.OrderNo = OrderNo
-      axios.get(R_PRE_URL+'/searchOrderProcess.do?order_no='+OrderNo
+      axios.get(R_PRE_URL+'/searchCompanyOrderProcess.do?order_no='+OrderNo
       ).then((res)=> {
         let temp = res.data.processList
         temp.map((item,idx)=>{

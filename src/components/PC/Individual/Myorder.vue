@@ -74,14 +74,20 @@
       </Modal>
 
       <!-- 订单跟踪 -->
-      <Modal v-model="ifShowTimeline">
+      <Modal v-model="ifShowTimeline" width="800">
         <p slot="header" style="text-align:left">
             <Icon type="ios-pricetags"></Icon>
             <span>订单跟踪记录</span>
         </p>
         <Timeline>
-            <TimelineItem v-for="(trackInfo,trackInfoIdx) in trackOrderInfo " color="green">{{trackInfo.ftimeT}} —— {{trackInfo.fprocess}}——{{trackInfo.fcontent}}</TimelineItem>
-            <!-- <TimelineItem color="red">2017-12-25 15:02:14 —— 付款成功</TimelineItem> -->
+            <TimelineItem v-for="(trackInfo,trackInfoIdx) in trackOrderInfo " :color="trackInfoIdx==0?'red':'green'">
+              <Row type="flex" justify="space-around" class="code-row-bg">
+                  <Col span="6">{{trackInfo.ftimeT}}</Col>
+                  <Col span="6">{{trackInfo.fprocess}}</Col>
+                  <Col span="6">{{trackInfo.real_name}}</Col>
+                  <Col span="6">{{trackInfo.fcontent}}</Col>
+              </Row>
+             </TimelineItem>
         </Timeline>
         <div slot="footer"></div>
       </Modal>

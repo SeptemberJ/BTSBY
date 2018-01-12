@@ -31,13 +31,13 @@
             </Row>
           </FormItem>
 
-          <FormItem prop="CODE" label="手机验证码">
+          <!-- <FormItem prop="CODE" label="手机验证码">
             <Row>
               <Col span="18">
                   <Input v-model="formStepOne.CODE" placeholder="请输入手机验证码"></Input>
               </Col>
             </Row>
-          </FormItem>
+          </FormItem> -->
 
           <FormItem prop="EMAIL" label="电子邮箱">
             <Row>

@@ -33,7 +33,7 @@
         <!-- <p>代理缴纳费用小计：<span> 39.8元（双买：39.8元（39.8元/月×1月×{{MemberAmountS + MemberAmountG}}人次）</span></p> -->
         <p>合计：
           <span class="colorRed" style="font-size: 18px; font-weight: bold;">
-            ¥{{((total_securityI + total_securityU)*MemberAmountS*buyMonthList.length)+(FundsBasic*(FundsI+FundsU)*MemberAmountG*buyMonthList.length)+(material_fee*MemberAmountS)+(service_fee*(MemberAmountG+MemberAmountS)*buyMonthList.length)}}
+            ¥{{(((total_securityI + total_securityU)*MemberAmountS*buyMonthList.length)+(FundsBasic*(FundsI+FundsU)*MemberAmountG*buyMonthList.length)+(material_fee*MemberAmountS)+(service_fee*(MemberAmountG+MemberAmountS)*buyMonthList.length)).toFixed(2)}}
           </span>
         </p>
          

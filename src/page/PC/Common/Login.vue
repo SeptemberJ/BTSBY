@@ -15,12 +15,19 @@
             </Input>
         </FormItem>
         <FormItem>
-            <Button type="text" @click="">找回密码</Button>
-            <Button type="text" @click="">去注册</Button>
+            <Button type="primary" long @click="handleSubmit('formLogin')">登录</Button>
         </FormItem>
         <FormItem>
-            <Button type="primary" @click="handleSubmit('formLogin')">登录</Button>
+          <Row>
+            <Col span="12">
+              <Button type="text" @click="FindPsd">找回密码</Button>
+            </Col>
+            <Col span="12" class="TextRight">
+              <Button type="text" @click="GoSignM">去注册</Button>
+            </Col>
+          </Row>
         </FormItem>
+        
       </Form>
   </div>
 </div>
@@ -43,7 +50,7 @@
                   </FormItem>
                   <FormItem label="记住密码" prop="ifRemmberPsd">
                     <Checkbox label="记住密码" v-model="ifRemmberPsd" @on-change="RemmberChange"></Checkbox>
-                    <Button type="text" style="float: right;">忘记密码</Button>
+                    <Button type="text" style="float: right;" @click="FindPsd">忘记密码</Button>
                   </FormItem>
                   
                   <FormItem>
@@ -104,6 +111,12 @@ export default {
       BackBar
     },
   methods: {
+    FindPsd(){
+      this.$router.push({name:'密码找回'})
+    },
+    GoSign(){
+      this.$router.push({name:'个人注册'})
+    },
     //记住密码
     RemmberChange(event){
       if(event){
@@ -156,6 +169,10 @@ export default {
       }).catch((error)=> {
         console.log(error)
       })
+    },
+    // Mobile
+    GoSignM(){
+      this.$router.push({name:'注册'});
     },
   }
 };

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import axios from 'axios'
 import Store from '../store/store'
 import App from '../app'
 import Index from '../page/Index/Index'
@@ -9,6 +10,7 @@ import test from '../page/test'
 import Login from '../page/PC/Common/Login'
 import SignI from '../page/PC/Individual/Sign'
 import SignE from '../page/PC/Enterprise/Sign'
+import FindPsd from '../page/PC/Common/FindPsd'
 import Individual from '../page/PC/Common/Individual'
 import Enterprise from '../page/PC/Common/Enterprise'
 import News from '../page/PC/Common/News'
@@ -28,6 +30,8 @@ import HowBuy from '../page/Mobile/HowBuy'
 
 import SecurityInfo from '../page/Mobile/SecurityInfo'
 import PaySecurity from '../page/Mobile/PaySecurity'
+import SignM from '../page/Mobile/Sign'
+import FindPsdM from '../page/Mobile/FindPsd'
 import My from '../page/Mobile/My'
 import MyWallet from '../page/Mobile/My/MyWallet'
 import PersonalData from '../page/Mobile/My/PersonalData'
@@ -36,7 +40,9 @@ import Message from '../page/Mobile/My/Message'
 import Feedback from '../page/Mobile/My/Feedback'
 import CostRecord from '../page/Mobile/My/CostRecord'
 import MyOrder from '../page/Mobile/My/MyOrder'
+import MyOrderE from '../page/Mobile/Enterprise/MyOrder'
 import MyOrderDetail from '../page/Mobile/My/MyOrderDetail'
+import MyOrderDetailE from '../page/Mobile/Enterprise/MyOrderDetail'
 import SecurityRecord from '../page/Mobile/My/SecurityRecord'
 import Calculation from '../page/Mobile/Calculation'
 import Search from '../page/Mobile/Search'
@@ -55,8 +61,9 @@ const routes = [
     {path: '/Index', name: '首页', component: Index},
     {path: '/test', name: 'test', component: test},
     {path: '/Login', name: '登录', component: Login},
-    {path: '/SignI/', name: '个人注册', component: SignI},
-    {path: '/SignE/', name: '企业注册', component: SignE},
+    {path: '/SignI', name: '个人注册', component: SignI},
+    {path: '/SignE', name: '企业注册', component: SignE},
+    {path: '/FindPsd', name: '找回密码', component: FindPsd},
     {path: '/Individual', name: '个人保', component: Individual},
     {path: '/Enterprise', name: '企业保', component: Enterprise},
     {path: '/News', name: '社保资讯', component: News},
@@ -71,6 +78,8 @@ const routes = [
 
     {path: '/PeripheryTab', name: '社保周边', component: PeripheryTab},
     {path: '/ArticleDetail/:id', name: '详情', component: ArticleDetail},
+    {path: '/SignM', name: '注册', component: SignM},
+    {path: '/FindPsdM', name: '密码找回', component: FindPsdM},
     {path: '/WhyBuy', name: '为何购买社保', component: WhyBuy},
     {path: '/Service', name: '社保服务介绍', component: Service},
     {path: '/HowBuy', name: '如何在线购买', component: HowBuy},
@@ -83,8 +92,10 @@ const routes = [
     {path: '/Message', name: '我的消息', component: Message,meta: {requireAuth: true}},
     {path: '/Feedback', name: '意见反馈', component: Feedback,meta: {requireAuth: true}},
     {path: '/CostRecord', name: '消费记录', component: CostRecord,meta: {requireAuth: true}},
-    {path: '/MyOrder', name: '我的订单', component: MyOrder,meta: {requireAuth: true}},
-    {path: '/MyOrderDetail/:OrderNo', name: '订单详情', component: MyOrderDetail,meta: {requireAuth: false}},
+    {path: '/MyOrder', name: '我的订单(个人)', component: MyOrder,meta: {requireAuth: true}},
+    {path: '/MyOrderE', name: '我的订单(企业)', component: MyOrderE,meta: {requireAuth: true}},
+    {path: '/MyOrderDetail/:OrderNo', name: '订单详情(个人)', component: MyOrderDetail,meta: {requireAuth: false}},
+    {path: '/MyOrderDetailE/:OrderNo', name: '订单详情(企业)', component: MyOrderDetailE,meta: {requireAuth: false}},
     {path: '/SecurityRecord', name: '投保记录', component: SecurityRecord,meta: {requireAuth: true}},
     {path: '/Calculation', name: '社保计算器', component: Calculation},
     {path: '/Search', name: '查社保', component: Search},
@@ -109,7 +120,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
     if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
         if (getCookie('btsby_cookie')) {  // 通过vuex state获取当前的token是否存在
-            next();
+            next()
         }
         else {
             localStorage.clear();
@@ -132,6 +143,13 @@ router.afterEach((to, from, next) => {
   Store.state.isMobile=ISMobile;
   document.title = to.name;
   Store.commit('ROUTE_CHANGE',{activeRoute: to.name})
+    axios.get(R_PRE_URL+'/serMessageUnread.do?member_id='+Store.state.userInfo.member_id
+      ).then((res)=> {
+        Store.commit('MESSAGECOUNT_CHANGE',{messageCount: res.data.MessageUnreadCount})
+      }).catch((error)=> {
+        console.log(error)
+      })
+
       
 })
 export default router

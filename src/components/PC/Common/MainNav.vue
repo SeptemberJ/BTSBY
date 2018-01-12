@@ -2,7 +2,7 @@
  <div class="layout">
         <Menu mode="horizontal" :active-name="activeRoute" @on-select="tabChange">
             <div class="layout-logo" @click="ToIndex"></div>
-            <div class="layout-nav">
+            <div class="layout-nav" v-if="activeRoute!='找回密码'">
                 <MenuItem name="首页">
                     首页
                 </MenuItem>

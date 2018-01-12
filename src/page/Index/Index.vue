@@ -19,7 +19,7 @@
           <NewsPart  :Infor="IndexInfor.news"></NewsPart>
           <Partner :Infor="IndexInfor.partner"></Partner>
           <!-- 返回顶部 -->
-          <BackTop></BackTop>
+            <BackTop></BackTop>
         </div>
     </div>
 </template>

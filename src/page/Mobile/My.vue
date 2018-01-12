@@ -58,7 +58,7 @@
             <Col span="4" class="TextCenter"><Avatar src="static/img/xxtx.png" size="small"/></Col>
             <Col span="12">我的消息</Col>
             <Col span="8" class="TextRight">
-              <Badge count="20" class-name="demo-badge-alone"></Badge>
+              <Badge :count="MessageCount" class-name="demo-badge-alone"></Badge>
               <Icon type="chevron-right"></Icon>
             </Col>
           </div>
@@ -103,6 +103,9 @@ import {clearCookie} from '../../util/utils'
       UserName(){
         return this.$store.state.userInfo.username
       },
+      MessageCount(){
+        return this.$store.state.MessageCount
+      },
       
     },
     watch: {
@@ -118,7 +121,11 @@ import {clearCookie} from '../../util/utils'
       GoModule(KIND){
         switch(KIND){
           case -1:
-          this.$router.push({name:'我的订单'})
+          if(this.$store.state.userInfo.register_type==0){
+            this.$router.push({name:'我的订单(个人)'})
+          }else{
+            this.$router.push({name:'我的订单(企业)'})
+          }
           break
           case -2:
           this.$router.push({name:'投保记录'})

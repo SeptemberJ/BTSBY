@@ -6,24 +6,22 @@
           消息通知
         </span>
       </h3>
-      <Alert show-icon   class="marginT_20" type="error">
+      <Row class="marginT_40 TextCenter" v-if="MeaasgeList.length<=0">
+        <Col span="24" class="TextCenter">
+          <Icon type="social-tux" :size="36"></Icon> 暂无数据
+        </Col>
+      </Row>
+      <Alert show-icon  class="marginT_20" v-for="(Message,MessageIdx) in MeaasgeList" :type="Message.fread==0?'error':'success'">
         <div class="marginT_10">
-          <span class="InlineBlock"><b>系统提醒 2017-11-08 10:30:27</b></span>
-          <span class="InlineBlock colorBlue" style="font-size: 12px;float: right;">标记为已读</span>
+          <span class="InlineBlock"><b>系统提醒 {{Message.fdate}}</b></span>
+          <span class="InlineBlock colorBlue" style="font-size: 12px;float: right;"@click="MarkMessage(Message.id,Message.fread)" >{{Message.fread==0?'标记为已读':'标记为未读'}}</span>
         </div>
         <Icon type="speakerphone" slot="icon"></Icon>
         <template slot="desc">
-您选择的上海地区201712,201801,201802,201803月份购买社保公积金已生成订单!订单号为：20171108103026000230</template>
+          {{Message.fcontent}}
+        </template>
       </Alert>
-      <Alert show-icon :closable="true" @on-close="deleteMsg" class="marginT_20">
-        <div class="marginT_10">
-          <span class="InlineBlock"><b>系统提醒 2017-11-08 10:30:27</b></span>
-          <span class="InlineBlock colorBlue" style="font-size: 12px;float: right;">标记为已读</span>
-        </div>
-        <Icon type="speakerphone" slot="icon"></Icon>
-        <template slot="desc">
-您选择的上海地区201712,201801,201802,201803月份购买社保公积金已生成订单!订单号为：20171108103026000230</template>
-      </Alert>
+      <Page  v-if="MeaasgeList.length>0" class="marginT_20" :total="Total" show-total style="float: right;" :current="page_num" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer></Page>
     </div>
 </template>
 <script>
@@ -33,23 +31,14 @@ import {timestampToFormatTime} from '../../../util/utils'
 export default {
   data() {
   return {
-
-    
+    Total:0,
+    page_num:1,  //页数
+    number:10,   //每页条数
+    MeaasgeList:[]
   }
   },
   created(){
-    // axios.get(R_PRE_URL+'/searchOrderList.do?member_id='+this.$store.state.userInfo.member_id
-    //   ).then((res)=> {
-    //     let temp = res.data.arr
-    //     temp.map((item,idx)=>{
-    //       item.pay_time = timestampToFormatTime(item.pay_time.time)
-    //     })
-    //     this.dataOrder = temp
-    //     console.log(this.dataOrder)
-
-    //   }).catch((error)=> {
-    //     console.log(error)
-    //   })
+    this.getMessage()
   },
   mounted: function(){
     
@@ -61,6 +50,51 @@ export default {
   watch:{
   },
   methods: {
+    //分页
+    changePage(event){//当前页数
+      this.page_num = event
+      this.getDataOrder()
+    },
+    //切换每页条数
+    changePageSize(event){
+      this.number = event
+      this.getDataOrder()
+    },
+    MarkMessage(ID,Fread){
+      let TFread
+      if(Fread==0){
+        TFread=1
+      }else{
+        TFread=0
+      }
+      axios.get(R_PRE_URL+'/updateMessage.do?id='+ID+'&fread='+TFread
+      ).then((res)=> {
+        if(res.data.result == 2){
+          this.$Message.success('标记成功！')
+          this.getMessage()
+        }else{
+          this.$Message.error('标记失败！')
+        }
+
+      }).catch((error)=> {
+        console.log(error)
+      })
+    },
+    //获取消息
+    getMessage(){
+      axios.get(R_PRE_URL+'/serMessageList.do?member_id='+this.$store.state.userInfo.member_id+'&number='+this.number+'&page_num='+this.page_num
+      ).then((res)=> {
+        let temp = res.data.arr
+        temp.map((item,idx)=>{
+          item.fdate = timestampToFormatTime(item.fdate.time)
+        })
+        this.MeaasgeList = temp
+        this.Total = res.data.messageCount
+
+      }).catch((error)=> {
+        console.log(error)
+      })
+    },
     deleteMsg(){
       alert('delete---')
     }

@@ -74,7 +74,11 @@ import axios from 'axios'
           this.$router.push({name:'社保周边'})
           break
           case 3:
-          this.$router.push({name:'我的订单'})
+          if(this.$store.state.userInfo.register_type==0){
+            this.$router.push({name:'我的订单(个人)'})
+          }else{
+            this.$router.push({name:'我的订单(企业)'})
+          }
           break
         }
       },

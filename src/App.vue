@@ -76,7 +76,6 @@ import FooterPartM from 'components/Mobile/FooterPartM'
   .ChildsBlock{
     width: 100%;
   }
-
   .layout{
         border: 0px solid #d7dde4;
         background: #fff;
@@ -109,6 +108,9 @@ import FooterPartM from 'components/Mobile/FooterPartM'
     }
     .layout-ceiling-main a{
         color: #9ba7b5;
+    }
+    .ivu-affix{
+      width: 100px !important;
     }
 }
 .PC{

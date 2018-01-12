@@ -15,6 +15,7 @@ const store = new Vuex.Store({
         register_type:localStorage.getItem("register_type"),
         // useravatar:localStorage.getItem("user_avatar"),
     },
+    MessageCount:0,
     HRMenuCur:'我的订单',
     ifLogined:getCookie('btsby_cookie')?true : false,
     // ifLogined:(localStorage.getItem("member_id"))?true : false,
@@ -73,6 +74,9 @@ const store = new Vuex.Store({
   mutations:{
     [types.ROUTE_CHANGE](state,data){
       state.activeRoute = data.activeRoute
+    },
+    [types.MESSAGECOUNT_CHANGE](state,data){
+      state.MessageCount = data.messageCount
     },
     [types.TOAST_TOGGLE](state,data){
       if(state.toast.ifShow){

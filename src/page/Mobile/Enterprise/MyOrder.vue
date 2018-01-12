@@ -93,7 +93,7 @@ import {timestampToFormatTime} from '../../../util/utils'
       },
       ToOrderDetail(Order){
         localStorage.setItem("OrderAmount",Order.amount)
-        this.$router.push({name:'订单详情(个人)',params:{OrderNo:Order.order_no}})
+        this.$router.push({name:'订单详情(企业)',params:{OrderNo:Order.order_no}})
       },
       //获取数据
     getDataOrder(Number,PageNum,Status){
@@ -106,7 +106,7 @@ import {timestampToFormatTime} from '../../../util/utils'
           start_time = '',
           end_time = '',
           month_name = ''
-      axios.get(R_PRE_URL+'/searchOrderList.do?member_id='+this.$store.state.userInfo.member_id+'&number='+number+'&status='+status+'&progress='+progress+'&start_time='+start_time+'&end_time='+end_time+'&month_name='+month_name+'&page_num='+ page_num
+      axios.get(R_PRE_URL+'/searchCompanyOrderList.do?member_id='+this.$store.state.userInfo.member_id+'&number='+number+'&status='+status+'&progress='+progress+'&start_time='+start_time+'&end_time='+end_time+'&month_name='+month_name+'&page_num='+ page_num
       ).then((res)=> {
         //this.Total = res.data.orderCount
         let temp = res.data.arr

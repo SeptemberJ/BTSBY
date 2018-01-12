@@ -1,5 +1,5 @@
 <template>
-  <div id="TopBlock" class="layout-ceiling" v-if="activeRoute!='个人注册' && activeRoute!='企业注册'">
+  <div id="TopBlock" class="layout-ceiling" v-if="activeRoute!='个人注册' && activeRoute!='企业注册' && activeRoute!='找回密码'">
       <div class="layout-ceiling-main">
           <Row type="flex" justify="space-around">
               <Col span="11">
@@ -7,7 +7,7 @@
                 <Button type="text" v-if="!ifLogined" @click="ToSign">注册</Button>
                 <Button type="text" v-if="ifLogined" @click="">{{UserName}}</Button>
                 <Button type="text" v-if="ifLogined" @click="GoMessage" style="cursor:pointer;">
-                  <Badge count="15">
+                  <Badge :count="MessageCount">
                       <Icon type="ios-bell-outline" size="22"></Icon>
                   </Badge>
                 </Button>
@@ -57,7 +57,10 @@ export default {
     },
     ifLogined(){
       return this.$store.state.ifLogined
-    }
+    },
+    MessageCount(){
+      return this.$store.state.MessageCount
+    },
   },
   watch:{
   },
