@@ -1,18 +1,10 @@
 <template>
   <div class="HowBuy">
-	<BackBar></BackBar>
+  	<BackBar></BackBar>
+    <div class="MainContent">
+      <img class="fullWidth" src="static/img/buy_online.jpg">
+    </div>
   </div> 
-
-
-
-  
-
-
-    
-    
-  
-
-
 </template>
 <script>
 import Vue from 'vue'
@@ -49,5 +41,13 @@ import BlankBar from '../../components/Mobile/BlankBar'
 <style lang="scss">
 .HowBuy{
   margin-bottom: 130px;
+  .MainContent{
+    width: 95%;
+    margin: 0px auto;
+    margin-top: 52px;
+    .fullWidth{
+      width: 100%;
+    }
+  }
 }
 </style>

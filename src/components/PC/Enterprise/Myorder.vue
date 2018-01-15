@@ -34,7 +34,7 @@
       <!-- table -->
       <Table class="marginT_20" border highlight-row :columns="myOrderList" :loading="ifLoading" :data="dataOrder"></Table>
 
-      <Page class="marginT_20" :total="Total" show-total style="float: right;" :current="page_num" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer></Page>
+      <Page class="marginT_20 marginB_150" :total="Total" show-total style="float: right;" :current="page_num" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer></Page>
       
       <!-- Modal -->
       <Modal v-model="ifShowModal" :width="800">

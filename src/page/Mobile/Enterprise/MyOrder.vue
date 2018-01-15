@@ -1,6 +1,9 @@
 <template>
   <div class="CostRecord">
   	<BackBar></BackBar>
+     <pull-to
+    :bottom-load-method="loadmore"
+    @bottom-state-change="stateChange" class="Apositiom">
     <div class="MainContent">
       <Row type="flex" justify="space-around" class="code-row-bg" style="height: 35px;line-height: 35px;">
         <Col span="8" class="TextCenter" v-bind:class="{tab_active:OrderTab_cur==0}"><span @click="ChangeTab(0)">待支付</span></Col>
@@ -16,13 +19,13 @@
       </Row>
       <Row class="ListBlock" v-else>
         <Col span="24" v-for="(Order,OrderIdx) in MyOrderList" class="marginT_20">
-          <div @click="Order.status=='待支付'?ToOrderDetail(Order):''">
+          <div>
             <Card>
                 <p slot="title">
                     单号:
                     {{Order.order_no}}
                 </p>
-                <a  slot="extra" v-if="Order.status=='待支付'">
+                <a  slot="extra" v-if="Order.status=='待支付'"  @click="Order.status=='待支付'?ToOrderDetail(Order):''">
                     <Icon type="chevron-right"></Icon>
                 </a>
                 <ul>
@@ -34,8 +37,15 @@
           </div>
         </Col>
       </Row>
+      <!-- <Row type="flex" justify="center" class="code-row-bg"  v-if="MyOrderList.length>0">
+        <Col>
+         <Page class="marginT_20 marginB_150" :total="Total" show-total style="float: right;" :current="page_num" @on-change="changePage" @on-page-size-change="changePageSize"
+         :show-sizer='false'></Page>
+        </Col>
+      </Row> -->
       
     </div>
+    </pull-to>
     <!-- 返回顶部 -->
     <BackTop :height="100" :bottom="200">
       <div class="top"><Icon type="android-arrow-dropup" :size="24"></Icon></div>
@@ -44,24 +54,39 @@
   </div> 
 </template>
 <script>
+const BOTTOM_DEFAULT_CONFIG = {
+  pullText: '上拉加载',
+  triggerText: '释放更新',
+  loadingText: '加载中...',
+  doneText: '加载完成',
+  failText: '加载失败',
+  loadedStayTime: 400,
+  stayDistance: 50,
+  triggerDistance: 70
+}
 import Vue from 'vue'
 import axios from 'axios'
 import BackBar from '../../../components/Mobile/BackBar'
 import BlankBar from '../../../components/Mobile/BlankBar'
 import Spin from '../../../components/PC/Common/Spin'
+import PullTo from 'vue-pull-to'
 import {timestampToFormatTime} from '../../../util/utils'
   export default{
     data: function () {
       return {
+        Total:0,
+        page_num:1,  //页数
+        number:10,   //每页条数
         OrderTab_cur:0,
-        MyOrderList:[]
+        MyOrderList:[],
+        iconLink: ''
       }
     },
     mounted: function () {
       
     },
     created() {
-      this.getDataOrder(100,1,0)
+      this.getDataOrder(this.number,this.page_num,this.OrderTab_cur)
       
     },
     computed: {
@@ -72,22 +97,26 @@ import {timestampToFormatTime} from '../../../util/utils'
     },
     components: {
       BackBar,
-      Spin
+      Spin,
+      PullTo
     },
     methods: {
       ChangeTab(KIND){
         switch(KIND){
           case 0:
           this.OrderTab_cur = 0
-          this.getDataOrder(100,1,0)
+          this.MyOrderList = []
+          this.getDataOrder(this.number,1,0)
           break
           case 1:
           this.OrderTab_cur = 1
-          this.getDataOrder(100,1,2)
+          this.MyOrderList = []
+          this.getDataOrder(this.number,1,2)
           break
           case 2:
           this.OrderTab_cur = 2
-          this.getDataOrder(100,1,3)
+          this.MyOrderList = []
+          this.getDataOrder(this.number,1,3)
           break
         }
       },
@@ -95,69 +124,97 @@ import {timestampToFormatTime} from '../../../util/utils'
         localStorage.setItem("OrderAmount",Order.amount)
         this.$router.push({name:'订单详情(企业)',params:{OrderNo:Order.order_no}})
       },
+      //分页
+      changePage(event){//当前页数
+        this.page_num = event
+        this.getDataOrder(this.number,event,this.OrderTab_cur)
+      },
+      //切换每页条数
+      changePageSize(event){
+        this.number = event
+        this.getDataOrder(event,this.page_num,this.OrderTab_cur)
+      },
       //获取数据
-    getDataOrder(Number,PageNum,Status){
-      this.ifSpin = true
-      let member_id = this.$store.state.userInfo.member_id,
-          number = Number,
-          page_num = 1,
-          status = Status,
-          progress = '',
-          start_time = '',
-          end_time = '',
-          month_name = ''
-      axios.get(R_PRE_URL+'/searchCompanyOrderList.do?member_id='+this.$store.state.userInfo.member_id+'&number='+number+'&status='+status+'&progress='+progress+'&start_time='+start_time+'&end_time='+end_time+'&month_name='+month_name+'&page_num='+ page_num
-      ).then((res)=> {
-        //this.Total = res.data.orderCount
-        let temp = res.data.arr
-        temp.map((item,idx)=>{
-          switch(item.status){
-            case '0':
-            item.status = '待支付'
-            break;
-            case '1':
-            item.status = '已支付'
-            break;
-            case '2':
-            item.status = '支付成功'
-            break;
-            case '3':
-            item.status = '支付失败'
-            break;
-          }
-          switch(item.progress){
-            case '0':
-            item.progress = '订单待支付'
-            break;
-            case '1':
-            item.progress = '已支付待确认'
-            break;
-            case '2':
-            item.progress = '已确认支付成功'
-            break;
-            case '3':
-            item.progress = '未支付成功'
-            break;
-            case '4':
-            item.progress = '订单已处理'
-            break;
-            case '5':
-            item.progress = '订单完成'
-            break;
-            case '6':
-            item.progress = '订单已取消'
-            break;
-          }
-          item.pay_time = timestampToFormatTime(item.pay_time.time)
-          this.ifSpin = false
-        })
-        this.MyOrderList = temp
-        this.ifSpin = false
+      getDataOrder(Number,PageNum,Status){
+        this.ifSpin = true
+        let member_id = this.$store.state.userInfo.member_id,
+            number = Number,
+            page_num = PageNum,
+            status = Status,
+            progress = '',
+            start_time = '',
+            end_time = '',
+            month_name = ''
+        axios.get(R_PRE_URL+'/searchCompanyOrderList.do?member_id='+this.$store.state.userInfo.member_id+'&number='+number+'&status='+status+'&progress='+progress+'&start_time='+start_time+'&end_time='+end_time+'&month_name='+month_name+'&page_num='+ page_num
+        ).then((res)=> {
+          this.Total = res.data.orderCount
+          let temp = res.data.arr
+          if(res.data.arr.length<=0){
+            this.MyOrderList.push()
+          }else{
+            temp.map((item,idx)=>{
+            switch(item.status){
+              case '0':
+              item.status = '待支付'
+              break;
+              case '1':
+              item.status = '已支付'
+              break;
+              case '2':
+              item.status = '支付成功'
+              break;
+              case '3':
+              item.status = '支付失败'
+              break;
+            }
+            switch(item.progress){
+              case '0':
+              item.progress = '订单待支付'
+              break;
+              case '1':
+              item.progress = '已支付待确认'
+              break;
+              case '2':
+              item.progress = '已确认支付成功'
+              break;
+              case '3':
+              item.progress = '未支付成功'
+              break;
+              case '4':
+              item.progress = '订单已处理'
+              break;
+              case '5':
+              item.progress = '订单完成'
+              break;
+              case '6':
+              item.progress = '订单已取消'
+              break;
+            }
+            item.pay_time = timestampToFormatTime(item.pay_time.time)
+            this.MyOrderList.push(item)
+          })
+            this.page_num++
 
-      }).catch((error)=> {
-        console.log(error)
-      })
-    },
+          }
+          this.ifSpin = false
+
+        }).catch((error)=> {
+          console.log(error)
+        })
+      },
+      loadmore(loaded) {
+        this.getDataOrder(this.number,this.page_num,this.OrderTab_cur)
+        loaded('done');
+      },
+      stateChange(state) {
+        if (state === 'pull' || state === 'trigger') {
+          this.iconLink = '#icon-arrow-bottom';
+        } else if (state === 'loading') {
+          this.iconLink = '#icon-loading';
+        } else if (state === 'loaded-done') {
+          this.iconLink = '#icon-finish';
+        }
+      }
       
       
     }
@@ -175,7 +232,7 @@ import {timestampToFormatTime} from '../../../util/utils'
       border-bottom: 2px solid #39f;
     }
     .ListBlock{
-      width: 95%;
+      width: 100%;
       margin: 40rpx auto 0 auto;
      img{
         width: 80px;
@@ -192,5 +249,8 @@ import {timestampToFormatTime} from '../../../util/utils'
         text-align: center;
         border-radius: 50%;
     }
+  .scroll-container{
+    margin-bottom: 60px;
+  }
 }
 </style>

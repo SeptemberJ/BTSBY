@@ -15,7 +15,7 @@ const store = new Vuex.Store({
         register_type:localStorage.getItem("register_type"),
         // useravatar:localStorage.getItem("user_avatar"),
     },
-    MessageCount:0,
+    MessageCount:11,
     HRMenuCur:'我的订单',
     ifLogined:getCookie('btsby_cookie')?true : false,
     // ifLogined:(localStorage.getItem("member_id"))?true : false,

@@ -14,20 +14,20 @@
       <Alert show-icon  class="marginT_20" v-for="(Message,MessageIdx) in MeaasgeList" :type="Message.fread==0?'error':'success'">
         <div class="marginT_10">
           <span class="InlineBlock"><b>系统提醒 {{Message.fdate}}</b></span>
-          <span class="InlineBlock colorBlue" style="font-size: 12px;float: right;"@click="MarkMessage(Message.id,Message.fread)" >{{Message.fread==0?'标记为已读':'标记为未读'}}</span>
+          <span class="InlineBlock colorBlue cursorPointer" style="font-size: 12px;float: right;"@click="MarkMessage(Message.id,Message.fread)" >{{Message.fread==0?'标记为已读':'标记为未读'}}</span>
         </div>
         <Icon type="speakerphone" slot="icon"></Icon>
         <template slot="desc">
           {{Message.fcontent}}
         </template>
       </Alert>
-      <Page  v-if="MeaasgeList.length>0" class="marginT_20" :total="Total" show-total style="float: right;" :current="page_num" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer></Page>
+      <Page  v-if="MeaasgeList.length>0" class="marginT_20 marginB_150" :total="Total" show-total style="float: right;" :current="page_num" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer></Page>
     </div>
 </template>
 <script>
 import Vue from 'vue'
 import axios from 'axios'
-import {timestampToFormatTime} from '../../../util/utils'
+import {timestampToFormatTime,MessageChange} from '../../../util/utils'
 export default {
   data() {
   return {
@@ -53,12 +53,12 @@ export default {
     //分页
     changePage(event){//当前页数
       this.page_num = event
-      this.getDataOrder()
+      this.getMessage()
     },
     //切换每页条数
     changePageSize(event){
       this.number = event
-      this.getDataOrder()
+      this.getMessage()
     },
     MarkMessage(ID,Fread){
       let TFread
@@ -72,6 +72,7 @@ export default {
         if(res.data.result == 2){
           this.$Message.success('标记成功！')
           this.getMessage()
+          MessageChange()
         }else{
           this.$Message.error('标记失败！')
         }

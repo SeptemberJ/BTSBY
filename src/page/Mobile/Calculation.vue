@@ -62,7 +62,7 @@
         <Row :gutter="16" class="marginT_20">
           <div>
             <Col span="12"><Button type="error" long @click="Calculate">计算</Button></Col>
-            <Col span="12"><Button type="error" long>缴社保</Button></Col></Col>
+            <Col span="12"><Button type="error" long @click="ToPay">缴社保</Button></Col></Col>
           </div>
         </Row>
       </div>
@@ -147,6 +147,14 @@ import BlankBar from '../../components/Mobile/BlankBar'
           this.sumG = 0
           this.sum = Number(this.sumS).toFixed(2)
         }
+        
+      },
+      ToPay(){
+        if(this.$store.state.userInfo.register_type==0){
+            this.$router.push({name:'参保信息'})
+          }else{
+            this.$Message.warning('企业用户请登录PC端进行缴纳!')
+          }
         
       }
     }

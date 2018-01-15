@@ -175,75 +175,92 @@ import TitBar from '../../components/Mobile/TitBar'
   export default{
     data: function () {
       return {
+        canNext:false,
         cityList:'',//城市列表
-    formInsuredInfo: {
-      memberDetail:{},
-      NAME:'',//用户名
-      IDNUMBER:'',//身份证
-      INSURED_AREA:'',//参保城市
-      RESIDENCE:'',//户口性质
-      // JOB:'',//岗位
-      // STREET:'',//街道
-      AvatarSource:{   //upload img
-        sfz_front:'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar',
-        sfz_back:'',
-        hkb_hz:'',
-        hkb_br:'',
-        personal_detail:'',
-      }
-    },
-    ruleInline: {
-        NAME: [
-            { required: true, message: '请输入真实姓名！', trigger: 'blur' }
+        formInsuredInfo: {
+          memberDetail:{},
+          NAME:'',//用户名
+          IDNUMBER:'',//身份证
+          INSURED_AREA:'',//参保城市
+          RESIDENCE:'',//户口性质
+          // JOB:'',//岗位
+          // STREET:'',//街道
+          AvatarSource:{   //upload img
+            sfz_front:'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar',
+            sfz_back:'',
+            hkb_hz:'',
+            hkb_br:'',
+            personal_detail:'',
+          }
+        },
+        ruleInline: {
+            NAME: [
+                { required: true, message: '请输入真实姓名！', trigger: 'blur' }
+            ],
+            IDNUMBER: [
+                { required: true, message: '请输入身份证号！', trigger: 'blur' },
+            ],
+            INSURED_AREA: [
+                { required: true, message: '请选择参保城市！', trigger: 'blur' },
+            ],
+            RESIDENCE: [
+                { required: true, message: '请选择户口性质！', trigger: 'blur' },
+            ],
+            sfz_front: [
+                { required: true, message: '请上传身份证正面！', trigger: 'blur' },
+            ],
+        },
+        defaultList: [
+        'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
         ],
-        IDNUMBER: [
-            { required: true, message: '请输入身份证号！', trigger: 'blur' },
-        ],
-        INSURED_AREA: [
-            { required: true, message: '请选择参保城市！', trigger: 'blur' },
-        ],
-        RESIDENCE: [
-            { required: true, message: '请选择户口性质！', trigger: 'blur' },
-        ],
-        sfz_front: [
-            { required: true, message: '请上传身份证正面！', trigger: 'blur' },
-        ],
-    },
-    defaultList: [
-    'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
-    ],
-    imgName: '',
-    visible: false,
-    uploadList: []
+        imgName: '',
+        visible: false,
+        uploadList: []
         
       }
     },
     created() {
-    axios.get(R_PRE_URL+'/searchCityList.do'
-    ).then((res)=> { 
-      this.cityList = res.data.arr
-    }).catch((error)=> {
-      console.log(error)
-    })
-    axios.get(R_PRE_URL+'/searchMemberDetail.do?member_id='+this.$store.state.userInfo.member_id
-    ).then((res)=> { 
-      console.log('searchMemberDetail-------------------')
-      console.log(res.data.memberDetail)
-      let MemberDetail = res.data.memberDetail
-      this.formInsuredInfo.NAME = MemberDetail.real_name || ''
-      this.formInsuredInfo.IDNUMBER = MemberDetail.sfz_no || ''
-      this.formInsuredInfo.INSURED_AREA = MemberDetail.city_name|| ''
-      this.formInsuredInfo.RESIDENCE = MemberDetail.type || ''
-      this.formInsuredInfo.AvatarSource = {  
-            sfz_front:MemberDetail.sfz_front || '',
-            sfz_back:MemberDetail.sfz_back || '',
-            hkb_hz:MemberDetail.hkb_hz || '',
-            hkb_br:MemberDetail.hkb_br || '',
-            personal_detail:MemberDetail.personal_detail || ''
-     }
-    }).catch((error)=> {
-      console.log(error)
-    })
+      if(this.$store.state.userInfo.register_type == 1){
+        this.$Message.warning('企业用户请登录PC端进行缴纳!')
+        this.$router.push({name:'首页'})
+      }else{
+        axios.get(R_PRE_URL+'/searchCityList.do'
+        ).then((res)=> { 
+          this.cityList = res.data.arr
+        }).catch((error)=> {
+          console.log(error)
+        })
+        axios.get(R_PRE_URL+'/searchMemberDetail.do?member_id='+this.$store.state.userInfo.member_id
+        ).then((res)=> {
+        console.log('searchMemberDetail-------------------')
+          console.log(res.data.memberDetail) 
+          if(res.data.memberDetail){
+            this.canNext = true
+            let MemberDetail = res.data.memberDetail
+            this.formInsuredInfo.NAME = MemberDetail.real_name || ''
+            this.formInsuredInfo.IDNUMBER = MemberDetail.sfz_no || ''
+            this.formInsuredInfo.INSURED_AREA = MemberDetail.city_name|| ''
+            this.formInsuredInfo.RESIDENCE = MemberDetail.type || ''
+            this.formInsuredInfo.AvatarSource = {  
+                  sfz_front:MemberDetail.sfz_front || '',
+                  sfz_back:MemberDetail.sfz_back || '',
+                  hkb_hz:MemberDetail.hkb_hz || '',
+                  hkb_br:MemberDetail.hkb_br || '',
+                  personal_detail:MemberDetail.personal_detail || ''
+            }
+
+          }else{
+            this.canNext = false
+          }
+          
+          
+
+        }).catch((error)=> {
+          console.log(error)
+        })
+
+      }
+    
   },
   mounted: function(){
     this.uploadList = this.$refs.upload.fileList;
@@ -266,47 +283,53 @@ import TitBar from '../../components/Mobile/TitBar'
     },
   methods: {
     saveSecurityInfo(name) {
-        // this.$refs[name].validate((valid) => {
-        //     if (valid) {
-        //       if(!(/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(this.formInsuredInfo.IDNUMBER))){
-        //         this.$Message.error('身份证格式不正确!')
-        //         return false
-        //       }
-        //       //必填项校验
-        //       if(!this.formInsuredInfo.AvatarSource.sfz_front || !this.formInsuredInfo.AvatarSource.sfz_back || !this.formInsuredInfo.AvatarSource.hkb_hz || !this.formInsuredInfo.AvatarSource.hkb_br ||!this.formInsuredInfo.AvatarSource.personal_detail ){
-        //         this.$Message.error('请先上传需要的文件!')
-        //         return false
-        //       }
-        //       let DATA = {
-        //         member_id:this.$store.state.userInfo.member_id,
-        //         real_name:this.formInsuredInfo.NAME,
-        //         sfz_no:this.formInsuredInfo.IDNUMBER,
-        //         city:this.formInsuredInfo.INSURED_AREA,
-        //         type:this.formInsuredInfo.RESIDENCE,
-        //         sfz_front:this.formInsuredInfo.AvatarSource.sfz_front,
-        //         sfz_back:this.formInsuredInfo.AvatarSource.sfz_back,
-        //         hkb_hz:this.formInsuredInfo.AvatarSource.hkb_hz,
-        //         hkb_br:this.formInsuredInfo.AvatarSource.hkb_br,
-        //         personal_detail:this.formInsuredInfo.AvatarSource.personal_detail
-        //       }
-        //       console.log(DATA)
-        //         axios.post(R_PRE_URL+'/updateMemberDetail.do',DATA
-        //       ).then((res)=> {
-        //         if(res.data.code==2){
-        //           this.$Message.success('信息更新成功!')
-        //         }else{
-        //           this.$Message.error('信息更新失败!')
-        //           return false
-        //         }
-        //       }).catch((error)=> {
-        //         console.log(error)
-        //       })
-                
-        //     } else {
-        //         this.$Message.error('带*号的为必填项!')
-        //     }
-        // })
+      alert(this.canNext)
+      if(this.canNext){   //信息已存在
         this.$router.push({name:'缴纳社保'})
+      }else{   //填写信息
+        this.$refs[name].validate((valid) => {
+            if (valid) {
+              if(!(/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(this.formInsuredInfo.IDNUMBER))){
+                this.$Message.error('身份证格式不正确!')
+                return false
+              }
+              console.log(this.formInsuredInfo.AvatarSource)
+              //必填项校验
+              if(!this.formInsuredInfo.AvatarSource.sfz_front || !this.formInsuredInfo.AvatarSource.sfz_back || !this.formInsuredInfo.AvatarSource.hkb_hz || !this.formInsuredInfo.AvatarSource.hkb_br ||!this.formInsuredInfo.AvatarSource.personal_detail ){
+                this.$Message.error('请先上传需要的文件!')
+                return false
+              }
+              let DATA = {
+                member_id:this.$store.state.userInfo.member_id,
+                real_name:this.formInsuredInfo.NAME,
+                sfz_no:this.formInsuredInfo.IDNUMBER,
+                city:this.formInsuredInfo.INSURED_AREA,
+                type:this.formInsuredInfo.RESIDENCE,
+                sfz_front:this.formInsuredInfo.AvatarSource.sfz_front,
+                sfz_back:this.formInsuredInfo.AvatarSource.sfz_back,
+                hkb_hz:this.formInsuredInfo.AvatarSource.hkb_hz,
+                hkb_br:this.formInsuredInfo.AvatarSource.hkb_br,
+                personal_detail:this.formInsuredInfo.AvatarSource.personal_detail
+              }
+              console.log(DATA)
+                axios.post(R_PRE_URL+'/updateMemberDetail.do',DATA
+              ).then((res)=> {
+                if(res.data.code==2){
+                  this.$Message.success('信息更新成功!')
+                  this.canNext == true
+                  this.$router.push({name:'缴纳社保'})
+                }else{
+                  this.$Message.error('信息更新失败!')
+                  return false
+                }
+              }).catch((error)=> {
+                console.log(error)
+              })
+            }else{
+              this.$Message.error('带*号的为必填项!')
+            }
+          })
+      }
     },
     // upload
     // 身份证正面

@@ -1,4 +1,15 @@
 import CryptoJS from 'crypto-js'
+import axios from 'axios'
+import store from '../store/store'
+
+export function MessageChange() {
+  axios.get(R_PRE_URL+'/serMessageUnread.do?member_id='+store.state.userInfo.member_id
+  ).then((res)=> {
+    store.commit('MESSAGECOUNT_CHANGE',{messageCount: res.data.messageUnreadCount})
+  }).catch((error)=> {
+    console.log(error)
+  })
+}
 
 //日期升序
 export function DateSortASC(MontList) {  //2018-01

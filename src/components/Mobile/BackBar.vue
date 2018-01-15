@@ -1,6 +1,6 @@
 <template>
   <div class="BackBar" @click="Back">
-    <Icon type="chevron-left" size="16"></Icon>
+    <Icon type="chevron-left" size="16" style="color: #fff;"></Icon>
     <span class="NavTxt">{{activeRoute}}</span>
   </div> 
 

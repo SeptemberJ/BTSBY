@@ -35,15 +35,10 @@ export default {
   }
   },
   mounted: function(){
-    //获取导航菜单
-    // axios.get(PRE_URL+'static/json/Navbar.json'
-    //     ).then((res)=> {
-    //       this.navbarInfo = res.data.navbar
-    //   }).catch((error)=> {
-    //     console.log(error)
-    //   })
     
   
+  },
+  created() {
   },
   computed: {
     isMobile(){
@@ -59,6 +54,7 @@ export default {
       return this.$store.state.ifLogined
     },
     MessageCount(){
+
       return this.$store.state.MessageCount
     },
   },

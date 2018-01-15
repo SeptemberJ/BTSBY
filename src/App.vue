@@ -3,22 +3,32 @@
     <div class="layout">
       <TopBlock v-if="!isMobile"></TopBlock>
       <NavBar v-if="!isMobile"></NavBar>
-      <!-- <Carousel></Carousel> -->
         <div class="ChildsBlock">
           <transition>
             <router-view class="child-view"></router-view>
           </transition>
         </div>
-        <!-- <div class="layout-copy marginT_10"> -->
         <FooterPart   v-if="!isMobile"></FooterPart>
-        <!-- </div> -->
         <FooterPartM v-if="isMobile"></FooterPartM>
     </div>
 
     <Affix v-if="!isMobile && activeRoute!='HR管理后台(个人)' && activeRoute!='HR管理后台(企业)' && activeRoute!='登录' && activeRoute!='个人注册' && activeRoute!='企业注册'"></Affix>
   </div>
+<!--   <transition>
+            <router-view class="child-view"></router-view>
+          </transition> -->
 </template>
 <script>
+const BOTTOM_DEFAULT_CONFIG = {
+  pullText: '上拉加载',
+  triggerText: '释放更新',
+  loadingText: '加载中...',
+  doneText: '加载完成',
+  failText: '加载失败',
+  loadedStayTime: 400,
+  stayDistance: 50,
+  triggerDistance: 170
+}
 import TopBlock from 'components/PC/Common/TopBlock'
 import NavBar from 'components/PC/Common/NavBar'
 import Carousel from 'components/PC/Common/Carousel'
@@ -73,6 +83,7 @@ import FooterPartM from 'components/Mobile/FooterPartM'
 .com-app{
   width: 100%;
   height: auto;
+  position: absolute;
   .ChildsBlock{
     width: 100%;
   }
@@ -119,6 +130,7 @@ import FooterPartM from 'components/Mobile/FooterPartM'
 }
 .MOBILE{
   width: 100%;
+  height: 100%;
   margin: 0 auto;
 }
 

@@ -83,7 +83,11 @@ import BlankBar from '../../components/Mobile/BlankBar'
         this.$router.push({name:'城市查询信息',params: {CityCode:CityCode}})
       },
       GoMyOrder(){
-        this.$router.push({name:'我的订单'})
+        if(this.$store.state.userInfo.register_type==0){
+          this.$router.push({name:'我的订单(个人)'})
+        }else{
+          this.$router.push({name:'我的订单(企业)'})
+        }
       }
     },
   }

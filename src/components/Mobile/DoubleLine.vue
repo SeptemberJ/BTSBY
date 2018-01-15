@@ -87,7 +87,7 @@ import axios from 'axios'
           this.$router.push({name:'如何在线购买'})
           break
           case 3:
-          this.$store.state.PeripheryTab_cur = 2
+          this.$store.state.PeripheryTab_cur = 3
           this.$router.push({name:'社保周边'})
           break
         }

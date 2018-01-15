@@ -59,7 +59,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import ChoosePayMember from "./ChoosePayMember.vue"
-import {getOneYearMonth,Intersect,ifContinuity,DateSortASC} from "../../../../util/utils"
+import {getOneYearMonth,Intersect,ifContinuity,DateSortASC,MessageChange} from "../../../../util/utils"
 export default {
   data() {
   return {
@@ -297,6 +297,7 @@ export default {
           case '2':
           this.$Message.success('下单成功!')
           this.$store.state.HRMenuCur = '我的订单'
+          MessageChange()
           break;
           case '0':
           this.$Notice.warning({

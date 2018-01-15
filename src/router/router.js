@@ -35,6 +35,7 @@ import FindPsdM from '../page/Mobile/FindPsd'
 import My from '../page/Mobile/My'
 import MyWallet from '../page/Mobile/My/MyWallet'
 import PersonalData from '../page/Mobile/My/PersonalData'
+import EnterpriseData from '../page/Mobile/Enterprise/EnterpriseInfo'
 import PsdModification from '../page/Mobile/My/PsdModification'
 import Message from '../page/Mobile/My/Message'
 import Feedback from '../page/Mobile/My/Feedback'
@@ -47,9 +48,12 @@ import SecurityRecord from '../page/Mobile/My/SecurityRecord'
 import Calculation from '../page/Mobile/Calculation'
 import Search from '../page/Mobile/Search'
 import CityInfo from '../page/Mobile/CityInfo'
+import MyOrderPull from '../page/Mobile/My/MyOrderPull'
 
 import {deviceInfo} from "../util/device"
 import {setCookie,getCookie} from '../util/utils'
+
+import {MessageChange} from "../util/utils"
 
 Vue.use(VueRouter)
 
@@ -88,6 +92,7 @@ const routes = [
     {path: '/My', name: '我的', component: My,meta: {requireAuth: false}},
     {path: '/MyWallet', name: '我的钱包', component: MyWallet,meta: {requireAuth: true}},
     {path: '/PersonalData', name: '个人资料', component: PersonalData,meta: {requireAuth: true}},
+    {path: '/EnterpriseData', name: '企业资料', component: EnterpriseData,meta: {requireAuth: true}},
     {path: '/PsdModification', name: '修改密码', component: PsdModification,meta: {requireAuth: true}},
     {path: '/Message', name: '我的消息', component: Message,meta: {requireAuth: true}},
     {path: '/Feedback', name: '意见反馈', component: Feedback,meta: {requireAuth: true}},
@@ -101,7 +106,7 @@ const routes = [
     {path: '/Search', name: '查社保', component: Search},
     {path: '/CityInfo/:CityCode', name: '城市查询信息', component: CityInfo},
     
-
+{path: '/MyOrderPull', name: 'MyOrderPull', component: MyOrderPull},
 
       {path:'*', redirect: '/Index'}
       // {path: '/article/:id', name: 'article', component: Article},
@@ -143,13 +148,7 @@ router.afterEach((to, from, next) => {
   Store.state.isMobile=ISMobile;
   document.title = to.name;
   Store.commit('ROUTE_CHANGE',{activeRoute: to.name})
-    axios.get(R_PRE_URL+'/serMessageUnread.do?member_id='+Store.state.userInfo.member_id
-      ).then((res)=> {
-        Store.commit('MESSAGECOUNT_CHANGE',{messageCount: res.data.MessageUnreadCount})
-      }).catch((error)=> {
-        console.log(error)
-      })
-
-      
+  //获取消息通知
+  MessageChange()
 })
 export default router

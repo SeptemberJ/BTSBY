@@ -10,7 +10,7 @@
 
       </Row>
       <!-- middle two -->
-      <Row class="MiddleTwo">
+      <!-- <Row class="MiddleTwo">
         <div  @click="GoModule(-1)">
           <Col span="12" class="TextCenter" style="border-right: 1px solid #ddd;">
             <Avatar src="static/img/qiangbao.png" size="small"/>
@@ -24,22 +24,36 @@
           </Col>
         </div>
       </Row>
-
+ -->
       <BlankBar></BlankBar>
 
       <!-- list -->
       <div class="List">
         <Row :gutter="16" class="ListItem">
+          <div  @click="GoModule(-1)">
+            <Col span="4" class="TextCenter"><Avatar src="static/img/qiangbao.png" size="small"/></Col>
+            <Col span="12">我的订单</Col>
+            <Col span="8" class="TextRight"><Icon type="chevron-right"></Icon></Col>
+          </div>
+        </Row>
+        <Row :gutter="16" class="ListItem" v-if="Type==0">
+          <div  @click="GoModule(-2)">
+            <Col span="4" class="TextCenter"><Avatar src="static/img/tbjl.png" size="small"/></Col>
+            <Col span="12">投保记录</Col>
+            <Col span="8" class="TextRight"><Icon type="chevron-right"></Icon></Col>
+          </div>
+        </Row>
+        <!-- <Row :gutter="16" class="ListItem">
           <div  @click="GoModule(0)">
             <Col span="4" class="TextCenter"><Avatar src="static/img/wdqb.png" size="small"/></Col>
             <Col span="12">我的钱包</Col>
             <Col span="8" class="TextRight"><Icon type="chevron-right"></Icon></Col>
           </div>
-        </Row>
+        </Row> -->
         <Row :gutter="16" class="ListItem">
           <div  @click="GoModule(1)">
             <Col span="4" class="TextCenter"><Avatar src="static/img/grzl.png" size="small"/></Col>
-            <Col span="12">个人资料</Col>
+            <Col span="12">{{this.Type==0?'个人资料':'企业资料'}}</Col>
             <Col span="8" class="TextRight"><Icon type="chevron-right"></Icon></Col>
           </div>
         </Row>
@@ -106,6 +120,9 @@ import {clearCookie} from '../../util/utils'
       MessageCount(){
         return this.$store.state.MessageCount
       },
+      Type(){
+        return this.$store.state.userInfo.register_type
+      }
       
     },
     watch: {
@@ -121,7 +138,7 @@ import {clearCookie} from '../../util/utils'
       GoModule(KIND){
         switch(KIND){
           case -1:
-          if(this.$store.state.userInfo.register_type==0){
+          if(this.Type==0){
             this.$router.push({name:'我的订单(个人)'})
           }else{
             this.$router.push({name:'我的订单(企业)'})
@@ -134,7 +151,11 @@ import {clearCookie} from '../../util/utils'
           this.$router.push({name:'我的钱包'})
           break
           case 1:
-          this.$router.push({name:'个人资料'})
+          if(this.Type==0){
+            this.$router.push({name:'个人资料'})
+          }else{
+            this.$router.push({name:'企业资料'})
+          }
           break
           case 2:
           this.$router.push({name:'修改密码'})

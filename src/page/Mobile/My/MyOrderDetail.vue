@@ -89,7 +89,7 @@
       <BlankBar></BlankBar>
 
       <Row class="ItemBlock">
-        <Col span="24">订单提交时间: 2017-11-30 11:12:56</Col>
+        <Col span="24">订单提交时间: {{trackOrderInfo[trackOrderInfo.length-1].ftimeT}}</Col>
       </Row>
 
       <!-- <BlankBar></BlankBar> -->
@@ -97,7 +97,7 @@
       <Row class="ItemBlock">
         <Col span="24" class="marginTB_20 TextCenter">
           <p>请在7天内完成付款，逾期订单将被取消</p>
-          <p>咨询电话： 400-0135-200</p>
+          <p>咨询电话： 021-3100-7227</p>
         </Col>
         <Col span="24">
           <Button type="error" long>去付款</Button>

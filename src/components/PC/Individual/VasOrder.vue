@@ -24,7 +24,7 @@
       <!-- table -->
       <Table class="marginT_20" border :columns="columns5" :data="dataVasOrder"></Table>
 
-       <Page class="marginT_20" :total="Total" show-total style="float: right;" :current="page_num" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer></Page>
+       <Page class="marginT_20 marginB_150" :total="Total" show-total style="float: right;" :current="page_num" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer></Page>
       
     </div>
 </template>
@@ -97,6 +97,7 @@ export default {
             {
                 title: '订单提交时间',
                 key: 'order_subtime',
+                sortable: true
                 
             },
             {
@@ -107,10 +108,12 @@ export default {
             {
                 title: '办理事项',
                 key: 'service_items',
+                sortable: true
             },
             {
                 title: '办理状态',
-                key: 's_status'
+                key: 's_status',
+                sortable: true
             },
             {
                 title: '受理方',

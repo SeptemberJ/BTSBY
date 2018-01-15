@@ -87,7 +87,7 @@
 <script>
 import Vue from 'vue'
 import axios from 'axios'
-import {getOneYearMonth,DateSortASC,ifContinuity} from "../../../util/utils"
+import {getOneYearMonth,DateSortASC,ifContinuity,MessageChange} from "../../../util/utils"
 export default {
   data() {
   return {
@@ -349,6 +349,7 @@ export default {
           case '2':
           this.$Message.success('下单成功!')
           this.$store.state.HRMenuCur = '我的订单'
+          MessageChange()
           break;
           case '0':
           this.$Message.error(res.data.message+':'+res.data.detail)

@@ -10,8 +10,8 @@
             
         </a>
         <ul>
-            <li v-for="item in policyList">
-                <a @click="GoArticleDetail(item.id)" class="ellipsis" style="color: #333;">{{ item.s_title }}</a>
+            <li v-for="item in policyList" @click="GoArticleDetail(item.id)" >
+                <a class="ellipsis" style="color: #333;">{{ item.s_title }}</a>
                 <span style="float: right;">
                     {{item.sub_time.time}}
                 </span>

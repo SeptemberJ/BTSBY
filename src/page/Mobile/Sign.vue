@@ -220,6 +220,10 @@ import {generateMixed} from "../../util/utils"
       console.log(this.formSign)
         this.$refs[name].validate((valid) => {
             if (valid) {
+              if (!(/^1[34578]\d{9}$/.test(this.formSign.TEL))){
+                this.$Message.error('手机号格式不正确!');
+                return false
+              }
               if (this.formSign.PSD != this.formSign.PSDAGAIN){
                 this.$Message.error('两次输入的密码不一致!')
                 return false
