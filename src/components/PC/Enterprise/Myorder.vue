@@ -68,7 +68,7 @@
           </Row>
         </div>
         <div slot="footer" style="text-align: center;">
-            <Button type="primary" size="large" :loading="modal_loading" @click=""><Icon type="printer"></Icon><a style="color: #fff;" href="http://192.168.10.177:8082/exportExcel?order_id=ea225728-e8ce-4b3c-8853-fb971ef9e66b&pay_type=0" download="http://192.168.10.177:8082/exportExcel?order_id=ea225728-e8ce-4b3c-8853-fb971ef9e66b&pay_type=0">导出订单数据</a></Button>
+            <Button type="primary" size="large" :loading="modal_loading" @click=""><Icon type="printer"></Icon><a style="color: #fff;" :href="URL + 'exportCompanyOrderExcel?order_id='+ ModalInfo.id" :download="URL + 'exportCompanyOrderExcel?order_id='+ ModalInfo.id">导出订单数据</a></Button>
         </div>
       </Modal>
 
@@ -319,9 +319,15 @@ export default {
   
   },
   computed: {
+    URL(){
+      return R_PRE_URL+'/'
+    },
     
   },
   watch:{
+    URL(){
+      return R_PRE_URL+'/'
+    },
   },
   methods: {
     show (index) {
