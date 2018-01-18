@@ -62,7 +62,6 @@
           :on-format-error="handleFormatError"
           :on-exceeded-size="handleMaxSize"
           :before-upload="handleBeforeUploadSF"
-          accept=".png, .jpg, .jpeg"
           type="drag"
           action=""
           style="display: block;">
@@ -83,7 +82,6 @@
           :on-format-error="handleFormatError"
           :on-exceeded-size="handleMaxSize"
           :before-upload="handleBeforeUploadSB"
-          accept=".png, .jpg, .jpeg"
           type="drag"
           action=""
           style="display: block;">
@@ -104,7 +102,6 @@
           :on-format-error="handleFormatError"
           :on-exceeded-size="handleMaxSize"
           :before-upload="handleBeforeUploadHZ"
-          accept=".png, .jpg, .jpeg"
           type="drag"
           action=""
           style="display: block;">
@@ -125,7 +122,6 @@
           :on-format-error="handleFormatError"
           :on-exceeded-size="handleMaxSize"
           :before-upload="handleBeforeUploadBR"
-          accept=".png, .jpg, .jpeg"
           type="drag"
           action=""
           style="display: block;">
@@ -146,7 +142,6 @@
           :on-format-error="handleFormatError"
           :on-exceeded-size="handleMaxSize"
           :before-upload="handleBeforeUploadPD"
-          accept=".png, .jpg, .jpeg"
           type="drag"
           action=""
           style="display: block;">
@@ -432,21 +427,19 @@ import TitBar from '../../components/Mobile/TitBar'
         this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
     },
     handleSuccess (res, file) {
-        file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar';
-        file.name = '7eb99afb9d5f317c912f08b5212fd69a';
     },
     handleFormatError (file) {
-        this.$Notice.warning({
-            title: 'The file format is incorrect',
-            desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
-        });
-    },
+          this.$Notice.warning({
+              title: '图片格式警告',
+              desc: '您上传的' + file.name + '文件格式不支持!'
+          });
+      },
     handleMaxSize (file) {
-        this.$Notice.warning({
-            title: 'Exceeding file size limit',
-            desc: 'File  ' + file.name + ' is too large, no more than 2M.'
-        });
-    },
+          this.$Notice.warning({
+              title: '图片大小警告',
+              desc: '您上传的  ' + file.name + '太大了, 请不要超过2M!'
+          });
+      },
     handleBeforeUpload () {
     }
    
